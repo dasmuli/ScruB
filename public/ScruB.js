@@ -17,11 +17,11 @@ function SwapListElements( upperElementId, lowerElementId )
 {
 	$( "#scrumListId"+upperElementId ).insertAfter( ($ ( "#scrumListId"+lowerElementId ) ) );
 	$( "#scrumListId"+upperElementId )
-		.animate({height: '+=30px'}, "fast")
-		.animate({height: '-=30px'}, "fast");
+		.animate({height: '+=20px'}, "fast")
+		.animate({height: '-=20px'}, "fast");
 	$( "#scrumListId"+lowerElementId )
-		.animate({height: '+=30px'}, "fast")
-		.animate({height: '-=30px'}, "fast");
+		.animate({height: '+=20px'}, "fast")
+		.animate({height: '-=20px'}, "fast");
 
 }
 
