@@ -42,14 +42,40 @@ var scrumDataManager = {
 	PriorityListLength: function () {
 		var currentData = scrumDataArray[ scrumDataManager.priorityStartId ];
 		var count = 0;
-		console.log( "currentData id: " + currentData.id + ", next: " + currentData.nextPriorityId );
 		while( currentData.nextPriorityId != -1 && count < scrumDataArray.length )
 		{
-			console.log( "scrumDataManager.PriorityListLength: next" );
 			currentData = scrumDataArray[ currentData.nextPriorityId ];
 			count++;
 		}
 		return count + 1;
+    },
+	MovePriorityUp: function ( dataToBeMovedUp ) {
+		if( scrumDataArray[ dataToBeMovedUp ].previousPriorityId != -1 ) // cannot be moved if first element
+		{
+			// get all involved ids
+			var dataToBeMovedDown = scrumDataArray[ dataToBeMovedUp ].previousPriorityId;
+			var precedingElementId = scrumDataArray[ dataToBeMovedDown ].previousPriorityId
+			var followingElementId = scrumDataArray[ dataToBeMovedUp ].nextPriorityId;
+			// change order of elements
+			scrumDataArray[ dataToBeMovedDown ].previousPriorityId = dataToBeMovedUp;
+			scrumDataArray[ dataToBeMovedUp ].nextPriorityId = dataToBeMovedDown;
+			scrumDataArray[ dataToBeMovedUp ].previousPriorityId = precedingElementId;
+			scrumDataArray[ dataToBeMovedDown ].nextPriorityId = followingElementId;
+			// change order outer elements
+			if( precedingElementId != -1 )
+			{
+				scrumDataArray[ precedingElementId ].nextPriorityId = dataToBeMovedUp;
+			}
+			if( followingElementId != -1 )
+			{
+				scrumDataArray[ followingElementId ].previousPriorityId = dataToBeMovedDown;
+			}
+			// new first element
+			if( scrumDataArray[ dataToBeMovedUp ].previousPriorityId == -1 ) 
+			{
+				this.priorityStartId = dataToBeMovedUp;
+			}
+		}
     },
 	IsIntegrityOk: function () {
 		// check ids are existing exactly once
