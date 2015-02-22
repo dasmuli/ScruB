@@ -24,19 +24,7 @@ eval( fs.readFileSync('public/scrumdata.js')+'' );
 
 var scrumDataArrayNextFreeId = 0; 
 // Test data
-for (var i = 0; i < 20; ++i)
-{
-	var testData 								= Object.create( ScrumData );
-	testData.id 								= scrumDataArrayNextFreeId;
-	testData.complexity							= 4;
-	testData.priority							= scrumDataArrayNextFreeId;
-	if (scrumDataArrayNextFreeId > 0)
-	{
-		testData.previousPriorityId					= scrumDataArrayNextFreeId-1;
-	}
-	scrumDataArray[ scrumDataArrayNextFreeId ] 	= testData;
-	scrumDataArrayNextFreeId++;
-}
+scrumDataManager.InitTestData();
 
 // Websocket
 io.sockets.on('connection', function (socket) {
@@ -65,13 +53,10 @@ io.sockets.on('connection', function (socket) {
 		//scrumDataArray[ data.id ].featurename = data.featurename;
 	});
 	
-	// Send all data to client
-	for (var i = 0; i < scrumDataArray.length; ++i)
-	{
-		socket.emit('scrubfulldata', {
-			data:			scrumDataArray
-			});
-	}
+	// Send complete array data to client
+	socket.emit('scrubfulldata', {
+		data:			scrumDataArray
+		});
 });
 
 // Portnummer in die Konsole schreiben
