@@ -22,7 +22,6 @@ app.get('/', function (req, res) {
 var fs = require('fs');
 eval( fs.readFileSync('public/scrumdata.js')+'' );
 
-var scrumDataArrayNextFreeId = 0; 
 // Test data
 scrumDataManager.InitTestData();
 
@@ -54,9 +53,7 @@ io.sockets.on('connection', function (socket) {
 	});
 	
 	// Send complete array data to client
-	socket.emit('scrubfulldata', {
-		data:			scrumDataArray
-		});
+	socket.emit('scrubfulldata', scrumDataArray );
 });
 
 // Portnummer in die Konsole schreiben

@@ -20,7 +20,8 @@ var scrumDataManager = {
 		this.id 				= id;
 		this.featurename 		= "TestData" + id;
 		this.complexity 		= 2;
-		this.previousPriorityId = -1;
+		this.priority			= -1;
+		this.previousPriorityId 	= -1;
 		this.nextPriorityId		= -1;
 	},
     InitTestData: function () {
@@ -29,6 +30,7 @@ var scrumDataManager = {
 		for( i = 0; i < 3; i++ )
 		{
 			scrumDataArray[ i ] = new scrumDataManager.DataObject( i );
+			scrumDataArray[ i ].priority = i;
 			if( i < 2 )
 			{
 				scrumDataArray[ i ].nextPriorityId = i + 1;

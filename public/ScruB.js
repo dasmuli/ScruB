@@ -7,6 +7,55 @@
 var scrumDataIdInEditor = 0;
 var socket;
 
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////   UI  functions   /////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+function CreateDataListEntry( scrumdata )
+{
+	$("#scrumDataList").append("<li><a href=\"#purchase\" id=\"editLink"+scrumdata.priority
+			+"\" data-rel=\"popup\" data-position-to=\"window\" data-transition=\"pop\">"
+			+scrumdata.featurename+"</a><a href=\"#\" id=\"moveDataUp"+scrumdata.id
+			+"\">Edit</a></li>");
+	if ($("#scrumDataList").hasClass('ui-listview')) 
+	{
+		$("#scrumDataList").listview('refresh'); //this listview has already been initialized, so refresh it
+	}
+	$( "#editLink"+scrumdata.priority ).click(function() {
+		scrumDataIdInEditor = scrumdata.priority;
+	});	
+	$( "#moveDataUp"+scrumdata.id ).click(function() {
+		socket.emit('moveDataUp', {
+			id			: scrumdata.id
+			});
+	});	
+}
+
+
+function UpdateBacklogData( scrumdata )
+{
+	console.log( "UpdateBacklogData for " + scrumdata.id + ", prio: " + scrumdata.priority );
+	// try to find elementFromPoint
+	if( scrumDataArray[ scrumdata.priority ] )
+	{
+		scrumDataArray[ scrumdata.priority ] = scrumdata;
+	}
+	if( $( "#editLink"+scrumdata.priority ).length != 0 )
+	{
+		$( "#editLink"+scrumdata.id ).html( scrumdata.featurename );
+	}
+	else // if not found: add
+	{	
+		CreateDataListEntry( scrumdata );
+	}
+}
+
+
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////   UI events   ///////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -67,7 +116,7 @@ $(document).on("pageinit", "#dataPage", function()
 	console.log( "pageinit" );
     $("#purchase").on("popupbeforeposition", function(event, ui) { // othre event is: popupafteropen
         console.log( "popupbeforeposition: " + scrumDataIdInEditor );
-		$("#textinputName").val( scrumDataArray[ scrumDataIdInEditor ].featurename );
+	$("#textinputName").val( scrumDataArray[ scrumDataIdInEditor ].featurename );
     });
 	$( "#editorOkButton" ).click(function() {
 		scrumDataArray[ scrumDataIdInEditor ].featurename = $("#textinputName").val();
@@ -77,8 +126,9 @@ $(document).on("pageinit", "#dataPage", function()
 
 
 
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////   Network send functions   //////////////////////////////////////////////
+/////////////////////////////////////////   Network functions   ////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function SendUpdateOfScrumDataToServer()
@@ -86,44 +136,6 @@ function SendUpdateOfScrumDataToServer()
 	socket.emit('updateScrumData', {
 		id			: scrumDataIdInEditor,
 		featurename	: scrumDataArray[ scrumDataIdInEditor ].featurename });
-}
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////   GUI  functions   /////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-function UpdateBacklogData( scrumdata )
-{
-	console.log( "UpdateBacklogData for " + scrumdata.id + ", prio: " + scrumdata.priority );
-	// try to find elementFromPoint
-	if( scrumDataArray[ scrumdata.priority ] )
-	{
-		scrumDataArray[ scrumdata.priority ] = scrumdata;
-	}
-	if( $( "#editLink"+scrumdata.priority ).length != 0 )
-	{
-		$( "#editLink"+scrumdata.id ).html( scrumdata.featurename );
-	}
-	else // if not found: add
-	{	
-		$("#scrumDataList").append("<li><a href=\"#purchase\" id=\"editLink"+scrumdata.priority+"\" data-rel=\"popup\" data-position-to=\"window\" data-transition=\"pop\">"+scrumdata.featurename+"</a>\
-								<a href=\"#\" id=\"moveDataUp"+scrumdata.id+"\">Edit</a>\
-							</li>");
-		if ($("#scrumDataList").hasClass('ui-listview')) 
-		{
-			$("#scrumDataList").listview('refresh'); //this listview has already been initialized, so refresh it
-		}
-		$( "#editLink"+scrumdata.priority ).click(function() {
-			scrumDataIdInEditor = scrumdata.priority;
-		});	
-		$( "#moveDataUp"+scrumdata.id ).click(function() {
-			socket.emit('moveDataUp', {
-				id			: scrumdata.id
-				});
-		});	
-	}
 }
 
 
@@ -145,12 +157,12 @@ $( document ).ready(function() {
     });
 	
 	// complete scrum data array
-	socket.on('scrubfulldata', function (data) {
-		console.log( "received complete scrubdata" );
-		scrumDataArray.push( data );
+	socket.on('scrubfulldata', function ( data ) {
+		scrumDataArray = data.slice();
+		console.log( "scrubdata changed, length:" + scrumDataArray.length );
 		for( i = 0; i < scrumDataArray.length; i++ )
 		{
-			UpdateBacklogData( scrumDataArray[ i ] );
+			CreateDataListEntry( scrumDataArray[ i ] );
 		}    
     });
     // Nachricht senden
