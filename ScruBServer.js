@@ -68,12 +68,8 @@ io.sockets.on('connection', function (socket) {
 	// Send all data to client
 	for (var i = 0; i < scrumDataArray.length; ++i)
 	{
-		socket.emit('scrubdata', {
-			featurename:			scrumDataArray[ i ].featurename,
-			id: 					scrumDataArray[ i ].id,
-			complexity: 			scrumDataArray[ i ].complexity,
-			priority: 				scrumDataArray[ i ].priority,
-			previousPriorityId: 	scrumDataArray[ i ].previousPriorityId
+		socket.emit('scrubfulldata', {
+			data:			scrumDataArray
 			});
 	}
 });
