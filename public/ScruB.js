@@ -147,7 +147,7 @@ $( document ).ready(function() {
 	// complete scrum data array
 	socket.on('scrubfulldata', function (data) {
 		console.log( "received complete scrubdata" );
-		scrumDataArray = data;
+		scrumDataArray.push( data );
 		for( i = 0; i < scrumDataArray.length; i++ )
 		{
 			UpdateBacklogData( scrumDataArray[ i ] );
