@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.css">
+<link rel="stylesheet" type="text/css" href="ScruB.css">
+<script src="socket.io/socket.io.js"></script>
+<script src="jquery/jquery-1.11.2.min.js"></script>
+<script src="jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.js"></script>
+<script src="Chartjs/Chart.js"></script>
+<script src="scrumdata.js"></script>
+<script src="ScruB.js"></script>
+
+<title>ScruB</title>
+</head>
+<body>
+
+<div data-role="page" id="mainPage" data-transition="flow">
+  <div data-role="header" class="scrumInfoOptional">
+     <h1>ScruB</h1>
+  </div>
+  <div data-role="main" class="ui-content">
+	<div class="ui-base">
+		<!-- Lead story block -->
+		<div class="ui-block-navigation">
+			<div class="ui-body ui-body-d">
+				<div data-role="navbar">
+					<ul>
+						<li><a href="#dataPage" class="ui-btn-active">Data</a></li>
+					</ul>
+				</div><!-- /navbar -->
+			</div>
+		</div>
+		<!-- secondary story block #2 -->
+		<div class="ui-block-mainView">
+			<div class="ui-body ui-body-d">
+				<h2 class="scrumInfoOptional">Burndown chart</h2>
+				<div id="Graph" class="ui-body-d ui-content">
+					<canvas id="canvas" class="scrumchart-view"></canvas>
+				</div>
+			</div>
+		</div>
+	</div><!-- /ui-base -->
+  </div> <!-- main content -->
+
+</div>  <!-- End of page -->
+
+
+<div data-role="page" id="dataPage" data-transition="flow">
+  <div data-role="header" class="scrumInfoOptional">
+     <h1>ScruB</h1>
+  </div>
+  <div data-role="main" class="ui-content">
+	<div class="ui-base">
+		<!-- Lead story block -->
+		<div class="ui-block-navigation">
+			<div class="ui-body ui-body-d">
+				<div data-role="navbar">
+					<ul>
+						<li><a href="#mainPage" class="ui-btn-active">Chart</a></li>
+					</ul>
+				</div><!-- /navbar -->
+			</div>
+		</div>
+		<!-- secondary story block #2 -->
+		<div class="ui-block-mainView">
+			<div class="ui-body ui-body-d">
+				<h2 class="scrumInfoOptional">Backlog data</h2>
+				<div class="scrumdata-scroll-view">
+					<ul data-role="listview" data-split-icon="arrow-u" data-split-theme="a" data-inset="true" id="scrumDataList">
+					</ul>
+				</div>
+				
+				<div data-role="popup" id="purchase" data-theme="a" data-overlay-theme="b" class="ui-content" style="max-width:340px; padding-bottom:2em;">
+				<div class="ui-field-contain">
+					<input name="textinputName" id="textinputName" placeholder="Text input" value="Oldame" type="text">
+				</div>
+				<p>Name, Complexity, Priority, Description, Data finished</p>
+					<a href="index.html" id="editorOkButton" data-rel="back" class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-check ui-btn-icon-left ui-btn-inline ui-mini">Ok</a>
+					<a href="index.html" data-rel="back" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-mini data-close-btn-text">Cancel</a>
+				</div>
+			</div>
+		</div>
+	</div><!-- /ui-base -->
+  </div> <!-- main content -->
+
+</div>  <!-- End of page -->
+
+
+</body>
+</html>

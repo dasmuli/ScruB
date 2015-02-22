@@ -1,0 +1,124 @@
+
+canvas{
+        width: 100%;
+        max-width: 800px;
+        height: auto;
+    }
+	
+	
+/* Basic styles */
+.ui-base .ui-body {
+    text-align: left;
+    border-color: #ddd;
+}
+.ui-base p {
+    color: #777;
+    line-height: 140%
+}
+/* Stack all blocks to start */
+.ui-base .ui-block-navigation,
+.ui-base .ui-block-control,
+.ui-base .ui-block-mainView {
+    width: 100%;
+    float: none;
+}
+/* Collapsing borders */
+.ui-base > div + div .ui-body {
+    border-top-width: 0;
+}
+/* Scroll view. */
+ .scrumdata-scroll-view{
+	height:70vh;overflow:auto;
+	overflow-y:scroll;
+	-webkit-overflow-scrolling: touch;
+ }
+/* Chart view. */
+ .scrumchart-view{
+	height:auto;
+	width:100%;
+}
+/* Optional information not shown. */
+.scrumInfoOptional {
+		display: none;
+}
+/* 1st breakpoint - Float navigation and control, leave mainView full width at bottom */
+/*
+@media all and (min-width: 42em) {
+    .ui-base {
+        overflow: hidden; *//* Use this or a "clearfix" to give the container height */
+		/*
+    }
+    .ui-base .ui-body {
+       min-height: 14em;
+    }
+    .ui-base .ui-block-control,
+    .ui-base .ui-block-navigation {
+      float: left;
+      width: 49.95%;
+    }
+    .ui-base .ui-block-control p,
+    .ui-base .ui-block-navigation p {
+      font-size: .8em;
+    }
+    .ui-base > div + div .ui-body {
+        border-top-width: 1px;
+    }
+    .ui-base > div:first-child .ui-body {
+        border-bottom-width: 0;
+    }
+    .ui-base > div:last-child .ui-body {
+        border-left-width: 0;
+    }
+}
+*/
+
+/* Show elements when there is enough space vertically. */
+@media all and (min-height: 25em) {
+	.scrumInfoOptional {
+		display: inline;
+	}
+	.scrumdata-scroll-view{
+		height:60vh;
+	 }
+}
+
+/* 2nd breakpoint - Float all, 50/25/25 */
+@media all and (min-width: 25em) {
+    .ui-base .ui-body {
+       min-height: 18em;
+    }
+    .ui-base .ui-block-mainView {
+      float: left;
+      width: 74.95%;
+    }
+    .ui-base .ui-block-control,
+    .ui-base .ui-block-navigation {
+      float: left;
+      width: 24.925%;
+    }
+    .ui-base > div:first-child .ui-body {
+        border-bottom-width: 1px;
+    }
+    .ui-base > div + div .ui-body {
+        border-left-width: 0;
+    }
+	.scrumdata-scroll-view{
+	height: 60vh;overflow:auto; /*display: flex*/
+	}
+}
+/* 3rd breakpoint - Bump up font size at very wide screens */
+@media all and (min-width: 75em) {
+    .ui-base .ui-body {
+      font-size: 125%;
+    }
+
+    .ui-base .ui-block-mainView {
+      float: left;
+      width: 49.95%;
+    }
+    .ui-base .ui-block-control,
+    .ui-base .ui-block-navigation {
+      float: left;
+      width: 24.925%;
+    }
+}
