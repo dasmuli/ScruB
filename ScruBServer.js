@@ -49,12 +49,16 @@ io.sockets.on('connection', function (socket) {
 	
 	socket.on('moveDataUp', function (data) {
 		console.log( 'moveDataUp:' + data.id );
-		//scrumDataArray[ data.id ].featurename = data.featurename;
+		scrumDataManager.MovePriorityUp( data.id );
+		io.sockets.emit( 'scrubmoveup', data.id );
 	});
 	
 	// Send complete array data to client
-	socket.emit('scrubfulldata', scrumDataArray );
+	socket.emit('scrubfulldata', {
+		dataArray:		scrumDataArray,
+		priorityStartId:	scrumDataManager.priorityStartId,
+	} );
 });
 
-// Portnummer in die Konsole schreiben
-console.log('Der Server läuft nun unter http://127.0.0.1:' + conf.port + '/');
+// portnumber in console
+console.log('Server listening on http://127.0.0.1:' + conf.port + '/');

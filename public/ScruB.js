@@ -13,12 +13,28 @@ var socket;
 ////////////////////////////////////////////   UI  functions   /////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+function SwapListElements( upperElementId, lowerElementId )
+{
+	$( "#scrumListId"+upperElementId ).insertAfter( ($ ( "#scrumListId"+lowerElementId ) ) );
+	$( "#scrumListId"+upperElementId )
+		.animate({height: '+=30px'}, "fast")
+		.animate({height: '-=30px'}, "fast");
+	$( "#scrumListId"+lowerElementId )
+		.animate({height: '+=30px'}, "fast")
+		.animate({height: '-=30px'}, "fast");
+
+}
 
 function CreateDataListEntry( scrumdata )
 {
-	$("#scrumDataList").append("<li><a href=\"#purchase\" id=\"editLink"+scrumdata.priority
+	$("#scrumDataList").append("<li id=\"scrumListId"
+			+scrumdata.id
+			+"\"><a href=\"#purchase\" id=\"editLink"
+			+scrumdata.priority
 			+"\" data-rel=\"popup\" data-position-to=\"window\" data-transition=\"pop\">"
-			+scrumdata.featurename+"</a><a href=\"#\" id=\"moveDataUp"+scrumdata.id
+			+scrumdata.featurename
+			+"</a><a href=\"#\" id=\"moveDataUp"
+			+scrumdata.id
 			+"\">Edit</a></li>");
 	if ($("#scrumDataList").hasClass('ui-listview')) 
 	{
@@ -156,14 +172,27 @@ $( document ).ready(function() {
 		UpdateBacklogData( data );
     });
 	
+	socket.on('scrubmoveup', function ( lowerElementId ) {
+		console.log( "scrubmoveup: " + lowerElementId );
+		var upperElementId = scrumDataArray[ lowerElementId ].previousPriorityId;
+		scrumDataManager.MovePriorityUp( lowerElementId );
+		if( upperElementId != -1 )
+		{
+			SwapListElements( upperElementId, lowerElementId );
+		}
+	});
+
 	// complete scrum data array
 	socket.on('scrubfulldata', function ( data ) {
-		scrumDataArray = data.slice();
+		scrumDataArray = data.dataArray.slice();
+		scrumDataManager.priorityStartId = data.priorityStartId;
 		console.log( "scrubdata changed, length:" + scrumDataArray.length );
-		for( i = 0; i < scrumDataArray.length; i++ )
+		var prioId = scrumDataManager.priorityStartId;
+		while( prioId != -1 )
 		{
-			CreateDataListEntry( scrumDataArray[ i ] );
-		}    
+			CreateDataListEntry( scrumDataArray[ prioId ] );
+			prioId = scrumDataArray[ prioId ].nextPriorityId;
+		}
     });
     // Nachricht senden
     function senden(){
