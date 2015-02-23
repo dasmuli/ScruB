@@ -16,12 +16,12 @@ var socket;
 function SwapListElements( upperElementId, lowerElementId )
 {
 	$( "#scrumListId"+upperElementId ).insertAfter( ($ ( "#scrumListId"+lowerElementId ) ) );
-	$( "#scrumListId"+upperElementId )
+	$( "#editLink"+lowerElementId )
 		.animate({height: '+=20px'}, "fast")
 		.animate({height: '-=20px'}, "fast");
-	$( "#scrumListId"+lowerElementId )
-		.animate({height: '+=20px'}, "fast")
-		.animate({height: '-=20px'}, "fast");
+	$( "#editLink"+upperElementId )
+		.animate({height: '-=20px'}, "fast")
+		.animate({height: '+=20px'}, "fast");
 
 }
 
@@ -30,7 +30,7 @@ function CreateDataListEntry( scrumdata )
 	$("#scrumDataList").append("<li id=\"scrumListId"
 			+scrumdata.id
 			+"\"><a href=\"#purchase\" id=\"editLink"
-			+scrumdata.priority
+			+scrumdata.id
 			+"\" data-rel=\"popup\" data-position-to=\"window\" data-transition=\"pop\">"
 			+scrumdata.featurename
 			+"</a><a href=\"#\" id=\"moveDataUp"

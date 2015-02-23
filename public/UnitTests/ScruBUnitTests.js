@@ -68,3 +68,7 @@ QUnit.test( "scrum data move up", function( assert ) {
 	assert.equal( scrumDataArray[ 2 ].nextPriorityId, 1 );
 	assert.equal( scrumDataArray[ 0 ].nextPriorityId, 2 );
 });
+
+QUnit.test( "scrum manager save file", function( assert ) {
+});
+
