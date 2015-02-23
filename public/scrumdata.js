@@ -25,7 +25,6 @@ var scrumDataManager = {
 		this.nextPriorityId		= -1;
 	},
     InitTestData: function () {
-		console.log( "Init test data called." );
 		scrumDataArray = new Array();
 		for( i = 0; i < 3; i++ )
 		{
