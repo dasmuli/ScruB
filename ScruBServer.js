@@ -2,7 +2,8 @@ var express = require('express')
 ,   app = express()
 ,   server = require('http').createServer(app)
 ,   io = require('socket.io').listen(server)
-,   conf = require('./config.json');
+,   conf = require('./config.json')
+,   scrumDB = require( './ScrumDB.js' );
 
 server.listen(conf.port);
 

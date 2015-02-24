@@ -1,5 +1,5 @@
 
-/* Server and client use this array to store scrum data. */
+/* Server and client use this object to store scrum data. */
 var scrumDataArray = new Array();
 
 var ScrumData = {  // Default value of properties

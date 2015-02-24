@@ -9,6 +9,8 @@ var scrumdataFile = fs.readFileSync('public/scrumdata.js');
 vm.runInThisContext( scrumdataFile );
 
 
+describe( 'ScrumDB', function() {
+
 it('should be running if mocha is installed', function () {
 	  assert.equal( 1, 1 );
 });
@@ -18,11 +20,14 @@ it('should exist a scrumDB', function () {
 	  assert.notEqual( scrumDB.LoadScrumDataSync, null );
 });
 
-it('should generate a file in the data directory', function () {
+it('should generate a file in the data directory', function ( done ) {
 	  assert.notEqual( scrumDataArray, null );
 	  assert.notEqual( scrumDataManager, null );
 	  scrumDataManager.InitTestData();
-	  scrumDB.SaveScrumDataSync( "Test", scrumDataArray, scrumDataManager.priorityStartId );
+	  scrumDB.SaveScrumDataAsync( "Test",
+			 scrumDataArray,
+			 scrumDataManager.priorityStartId,
+			 done );
 });
 
 it('should load the file in the data directory', function () {
@@ -36,3 +41,9 @@ it('should load the file in the data directory', function () {
 	  assert.equal( scrumDataArray[ 2 ].id, 2 );
 	  assert.equal( scrumDataManager.priorityStartId, 0 );
 });
+
+it('should have a timer', function () {
+	  assert.notEqual( scrumDB.timerHandle, null );
+});
+
+} );
