@@ -40,8 +40,8 @@ function CreateDataListEntry( scrumdata )
 	{
 		$("#scrumDataList").listview('refresh'); //this listview has already been initialized, so refresh it
 	}
-	$( "#editLink"+scrumdata.priority ).click(function() {
-		scrumDataIdInEditor = scrumdata.priority;
+	$( "#editLink"+scrumdata.id ).click(function() {
+		scrumDataIdInEditor = scrumdata.id;
 	});	
 	$( "#moveDataUp"+scrumdata.id ).click(function() {
 		socket.emit('moveDataUp', {
@@ -55,11 +55,11 @@ function UpdateBacklogData( scrumdata )
 {
 	console.log( "UpdateBacklogData for " + scrumdata.id + ", prio: " + scrumdata.priority );
 	// try to find elementFromPoint
-	if( scrumDataArray[ scrumdata.priority ] )
+	if( scrumDataArray[ scrumdata.id ] )
 	{
-		scrumDataArray[ scrumdata.priority ] = scrumdata;
+		scrumDataArray[ scrumdata.id ] = scrumdata;
 	}
-	if( $( "#editLink"+scrumdata.priority ).length != 0 )
+	if( $( "#editLink"+scrumdata.id ).length != 0 )
 	{
 		$( "#editLink"+scrumdata.id ).html( scrumdata.featurename );
 	}
@@ -168,7 +168,7 @@ $( document ).ready(function() {
     // update non-order related data
     socket.on('scrubdata', function (data) {
 		console.log( "received scrubdata: " + data.featurename );
-		scrumDataArray[ data.priority ] = data;
+		scrumDataArray[ data.id ] = data;
 		UpdateBacklogData( data );
     });
 	

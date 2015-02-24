@@ -27,7 +27,9 @@ var scrumDataManager = {
 		this.nextPriorityId		= -1;
 	},
 	UpdateData: function ( data ) {
-		scrumDataArray[ data.id ] = data;
+		scrumDataArray[ data.id ].featurename = data.featurename;
+		scrumDataArray[ data.id ].complexity  = data.complexity;
+		scrumDataArray[ data.id ].priority    = data.priority;
 		this.dirtyFlag = true;
 		this.versionCounter++;
 	},

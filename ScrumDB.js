@@ -1,5 +1,6 @@
 
 var fs = require( 'fs' );
+var vm = require( 'vm' );
 
 this.LoadScrumDataSync = function( name )
 {
@@ -15,8 +16,9 @@ this.SaveScrumDataAsync = function( name, scrumDataArray, priorityStartId, callb
     fs.writeFile( "data/" + name + ".json", JSON.stringify( data, null, ' ' ), callback ); 
 }
 
+
 this.TimerCallback = function()
 {
-	//console.log( "ScrumDB timer" );
+    //console.log( "ScrumDB: not dirty enough." );
 }
 this.timerHandle = setInterval( this.TimerCallback, 60 * 1000 );

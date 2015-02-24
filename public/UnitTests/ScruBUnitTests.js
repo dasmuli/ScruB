@@ -91,4 +91,26 @@ QUnit.test( "scrum data dirty dirty flag", function( assert ) {
 
 });
 
+QUnit.test( "scrum update only informational data, not structure", function( assert ) {
+	scrumDataManager.InitTestData();
+	assert.equal( scrumDataArray[ 0 ].nextPriorityId, 1 );
+	assert.equal( scrumDataArray[ 0 ].previousPriorityId, -1 );
+	assert.equal( scrumDataArray[ 0 ].featurename, "TestData0" );
+	assert.equal( scrumDataArray[ 0 ].priority, 0 );
+	assert.equal( scrumDataArray[ 0 ].complexity, 2 );
 
+	var testData = new scrumDataManager.DataObject( 0 );
+	testData.featurename = "Changed";
+	testData.priority = 3;
+	testData.complexity = 8;
+	testData.previousPriorityId = 99;
+	testData.nextPriorityId = 99;
+
+	scrumDataManager.UpdateData( testData );
+
+	assert.equal( scrumDataArray[ 0 ].nextPriorityId, 1 );
+	assert.equal( scrumDataArray[ 0 ].previousPriorityId, -1 );
+	assert.equal( scrumDataArray[ 0 ].featurename, "Changed" );
+	assert.equal( scrumDataArray[ 0 ].priority, 3 );
+	assert.equal( scrumDataArray[ 0 ].complexity, 8 );
+});

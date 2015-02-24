@@ -41,7 +41,8 @@ io.sockets.on('connection', function (socket) {
 	
 	socket.on('updateScrumData', function (data) {
 		console.log( 'updateScrumData:' + data.id + ', name: ' + data.featurename );
-		scrumDataArray[ data.id ].featurename = data.featurename;
+		//scrumDataArray[ data.id ].featurename = data.featurename;
+		scrumDataManager.UpdateData( data );
 		io.sockets.emit('scrubdata', {
 			featurename:			scrumDataArray[ data.id ].featurename,
 			id: 					scrumDataArray[ data.id ].id,
@@ -49,6 +50,8 @@ io.sockets.on('connection', function (socket) {
 			priority: 				scrumDataArray[ data.id ].priority,
 			previousPriorityId: 	scrumDataArray[ data.id ].previousPriorityId
 			});
+		console.log( 'updateScrumData:' + scrumDataArray[ data.id ].id 
+				+ ', prio: ' + scrumDataArray[ data.id ].priority );
 	});
 	
 	socket.on('moveDataUp', function (data) {
