@@ -69,3 +69,26 @@ QUnit.test( "scrum data move up", function( assert ) {
 	assert.equal( scrumDataArray[ 0 ].nextPriorityId, 2 );
 });
 
+QUnit.test( "scrum data dirty dirty flag", function( assert ) {
+	scrumDataManager.InitTestData();
+	assert.equal( scrumDataManager.dirtyFlag, false );
+	assert.equal( scrumDataManager.versionCounter, 0 );
+
+	var testData = new scrumDataManager.DataObject( 2 );
+	scrumDataManager.UpdateData( testData );
+	assert.equal( scrumDataManager.dirtyFlag, true );
+	assert.equal( scrumDataManager.versionCounter, 1 );
+	scrumDataManager.dirtyFlag = false;
+	
+	// first element not moved -> not dirty
+	scrumDataManager.MovePriorityUp( 0 );
+	assert.equal( scrumDataManager.dirtyFlag, false );
+	assert.equal( scrumDataManager.versionCounter, 1 );
+
+	scrumDataManager.MovePriorityUp( 1 );
+	assert.equal( scrumDataManager.dirtyFlag, true );
+	assert.equal( scrumDataManager.versionCounter, 2 );
+
+});
+
+

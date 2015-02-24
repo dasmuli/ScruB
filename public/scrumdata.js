@@ -9,13 +9,15 @@ var ScrumData = {  // Default value of properties
   priority:				1,
   previousPriorityId:	-1,
   nextPriorityId:		-1,
-  printData : function(){  // Method which will display type of Animal
+  printData : function(){  
     console.log( 'scrumdata ' + this.id + " " + this.featurename + ' ' + complextiy );
   }
 }
 
 var scrumDataManager = {
 	priorityStartId: 0,
+	dirtyFlag: false,
+	versionCounter: 0,
 	DataObject: function ( id ) {
 		this.id 				= id;
 		this.featurename 		= "TestData" + id;
@@ -23,6 +25,11 @@ var scrumDataManager = {
 		this.priority			= -1;
 		this.previousPriorityId 	= -1;
 		this.nextPriorityId		= -1;
+	},
+	UpdateData: function ( data ) {
+		scrumDataArray[ data.id ] = data;
+		this.dirtyFlag = true;
+		this.versionCounter++;
 	},
     InitTestData: function () {
 		scrumDataArray = new Array();
@@ -39,6 +46,8 @@ var scrumDataManager = {
 				scrumDataArray[ i ].previousPriorityId = i - 1;
 			}
 		}
+		this.dirtyFlag = false;
+		this.versionCounter = 0;
     },
 	PriorityListLength: function () {
 		var currentData = scrumDataArray[ scrumDataManager.priorityStartId ];
@@ -76,6 +85,9 @@ var scrumDataManager = {
 			{
 				this.priorityStartId = dataToBeMovedUp;
 			}
+			this.dirtyFlag = true;
+			this.versionCounter++;
+
 		}
     },
 	IsIntegrityOk: function () {
