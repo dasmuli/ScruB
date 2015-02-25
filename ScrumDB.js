@@ -26,7 +26,7 @@ this.TimerCallback = function()
         if( this.scrumDataManagerList[ i ].IsDirty() )
 	{
             console.log( "ScrumDB: dirty enough." );
-	    SaveScrumDataAsync( "Default",
+	    SaveScrumDataAsync( this.scrumDataArray[ i ].name,
 			    this.scrumDataArray[ i ],
 			    this.scrumDataManager[ i ].priorityStartId, null );
 	}

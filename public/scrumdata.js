@@ -17,6 +17,7 @@ var ScrumData = {  // Default value of properties
 var scrumDataManager = {
 	priorityStartId: 0,
 	dirtyFlag: false,
+	name: "Default",
 	versionCounter: 0,
 	DataObject: function ( id ) {
 		this.id 				= id;
@@ -25,6 +26,9 @@ var scrumDataManager = {
 		this.priority			= -1;
 		this.previousPriorityId 	= -1;
 		this.nextPriorityId		= -1;
+	},
+	IsDirty: function () {
+		return this.dirtyFlag;
 	},
 	UpdateData: function ( data ) {
 		scrumDataArray[ data.id ].featurename = data.featurename;

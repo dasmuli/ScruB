@@ -72,21 +72,25 @@ QUnit.test( "scrum data move up", function( assert ) {
 QUnit.test( "scrum data dirty dirty flag", function( assert ) {
 	scrumDataManager.InitTestData();
 	assert.equal( scrumDataManager.dirtyFlag, false );
+	assert.equal( scrumDataManager.IsDirty(), false );
 	assert.equal( scrumDataManager.versionCounter, 0 );
 
 	var testData = new scrumDataManager.DataObject( 2 );
 	scrumDataManager.UpdateData( testData );
 	assert.equal( scrumDataManager.dirtyFlag, true );
+	assert.equal( scrumDataManager.IsDirty(), true );
 	assert.equal( scrumDataManager.versionCounter, 1 );
 	scrumDataManager.dirtyFlag = false;
 	
 	// first element not moved -> not dirty
 	scrumDataManager.MovePriorityUp( 0 );
 	assert.equal( scrumDataManager.dirtyFlag, false );
+	assert.equal( scrumDataManager.IsDirty(), false );
 	assert.equal( scrumDataManager.versionCounter, 1 );
 
 	scrumDataManager.MovePriorityUp( 1 );
 	assert.equal( scrumDataManager.dirtyFlag, true );
+	assert.equal( scrumDataManager.IsDirty(), true );
 	assert.equal( scrumDataManager.versionCounter, 2 );
 
 });
@@ -113,4 +117,10 @@ QUnit.test( "scrum update only informational data, not structure", function( ass
 	assert.equal( scrumDataArray[ 0 ].featurename, "Changed" );
 	assert.equal( scrumDataArray[ 0 ].priority, 3 );
 	assert.equal( scrumDataArray[ 0 ].complexity, 8 );
+});
+
+
+QUnit.test( "scrum data manager has a name", function( assert ) {
+	scrumDataManager.InitTestData();
+	assert.equal( scrumDataManager.name, "Default" );
 });
