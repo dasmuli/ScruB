@@ -2,6 +2,8 @@
 var fs = require( 'fs' );
 var vm = require( 'vm' );
 
+this.scrumDataManagerList = new Array();
+
 this.LoadScrumDataSync = function( name )
 {
     return JSON.parse( fs.readFileSync( "data/" + name + ".json", 'utf8') );
@@ -19,6 +21,22 @@ this.SaveScrumDataAsync = function( name, scrumDataArray, priorityStartId, callb
 
 this.TimerCallback = function()
 {
-    //console.log( "ScrumDB: not dirty enough." );
+    for( var i = 0; i < this.scrumDataManagerList.length; i++ )
+    {
+        if( this.scrumDataManagerList[ i ].IsDirty() )
+	{
+            console.log( "ScrumDB: dirty enough." );
+	    SaveScrumDataAsync( "Default",
+			    this.scrumDataArray[ i ],
+			    this.scrumDataManager[ i ].priorityStartId, null );
+	}
+    }
 }
 this.timerHandle = setInterval( this.TimerCallback, 60 * 1000 );
+
+this.AddDataManager = function( scrumDataManager )
+{
+    this.scrumDataManagerList.push( scrumDataManager );
+    this.TimerCallback();
+}
+

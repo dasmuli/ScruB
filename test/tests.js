@@ -46,4 +46,15 @@ it('should have a timer', function () {
 	  assert.notEqual( scrumDB.timerHandle, null );
 });
 
+it('should receive a scrum data manager an ask if it is changed', function (done) {
+	  scrumDataManager.InitTestData();
+	  var mockWasCalled = false;
+	  scrumDataManager.IsDirty = function() {
+		mockWasCalled = true;
+		done();
+	  }
+	  scrumDB.AddDataManager( scrumDataManager );
+});
+
+
 } );
