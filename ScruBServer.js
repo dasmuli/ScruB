@@ -23,11 +23,17 @@ app.get('/', function (req, res) {
 
 // load scrumdata.js
 var fs = require('fs');
-eval( fs.readFileSync('public/scrumdata.js')+'' );
+eval( fs.readFileSync('public/ScrumDataManager.js')+'' );
 
 // init test data
-scrumDataManager.InitTestData();
+//scrumDataManager.InitTestData();
 
+// connect scrumDataManager to scrumDB
+var loadedData = scrumDB.LoadScrumDataSync( "Default" );
+scrumDataArray = loadedData.scrumDataArray;
+scrumDataManager.priorityStartId = loadedData.priorityStartId;
+scrumDB.AddDataManager( scrumDataManager );
+scrumDB.scrumDataArray = scrumDataArray;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////  websocket + events  ////////////////////////////////////////////////
@@ -40,8 +46,6 @@ io.sockets.on('connection', function (socket) {
 	});
 	
 	socket.on('updateScrumData', function (data) {
-		console.log( 'updateScrumData:' + data.id + ', name: ' + data.featurename );
-		//scrumDataArray[ data.id ].featurename = data.featurename;
 		scrumDataManager.UpdateData( data );
 		io.sockets.emit('scrubdata', {
 			featurename:			scrumDataArray[ data.id ].featurename,
@@ -50,12 +54,9 @@ io.sockets.on('connection', function (socket) {
 			priority: 				scrumDataArray[ data.id ].priority,
 			previousPriorityId: 	scrumDataArray[ data.id ].previousPriorityId
 			});
-		console.log( 'updateScrumData:' + scrumDataArray[ data.id ].id 
-				+ ', prio: ' + scrumDataArray[ data.id ].priority );
 	});
 	
 	socket.on('moveDataUp', function (data) {
-		console.log( 'moveDataUp:' + data.id );
 		scrumDataManager.MovePriorityUp( data.id );
 		io.sockets.emit( 'scrubmoveup', data.id );
 	});

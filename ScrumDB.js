@@ -1,8 +1,9 @@
 
 var fs = require( 'fs' );
-var vm = require( 'vm' );
 
 this.scrumDataManagerList = new Array();
+
+this.scrumDataArray;
 
 this.LoadScrumDataSync = function( name )
 {
@@ -25,14 +26,17 @@ this.TimerCallback = function()
     {
         if( this.scrumDataManagerList[ i ].IsDirty() )
 	{
-            console.log( "ScrumDB: dirty enough." );
-	    SaveScrumDataAsync( this.scrumDataArray[ i ].name,
-			    this.scrumDataArray[ i ],
-			    this.scrumDataManager[ i ].priorityStartId, null );
+	    this.SaveScrumDataAsync( this.scrumDataManagerList[ i ].name,
+			    this.scrumDataArray,
+			    this.scrumDataManagerList[ i ].priorityStartId, null );
 	}
     }
 }
-this.timerHandle = setInterval( this.TimerCallback, 60 * 1000 );
+this.timerHandle = setInterval( (function( self ){
+    return function() {
+        self.TimerCallback();
+    }
+    })(this),60 * 1000 );
 
 this.AddDataManager = function( scrumDataManager )
 {

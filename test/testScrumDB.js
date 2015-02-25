@@ -5,7 +5,7 @@ var vm = require( 'vm');
 var scrumDB = require( '../ScrumDB.js' );
 
 // load scrumdata.js
-var scrumdataFile = fs.readFileSync('public/scrumdata.js');
+var scrumdataFile = fs.readFileSync('public/ScrumDataManager.js');
 vm.runInThisContext( scrumdataFile );
 
 
