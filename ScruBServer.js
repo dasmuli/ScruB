@@ -7,6 +7,8 @@ var express = require('express')
 
 server.listen(conf.port);
 
+app.use( express.compress() );
+
 // serve public folder's contents
 app.use(express.static(__dirname + '/public'));
 
