@@ -2,15 +2,27 @@ var express = require('express')
 ,   app = express()
 ,   server = require('http').createServer(app)
 ,   io = require('socket.io').listen(server)
+,   combo = require('combohandler')
 ,   conf = require('./config.json')
 ,   scrumDB = require( './ScrumDB.js' );
+
+var root = '/public';
 
 server.listen(conf.port);
 
 app.use( express.compress() );
 
+app.use( express.errorHandler() );
+
+// Given a root path that points to a YUI 3 root folder, this route will
+// handle URLs like:
+//
+// http://example.com/yui3?build/yui/yui-min.js&build/loader/loader-min.js
+//
+app.get('/combohandler', combo.combine({rootPath: __dirname + root }), combo.respond);
+
 // serve public folder's contents
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + root ));
 
 
 // show index.html on '/'

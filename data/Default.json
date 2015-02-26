@@ -1,23 +1,23 @@
 {
- "priorityStartId": 0,
+ "priorityStartId": 2,
  "scrumDataArray": [
   {
    "id": 0,
    "featurename": "Save data",
-   "previousPriorityId": -1,
+   "previousPriorityId": 2,
    "nextPriorityId": 1
   },
   {
    "id": 1,
-   "featurename": "Add plus icon",
+   "featurename": ":) :)",
    "previousPriorityId": 0,
-   "nextPriorityId": 2
+   "nextPriorityId": -1
   },
   {
    "id": 2,
    "featurename": "Add data in model",
-   "previousPriorityId": 1,
-   "nextPriorityId": -1
+   "previousPriorityId": -1,
+   "nextPriorityId": 0
   }
  ]
 }
