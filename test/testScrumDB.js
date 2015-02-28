@@ -56,5 +56,39 @@ it('should receive a scrum data manager an ask if it is changed', function (done
 	  scrumDB.AddDataManager( scrumDataManager );
 });
 
+it('should automatically add missing elements while loading', function () {
+	  scrumDataArray = null;
+	  assert.equal( scrumDataArray, null );
+	  // create empty array
+	  var testArray = new Array();
+	  var emptyObject = {};
+	  testArray.push( emptyObject );
+	  testArray.push( emptyObject );
+	  var data = {
+            scrumDataArray: testArray
+	  };
+	  // and save it
+          fs.writeFileSync( "data/TestEmptyArray.json",
+			JSON.stringify( data, null, ' ' ) ); 
+	  data = scrumDB.LoadScrumDataSync( "TestEmptyArray" );
+	  console.log( "Obj:" + JSON.stringify( data, null, ' ' ) );
+	  assert.equal( data['priorityStartId'], -1 );
+	  assert.equal( data.lastFinishedId, -1 );
+	  scrumDataArray = data.scrumDataArray;
+	  assert.equal( scrumDataArray[ 0 ].id, 0 );
+	  assert.equal( scrumDataArray[ 0 ].featurename, "Unknown" );
+	  assert.equal( scrumDataArray[ 0 ].complexity, 0 );
+	  assert.equal( scrumDataArray[ 0 ].isFinished, false );
+	  assert.equal( scrumDataArray[ 0 ].nextPriorityId, 1 );
+	  assert.equal( scrumDataArray[ 0 ].previousPriorityId, -1 );
+	  assert.equal( scrumDataArray[ 1 ].id, 1 );
+	  assert.equal( scrumDataArray[ 1 ].featurename, "Unknown" );
+	  assert.equal( scrumDataArray[ 1 ].complexity, 0 );
+	  assert.equal( scrumDataArray[ 1 ].isFinished, false );
+	  assert.equal( scrumDataArray[ 1 ].nextPriorityId, 1 );
+	  assert.equal( scrumDataArray[ 1 ].previousPriorityId, -1 );
+
+});
+
 
 } );
