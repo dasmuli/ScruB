@@ -16,6 +16,7 @@ var ScrumData = {  // Default value of properties
 
 var scrumDataManager = {
 	priorityStartId: 0,
+	lastFinishedId: -1,
 	dirtyFlag: false,
 	name: "Default",
 	versionCounter: 0,
@@ -23,6 +24,7 @@ var scrumDataManager = {
 		this.id 				= id;
 		this.featurename 		= "TestData" + id;
 		this.complexity 		= 2;
+		this.isFinished 		= false;
 		this.priority			= -1;
 		this.previousPriorityId 	= -1;
 		this.nextPriorityId		= -1;
@@ -30,6 +32,42 @@ var scrumDataManager = {
 	IsDirty: function () {
 		return this.dirtyFlag;
 	},
+	Finish: function ( id ) {
+		console.log( "Finish:" + id );
+		if( scrumDataArray[ id ].isFinished )
+		{
+		    return false;
+		}
+	        var oldNext = scrumDataArray[ id ].nextPriorityId;
+                var oldPrevious = scrumDataArray[ id ].previousPriorityId;
+
+		scrumDataArray[ id ].isFinished = true;
+		scrumDataArray[ id ].nextPriorityId = scrumDataManager.lastFinishedId;
+		scrumDataArray[ id ].previousPriorityId = -1;
+		// fix open list
+		if( oldPrevious != -1 )
+		{
+	            scrumDataArray[ oldPrevious ].nextPriorityId = oldNext;
+		}
+		if( oldNext != -1 )
+		{
+	            scrumDataArray[ oldNext ].previousPriorityId = oldPrevious;
+		}
+                if( scrumDataManager.priorityStartId == id )
+		{
+		    scrumDataManager.priorityStartId = oldNext;
+		}
+		// fix finished list
+		if( !(scrumDataManager.lastFinishedId == -1) )
+		{
+		   scrumDataArray[ scrumDataManager.lastFinishedId ].previousPriorityId = id;
+		}
+                scrumDataManager.lastFinishedId = id;
+                this.dirtyFlag = true;
+		this.versionCounter++;
+		return true;
+	},
+
 	UpdateData: function ( data ) {
 		scrumDataArray[ data.id ].featurename = data.featurename;
 		scrumDataArray[ data.id ].complexity  = data.complexity;
@@ -37,8 +75,25 @@ var scrumDataManager = {
 		this.dirtyFlag = true;
 		this.versionCounter++;
 	},
+	AddDataToFront: function ( data ) {
+		console.log( "Adding data at array pos:" + scrumDataArray.length );
+	        var newPos = scrumDataArray.length;
+		scrumDataArray.push( data );
+		scrumDataArray[ newPos ].previousPriorityId = -1;
+		scrumDataArray[ newPos ].nextPriorityId     = scrumDataManager.priorityStartId;
+		if( scrumDataManager.priorityStartId != -1 )
+		{
+		    scrumDataArray[ scrumDataManager.priorityStartId ].previousPriorityId = newPos;
+		}
+		scrumDataManager.priorityStartId = newPos;
+		this.dirtyFlag = true;
+		this.versionCounter++;
+	},
+
     InitTestData: function () {
 		scrumDataArray = new Array();
+		scrumDataManager.priorityStartId = 0;
+		scrumDataManager.lastFinishedId = -1;
 		for( i = 0; i < 3; i++ )
 		{
 			scrumDataArray[ i ] = new scrumDataManager.DataObject( i );
