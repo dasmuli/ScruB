@@ -3,26 +3,39 @@ var express = require('express')
 ,   server = require('http').createServer(app)
 ,   io = require('socket.io').listen(server)
 ,   combo = require('combohandler')
+,   minify = require('express-minify')
+,   Cacher = require('cacher')
 ,   conf = require('./config.json')
 ,   scrumDB = require( './ScrumDB.js' );
 
 var root = '/public';
+var cacher = new Cacher();
 
 server.listen(conf.port);
 
-app.use( express.compress() );
+if ('production' == app.get('env'))
+{
+   app.use( cacher.cache( 'days', 1 ) );
 
-app.use( express.errorHandler() );
+   app.use( express.compress() );
 
-// Given a root path that points to a YUI 3 root folder, this route will
-// handle URLs like:
-//
-// http://example.com/yui3?build/yui/yui-min.js&build/loader/loader-min.js
-//
+   app.use( minify() );
+
+   app.use( express.errorHandler() );
+ }
+
 app.get('/combohandler', combo.combine({rootPath: __dirname + root }), combo.respond);
 
-// serve public folder's contents
-app.use(express.static(__dirname + root ));
+
+if ('production' == app.get('env'))
+{
+   var oneDay = 86400000;
+   app.use(express.static(__dirname + root, { maxAge: oneDay } ));
+}
+else
+{
+   app.use(express.static(__dirname + root ));
+}
 
 
 // show index.html on '/'

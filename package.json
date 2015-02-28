@@ -5,7 +5,9 @@
   "dependencies": {
     "daemon": "^1.1.0",
     "express": "3.x",
+    "express-minify": "3.x",
     "socket.io": "*",
+    "cacher": "*",
     "combohandler": "*"
   }, 
   "scripts": {
