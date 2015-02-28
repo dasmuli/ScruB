@@ -21,7 +21,7 @@
 			<div class="ui-body ui-body-d">
 				<div data-role="navbar">
 					<ul>
-						<li><a href="#dataPage" class="ui-btn-active">Data</a></li>
+						<li><a href="#dataPage">Data</a></li>
 					</ul>
 				</div><!-- /navbar -->
 			</div>
@@ -46,37 +46,56 @@
      <h1>ScruB</h1>
   </div>
   <div data-role="main" class="ui-content">
-	<div class="ui-base">
-		<!-- Lead story block -->
-		<div class="ui-block-navigation">
-			<div class="ui-body ui-body-d">
-				<div data-role="navbar">
-					<ul>
-						<li><a href="#mainPage" class="ui-btn-active">Chart</a></li>
-					</ul>
-				</div><!-- /navbar -->
-			</div>
-		</div>
-		<!-- secondary story block #2 -->
-		<div class="ui-block-mainView">
-			<div class="ui-body ui-body-d">
-				<h2 class="scrumInfoOptional">Backlog data</h2>
-				<div class="scrumdata-scroll-view">
-					<ul data-role="listview" data-split-icon="arrow-u" data-split-theme="a" data-inset="true" id="scrumDataList">
-					</ul>
-				</div>
+    <div class="ui-base">
+      <!-- Lead story block -->
+      <div class="ui-block-navigation">
+        <div class="ui-body ui-body-d">
+          <div data-role="navbar">
+            <ul>
+              <li><a href="#mainPage">Chart</a></li>
+              <li><a href="#addData" data-rel="popup" data-position-to="window" data-transition="pop">Add</a></li>
+            </ul>
+          </div><!-- /navbar -->
+        </div>
+      </div>
+      <!-- secondary story block #2 -->
+      <div class="ui-block-mainView">
+        <div class="ui-body ui-body-d">
+          <h2 class="scrumInfoOptional">Backlog data</h2>
+          <div class="scrumdata-scroll-view">
+            <ul data-role="listview" data-split-icon="arrow-u" data-split-theme="a" data-inset="true" id="scrumDataList">
+            </ul>
+          </div>
 				
-				<div data-role="popup" id="purchase" data-theme="a" data-overlay-theme="b" class="ui-content" style="max-width:340px; padding-bottom:2em;">
-				<div class="ui-field-contain">
-					<input name="textinputName" id="textinputName" placeholder="Text input" value="Oldame" type="text">
-				</div>
-				<p>Name, Complexity, Priority, Description, Data finished</p>
-					<a href="index.html" id="editorOkButton" data-rel="back" class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-check ui-btn-icon-left ui-btn-inline ui-mini">Ok</a>
-					<a href="index.html" data-rel="back" class="ui-shadow ui-btn ui-corner-all ui-btn-inline ui-mini data-close-btn-text">Cancel</a>
-				</div>
-			</div>
-		</div>
-	</div><!-- /ui-base -->
+          <div data-role="popup" id="editData" data-theme="a" data-overlay-theme="b"
+		  class="ui-content" style="max-width:340px; padding-bottom:2em;">
+            <div class="ui-field-contain">
+              <input name="textinputName" id="textinputName" placeholder="Text input"
+	        value="Oldame" type="text">
+            </div>
+            <p>Complexity, Description, Data finished</p>
+             <a href="" id="editorOkButton" data-rel="back" class="ui-shadow ui-btn
+		     ui-corner-all ui-btn-b ui-icon-check ui-btn-icon-left ui-btn-inline ui-mini">Ok</a>
+            <a href="" data-rel="back" class="ui-shadow ui-btn ui-corner-all
+		    ui-btn-inline ui-mini data-close-btn-text">Cancel</a>
+	  </div><!-- editData Pop Up -->
+	  <div data-role="popup" id="addData" data-theme="a" data-overlay-theme="a"
+		  class="ui-content" style="max-width:340px; padding-bottom:2em;">
+            <div class="ui-field-contain">
+                <input name="textinputName" id="textinputNameAdd"
+		  placeholder="Text input" value="Oldame" type="text">
+            </div>
+            <p>Complexity, Description, Data finished</p>
+             <a href="" id="editorAddOkButton" data-rel="back"
+		     class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-check
+		     ui-btn-icon-left ui-btn-inline ui-mini">Ok</a>
+	     <a href="" data-rel="back" class="ui-shadow ui-btn ui-corner-all
+		     ui-btn-inline ui-mini data-close-btn-text">Cancel</a> 
+	  </div><!-- addData Pop Up -->
+  
+	</div><!-- data main view -->
+      </div>
+    </div><!-- /ui-base -->
   </div> <!-- main content -->
 
 </div>  <!-- End of page -->

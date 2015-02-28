@@ -18,7 +18,7 @@ function CreateDataListEntry( scrumdata )
 {
 	$("#scrumDataList").append("<li id=\"scrumListId"
 			+scrumdata.id
-			+"\"><a href=\"#purchase\" id=\"editLink"
+			+"\"><a href=\"#editData\" id=\"editLink"
 			+scrumdata.id
 			+"\" data-rel=\"popup\" data-position-to=\"window\" data-transition=\"pop\">"
 			+scrumdata.featurename
@@ -117,7 +117,7 @@ $( document ).on( "pagecontainershow", function( event, ui ) {
 $(document).on("pageinit", "#dataPage", function()
 {
 	console.log( "pageinit" );
-    $("#purchase").on("popupbeforeposition", function(event, ui) { // othre event is: popupafteropen
+    $("#editData").on("popupbeforeposition", function(event, ui) { // othre event is: popupafteropen
         console.log( "popupbeforeposition: " + scrumDataIdInEditor );
 	$("#textinputName").val( scrumDataArray[ scrumDataIdInEditor ].featurename );
     });
