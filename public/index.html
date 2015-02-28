@@ -79,15 +79,36 @@
             <a href="" data-rel="back" class="ui-shadow ui-btn ui-corner-all
 		    ui-btn-inline ui-mini data-close-btn-text">Cancel</a>
 	  </div><!-- editData Pop Up -->
+
 	  <div data-role="popup" id="addData" data-theme="a" data-overlay-theme="a"
 		  class="ui-content" style="max-width:340px; padding-bottom:2em;">
+		  <div data-role="header" data-theme="a">
+			  <h4>Add</h4>
+		  </div>
             <div class="ui-field-contain">
                 <input name="textinputName" id="textinputNameAdd"
-		  placeholder="Text input" value="Oldame" type="text">
+		  placeholder="Text input" value="Short description" type="text">
             </div>
-            <p>Complexity, Description, Data finished</p>
+	    <form>
+	      <div class="ui-field-contain">
+	         <label for="selectComplexityAddPopup">Complexity:</label>
+	         <select name="selectComplexityAddPopup" id="selectComplexityAddPopup">
+	           <option value="1">1</option>
+	           <option value="2">2</option>
+	           <option value="3">3</option>
+	           <option value="4">5</option>
+	           <option value="5">8</option>
+	           <option value="6">13</option>
+	           <option value="7">20</option>
+	           <option value="8">40</option>
+	           <option value="9">100</option>
+	         </select>
+	      </div>
+	      <label for="descriptionAreaAddPopup">Description:</label>
+	      <textarea name="descriptionAreaAddPopup" id="descriptionAreaAddPopup">Long description</textarea>
+	    </form>
              <a href="" id="editorAddOkButton" data-rel="back"
-		     class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-check
+		     class="ui-shadow ui-btn ui-corner-all ui-btn-a ui-icon-check
 		     ui-btn-icon-left ui-btn-inline ui-mini">Ok</a>
 	     <a href="" data-rel="back" class="ui-shadow ui-btn ui-corner-all
 		     ui-btn-inline ui-mini data-close-btn-text">Cancel</a> 
