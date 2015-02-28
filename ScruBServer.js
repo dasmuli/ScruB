@@ -15,6 +15,24 @@ server.listen(conf.port);
 
 if ('production' == app.get('env'))
 {
+   //app.disable('etag'); // added for Safari
+
+   //app.get('/*', function(req, res, next){ 
+	//        res.setHeader('Last-Modified', (new Date()).toUTCString());
+	//	  next(); 
+   //});
+
+   cacher.genCacheKey = function(req) {
+	   // cache: remember gzip support in cache key
+   return req.originalUrl + req.accepts('gzip')     }
+
+   //cacher.on("hit", function(key) {
+   //  console.log("woohoo!")
+   //})
+   //cacher.on("miss", function(key) {
+   //  console.log("doh!")
+   //})
+
    app.use( cacher.cache( 'days', 1 ) );
 
    app.use( express.compress() );
@@ -22,13 +40,17 @@ if ('production' == app.get('env'))
    app.use( minify() );
 
    app.use( express.errorHandler() );
- }
+}
+
+//app.use(app.router);
 
 app.get('/combohandler', combo.combine({rootPath: __dirname + root }), combo.respond);
 
 
+
+   
 if ('production' == app.get('env'))
-{
+{   
    var oneDay = 86400000;
    app.use(express.static(__dirname + root, { maxAge: oneDay } ));
 }

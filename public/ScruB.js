@@ -167,6 +167,7 @@ $( document ).ready(function() {
 
 	// complete scrum data array
 	socket.on('scrubfulldata', function ( data ) {
+		$("#scrumDataList").empty();
 		scrumDataArray = data.dataArray.slice();
 		scrumDataManager.priorityStartId = data.priorityStartId;
 		console.log( "scrubdata changed, length:" + scrumDataArray.length );
