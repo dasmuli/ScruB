@@ -1,20 +1,20 @@
 var express = require('express')
-,   app = express()
-,   server = require('http').createServer(app)
-,   io = require('socket.io').listen(server)
-,   combo = require('combohandler')
-,   minify = require('express-minify')
-,   Cacher = require('cacher')
-,   conf = require('./config.json')
+,   app     = express()
+,   server  = require('http').createServer(app)
+,   io      = require('socket.io').listen(server)
+,   combo   = require('combohandler')
+,   minify  = require('express-minify')
+,   Cacher  = require('cacher')
+,   conf    = require('./config.json')
 ,   scrumDB = require( './ScrumDB.js' );
 
 var root = '/public';
-var cacher = new Cacher();
 
 server.listen(conf.port);
 
 if ('production' == app.get('env'))
 {
+   var cacher = new Cacher();
    //app.disable('etag'); // added for Safari
 
    //app.get('/*', function(req, res, next){ 
@@ -66,9 +66,9 @@ app.get('/', function (req, res) {
 });
 
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////  Load scripts + data  ////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+////////////////////  Load scripts + data  ///////////////////////////
+//////////////////////////////////////////////////////////////////////
 
 // load scrumdata.js
 var fs = require('fs');
@@ -84,9 +84,9 @@ scrumDataManager.priorityStartId = loadedData.priorityStartId;
 scrumDB.AddDataManager( scrumDataManager );
 scrumDB.scrumDataArray = scrumDataArray;
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////  websocket + events  ////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
+///////////////  websocket + events  //////////////////////////
+///////////////////////////////////////////////////////////////
 
 io.sockets.on('connection', function (socket) {
 	socket.emit('chat', { zeit: new Date(), text: 'You are locked on to the server!' });
@@ -106,8 +106,10 @@ io.sockets.on('connection', function (socket) {
 	});
 	
 	socket.on('moveDataUp', function (data) {
-		scrumDataManager.MovePriorityUp( data.id );
-		io.sockets.emit( 'scrubmoveup', data.id );
+		if( scrumDataManager.MovePriorityUp( data.id ) )
+		{
+		  io.sockets.emit( 'scrubmoveup', data.id );
+		}
 	});
 	
 	// Send complete array data to client

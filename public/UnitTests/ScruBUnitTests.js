@@ -37,12 +37,14 @@ QUnit.test( "scrum data check prio list length", function( assert ) {
 QUnit.test( "scrum data move up", function( assert ) {
 	scrumDataManager.InitTestData();
 	
-	scrumDataManager.MovePriorityUp( 0 );
+	var result = scrumDataManager.MovePriorityUp( 0 );
+	assert.equal( result, false );
 	assert.equal( scrumDataManager.IsIntegrityOk(), true );
 	assert.equal( scrumDataManager.PriorityListLength(), 3 );
 	assert.equal( scrumDataManager.priorityStartId, 0 );  // nothing changed
 	
-	scrumDataManager.MovePriorityUp( 1 );
+	result = scrumDataManager.MovePriorityUp( 1 );
+	assert.equal( result, true );
 	assert.equal( scrumDataManager.IsIntegrityOk(), true );
 	assert.equal( scrumDataManager.PriorityListLength(), 3 );
 	assert.equal( scrumDataManager.priorityStartId, 1 );
@@ -124,3 +126,5 @@ QUnit.test( "scrum data manager has a name", function( assert ) {
 	scrumDataManager.InitTestData();
 	assert.equal( scrumDataManager.name, "Default" );
 });
+
+

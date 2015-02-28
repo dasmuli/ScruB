@@ -93,7 +93,11 @@ var scrumDataManager = {
 			}
 			this.dirtyFlag = true;
 			this.versionCounter++;
-
+			return true;
+		}
+		else
+		{
+			return false;
 		}
     },
 	IsIntegrityOk: function () {
