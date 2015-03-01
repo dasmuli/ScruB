@@ -11,20 +11,21 @@
 <body>
 
 <div data-role="page" id="mainPage" data-transition="flow">
-  <div data-role="header" class="scrumInfoOptional">
+  <div data-role="header">
      <h1>ScruB</h1>
+     <div data-role="navbar">
+	<ul>
+          <li><a href="#mainPage" class="ui-btn-active ui-state-persist">Chart</a></li>
+ 	  <li><a href="#dataPage">Open</a></li>
+	</ul>
+     </div><!-- /navbar -->
   </div>
   <div data-role="main" class="ui-content">
 	<div class="ui-base">
 		<!-- Lead story block -->
 		<div class="ui-block-navigation">
 			<div class="ui-body ui-body-d">
-				<div data-role="navbar">
-					<ul>
-						<li><a href="#dataPage">Data</a></li>
-					</ul>
-				</div><!-- /navbar -->
-			</div>
+							</div>
 		</div>
 		<!-- secondary story block #2 -->
 		<div class="ui-block-mainView">
@@ -42,21 +43,32 @@
 
 
 <div data-role="page" id="dataPage" data-transition="flow">
-  <div data-role="header" class="scrumInfoOptional">
+  <div data-role="header">
      <h1>ScruB</h1>
+          <div data-role="navbar">
+            <ul>
+              <li><a href="#mainPage">Chart</a></li>
+              <li><a href="#dataPage" class="ui-btn-active ui-state-persist">Open</a></li>
+            </ul>
+          </div><!-- /navbar -->
+
   </div>
   <div data-role="main" class="ui-content">
     <div class="ui-base">
       <!-- Lead story block -->
       <div class="ui-block-navigation">
         <div class="ui-body ui-body-d">
-          <div data-role="navbar">
+	  <div data-role="navbar">
             <ul>
-              <li><a href="#mainPage">Chart</a></li>
-              <li><a href="#addData" data-rel="popup" data-position-to="window" data-transition="pop">Add</a></li>
+		    <li><a href="#addData" data-rel="popup"
+			     class="ui-btn ui-corner-all ui-shadow ui-btn-inline"
+	                     data-position-to="window"
+			     data-transition="pop">New</a>
+		    </li>
             </ul>
           </div><!-- /navbar -->
-        </div>
+
+                  </div>
       </div>
       <!-- secondary story block #2 -->
       <div class="ui-block-mainView">

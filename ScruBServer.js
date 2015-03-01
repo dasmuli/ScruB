@@ -13,7 +13,7 @@ server.listen(conf.port);
 if ('production' == app.get('env'))
 {
    var cacher = new Cacher();
-   //app.disable('etag'); // added for Safari
+   app.disable('etag'); // added for Safari
 
    //app.get('/*', function(req, res, next){ 
 	//        res.setHeader('Last-Modified', (new Date()).toUTCString());
