@@ -1,6 +1,6 @@
 
 /* Server and client use this object to store scrum data. */
-var scrumDataArray = new Array();
+//var scrumDataArray = new Array();
 
 var ScrumData = {  // Default value of properties
   id: 					-1,
@@ -15,6 +15,7 @@ var ScrumData = {  // Default value of properties
 }
 
 var scrumDataManager = {
+	scrumDataArray: [],
 	priorityStartId: 0,
 	lastFinishedId: -1,
 	dirtyFlag: false,
@@ -34,115 +35,116 @@ var scrumDataManager = {
 	},
 	Finish: function ( id ) {
 		console.log( "Finish:" + id );
-		if( scrumDataArray[ id ].isFinished )
+		if( this.scrumDataArray[ id ].isFinished )
 		{
 		    return false;
 		}
-	        var oldNext = scrumDataArray[ id ].nextPriorityId;
-                var oldPrevious = scrumDataArray[ id ].previousPriorityId;
+	        var oldNext = this.scrumDataArray[ id ].nextPriorityId;
+                var oldPrevious = this.scrumDataArray[ id ].previousPriorityId;
 
-		scrumDataArray[ id ].isFinished = true;
-		scrumDataArray[ id ].nextPriorityId = scrumDataManager.lastFinishedId;
-		scrumDataArray[ id ].previousPriorityId = -1;
+		this.scrumDataArray[ id ].isFinished = true;
+		this.scrumDataArray[ id ].nextPriorityId = this.lastFinishedId;
+		this.scrumDataArray[ id ].previousPriorityId = -1;
 		// fix open list
 		if( oldPrevious != -1 )
 		{
-	            scrumDataArray[ oldPrevious ].nextPriorityId = oldNext;
+	            this.scrumDataArray[ oldPrevious ].nextPriorityId = oldNext;
 		}
 		if( oldNext != -1 )
 		{
-	            scrumDataArray[ oldNext ].previousPriorityId = oldPrevious;
+	            this.scrumDataArray[ oldNext ].previousPriorityId = oldPrevious;
 		}
                 if( scrumDataManager.priorityStartId == id )
 		{
-		    scrumDataManager.priorityStartId = oldNext;
+		    this.priorityStartId = oldNext;
 		}
 		// fix finished list
-		if( !(scrumDataManager.lastFinishedId == -1) )
+		if( !( this.lastFinishedId == -1) )
 		{
-		   scrumDataArray[ scrumDataManager.lastFinishedId ].previousPriorityId = id;
+		   this.scrumDataArray[ this.lastFinishedId ].previousPriorityId = id;
 		}
-                scrumDataManager.lastFinishedId = id;
+                this.lastFinishedId = id;
                 this.dirtyFlag = true;
 		this.versionCounter++;
 		return true;
 	},
 
 	UpdateData: function ( data ) {
-		scrumDataArray[ data.id ].featurename = data.featurename;
-		scrumDataArray[ data.id ].complexity  = data.complexity;
-		scrumDataArray[ data.id ].priority    = data.priority;
+		this.scrumDataArray[ data.id ].featurename = data.featurename;
+		this.scrumDataArray[ data.id ].complexity  = data.complexity;
+		this.scrumDataArray[ data.id ].priority    = data.priority;
 		this.dirtyFlag = true;
 		this.versionCounter++;
 	},
 	AddDataToFront: function ( data ) {
-		console.log( "Adding data at array pos:" + scrumDataArray.length );
-	        var newPos = scrumDataArray.length;
-		scrumDataArray.push( data );
-		scrumDataArray[ newPos ].previousPriorityId = -1;
-		scrumDataArray[ newPos ].nextPriorityId     = scrumDataManager.priorityStartId;
-		if( scrumDataManager.priorityStartId != -1 )
+		console.log( "Adding data at array pos:" + this.scrumDataArray.length );
+	        var newPos = this.scrumDataArray.length;
+		this.scrumDataArray.push( data );
+		this.scrumDataArray[ newPos ].previousPriorityId = -1;
+		this.scrumDataArray[ newPos ].nextPriorityId     = this.priorityStartId;
+		if( this.priorityStartId != -1 )
 		{
-		    scrumDataArray[ scrumDataManager.priorityStartId ].previousPriorityId = newPos;
+		    this.scrumDataArray[ this.priorityStartId ].previousPriorityId = newPos;
 		}
-		scrumDataManager.priorityStartId = newPos;
+		this.priorityStartId = newPos;
 		this.dirtyFlag = true;
 		this.versionCounter++;
 	},
 
     InitTestData: function () {
-		scrumDataArray = new Array();
-		scrumDataManager.priorityStartId = 0;
-		scrumDataManager.lastFinishedId = -1;
+		this.scrumDataArray = new Array();
+		this.priorityStartId = 0;
+		this.lastFinishedId = -1;
 		for( i = 0; i < 3; i++ )
 		{
-			scrumDataArray[ i ] = new scrumDataManager.DataObject( i );
-			scrumDataArray[ i ].priority = i;
+			this.scrumDataArray[ i ] = new this.DataObject( i );
+			this.scrumDataArray[ i ].priority = i;
 			if( i < 2 )
 			{
-				scrumDataArray[ i ].nextPriorityId = i + 1;
+				this.scrumDataArray[ i ].nextPriorityId = i + 1;
 			}
 			if( i > 0 )
 			{
-				scrumDataArray[ i ].previousPriorityId = i - 1;
+				this.scrumDataArray[ i ].previousPriorityId = i - 1;
 			}
 		}
 		this.dirtyFlag = false;
 		this.versionCounter = 0;
     },
 	PriorityListLength: function () {
-		var currentData = scrumDataArray[ scrumDataManager.priorityStartId ];
+		var currentData = this.scrumDataArray[ this.priorityStartId ];
 		var count = 0;
-		while( currentData.nextPriorityId != -1 && count < scrumDataArray.length )
+		while( currentData.nextPriorityId != -1 && count < this.scrumDataArray.length )
 		{
-			currentData = scrumDataArray[ currentData.nextPriorityId ];
+			currentData = this.scrumDataArray[ currentData.nextPriorityId ];
 			count++;
 		}
 		return count + 1;
     },
 	MovePriorityUp: function ( dataToBeMovedUp ) {
-		if( scrumDataArray[ dataToBeMovedUp ].previousPriorityId != -1 ) // cannot be moved if first element
+		if( this.scrumDataArray[ dataToBeMovedUp ].previousPriorityId != -1 )
+			// cannot be moved if first element
 		{
 			// get all involved ids
-			var dataToBeMovedDown = scrumDataArray[ dataToBeMovedUp ].previousPriorityId;
-			var precedingElementId = scrumDataArray[ dataToBeMovedDown ].previousPriorityId
-			var followingElementId = scrumDataArray[ dataToBeMovedUp ].nextPriorityId;
+			var dataToBeMovedDown = this.scrumDataArray[ dataToBeMovedUp ].previousPriorityId;
+			var precedingElementId = this.scrumDataArray[ dataToBeMovedDown ].previousPriorityId
+			var followingElementId = this.scrumDataArray[ dataToBeMovedUp ].nextPriorityId;
 			// change order of elements
-			scrumDataArray[ dataToBeMovedDown ].previousPriorityId = dataToBeMovedUp;
-			scrumDataArray[ dataToBeMovedUp ].nextPriorityId = dataToBeMovedDown;
-			scrumDataArray[ dataToBeMovedUp ].previousPriorityId = precedingElementId;
-			scrumDataArray[ dataToBeMovedDown ].nextPriorityId = followingElementId;
+			this.scrumDataArray[ dataToBeMovedDown ].previousPriorityId = dataToBeMovedUp;
+			this.scrumDataArray[ dataToBeMovedUp ].nextPriorityId = dataToBeMovedDown;
+			this.scrumDataArray[ dataToBeMovedUp ].previousPriorityId = precedingElementId;
+			this.scrumDataArray[ dataToBeMovedDown ].nextPriorityId = followingElementId;
 			// change order outer elements
 			if( precedingElementId != -1 )
 			{
-				scrumDataArray[ precedingElementId ].nextPriorityId = dataToBeMovedUp;
+				this.scrumDataArray[ precedingElementId ].nextPriorityId = dataToBeMovedUp;
 			}
 			if( followingElementId != -1 )
 			{
-				scrumDataArray[ followingElementId ].previousPriorityId = dataToBeMovedDown;
+				this.scrumDataArray[ followingElementId ].previousPriorityId = dataToBeMovedDown;
 			}
 			// new first element
-			if( scrumDataArray[ dataToBeMovedUp ].previousPriorityId == -1 ) 
+			if( this.scrumDataArray[ dataToBeMovedUp ].previousPriorityId == -1 ) 
 			{
 				this.priorityStartId = dataToBeMovedUp;
 			}
@@ -157,34 +159,37 @@ var scrumDataManager = {
     },
 	IsIntegrityOk: function () {
 		// check ids are existing exactly once
-		for( i = 0; i < scrumDataArray.length; i++ )
+		for( i = 0; i < this.scrumDataArray.length; i++ )
 		{
-			if( scrumDataArray[ i ].id != i )
+			if( this.scrumDataArray[ i ].id != i )
 			{
 				return false;
 			}
 		}
 		// check priority list is ok
-		var currentData = scrumDataArray[ scrumDataManager.priorityStartId ];
+		var currentData = this.scrumDataArray[ this.priorityStartId ];
 		if( currentData.previousPriorityId != -1 )
 		{
-			console.log( "scrumDataManager.IsIntegrityOk: Initial priority field " + currentData.id + " has previous element" );
+			console.log( "scrumDataManager.IsIntegrityOk: Initial priority field " 
+				+ currentData.id + " has previous element" );
 			return false;
 		}
 		var count = 0;
-		while( currentData.nextPriorityId != -1 && count < scrumDataArray.length )
+		while( currentData.nextPriorityId != -1 && count < this.scrumDataArray.length )
 		{
-			nextData = scrumDataArray[ currentData.nextPriorityId ];
+			nextData = this.scrumDataArray[ currentData.nextPriorityId ];
 			if( nextData.previousPriorityId != currentData.id )
 			{
-				console.log( "scrumDataManager.IsIntegrityOk: Linked list error: " + nextData.id + " has not set "
-					+ currentData.id + " as previous element, but is the successor.");
+				console.log( "scrumDataManager.IsIntegrityOk: Linked list error: " 
+						+ nextData.id + " has not set "
+					        + currentData.id 
+						+ " as previous element, but is the successor.");
 				return false;
 			}
 			currentData = nextData;
 			count++;
 		}
-		if( count >= scrumDataArray.length )
+		if( count >= this.scrumDataArray.length )
 		{
 			console.log( "scrumDataManager.IsIntegrityOk: Too many elements in priority list" );
 			return false;

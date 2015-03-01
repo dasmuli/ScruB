@@ -2,6 +2,7 @@
 var assert = require("assert")
 var fs = require( 'fs');
 var vm = require( 'vm');
+var expect = require( 'expect');
 var scrumDB = require( '../ScrumDB.js' );
 
 // load scrumdata.js
@@ -21,11 +22,11 @@ it('should exist a scrumDB', function () {
 });
 
 it('should generate a file in the data directory', function ( done ) {
-	  assert.notEqual( scrumDataArray, null );
+	  assert.notEqual( scrumDataManager.scrumDataArray, null );
 	  assert.notEqual( scrumDataManager, null );
 	  scrumDataManager.InitTestData();
 	  scrumDB.SaveScrumDataAsync( "Test",
-			 scrumDataArray,
+			 scrumDataManager.scrumDataArray,
 			 scrumDataManager.priorityStartId,
 			 done );
 });

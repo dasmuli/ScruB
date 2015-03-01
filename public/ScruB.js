@@ -44,9 +44,9 @@ function UpdateBacklogData( scrumdata )
 {
 	console.log( "UpdateBacklogData for " + scrumdata.id + ", prio: " + scrumdata.priority );
 	// try to find elementFromPoint
-	if( scrumDataArray[ scrumdata.id ] )
+	if( scrumDataManager.scrumDataArray[ scrumdata.id ] )
 	{
-		scrumDataArray[ scrumdata.id ] = scrumdata;
+		scrumDataManager.scrumDataArray[ scrumdata.id ] = scrumdata;
 	}
 	if( $( "#editLink"+scrumdata.id ).length != 0 )
 	{
@@ -119,10 +119,10 @@ $(document).on("pageinit", "#dataPage", function()
 	console.log( "pageinit" );
     $("#editData").on("popupbeforeposition", function(event, ui) { // othre event is: popupafteropen
         console.log( "popupbeforeposition: " + scrumDataIdInEditor );
-	$("#textinputName").val( scrumDataArray[ scrumDataIdInEditor ].featurename );
+	$("#textinputName").val( scrumDataManager.scrumDataArray[ scrumDataIdInEditor ].featurename );
     });
 	$( "#editorOkButton" ).click(function() {
-		scrumDataArray[ scrumDataIdInEditor ].featurename = $("#textinputName").val();
+		scrumDataManager.scrumDataArray[ scrumDataIdInEditor ].featurename = $("#textinputName").val();
 		SendUpdateOfScrumDataToServer();
 	});	
 });
@@ -136,7 +136,7 @@ function SendUpdateOfScrumDataToServer()
 {
 	socket.emit('updateScrumData', {
 		id			: scrumDataIdInEditor,
-		featurename	: scrumDataArray[ scrumDataIdInEditor ].featurename });
+		featurename	: scrumDataManager.scrumDataArray[ scrumDataIdInEditor ].featurename });
 }
 
 
@@ -151,13 +151,13 @@ $( document ).ready(function() {
     // update non-order related data
     socket.on('scrubdata', function (data) {
 		console.log( "received scrubdata: " + data.featurename );
-		scrumDataArray[ data.id ] = data;
+		scrumDataManager.scrumDataArray[ data.id ] = data;
 		UpdateBacklogData( data );
     });
 	
 	socket.on('scrubmoveup', function ( lowerElementId ) {
 		console.log( "scrubmoveup: " + lowerElementId );
-		var upperElementId = scrumDataArray[ lowerElementId ].previousPriorityId;
+		var upperElementId = scrumDataManager.scrumDataArray[ lowerElementId ].previousPriorityId;
 		scrumDataManager.MovePriorityUp( lowerElementId );
 		if( upperElementId != -1 )
 		{
@@ -168,14 +168,15 @@ $( document ).ready(function() {
 	// complete scrum data array
 	socket.on('scrubfulldata', function ( data ) {
 		$("#scrumDataList").empty();
-		scrumDataArray = data.dataArray.slice();
+		scrumDataManager.scrumDataArray = data.dataArray.slice();
 		scrumDataManager.priorityStartId = data.priorityStartId;
-		console.log( "scrubdata changed, length:" + scrumDataArray.length );
+		console.log( "scrubdata changed, length:" 
+			    + scrumDataManager.scrumDataArray.length );
 		var prioId = scrumDataManager.priorityStartId;
 		while( prioId != -1 )
 		{
-			CreateDataListEntry( scrumDataArray[ prioId ] );
-			prioId = scrumDataArray[ prioId ].nextPriorityId;
+			CreateDataListEntry( scrumDataManager.scrumDataArray[ prioId ] );
+			prioId = scrumDataManager.scrumDataArray[ prioId ].nextPriorityId;
 		}
     });
     // Nachricht senden

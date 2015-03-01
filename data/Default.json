@@ -1,0 +1,26 @@
+{
+ "priorityStartId": 2,
+ "scrumDataArray": [
+  {
+   "id": 0,
+   "featurename": "test4",
+   "isFinished": false,
+   "previousPriorityId": 2,
+   "nextPriorityId": 1
+  },
+  {
+   "id": 1,
+   "featurename": "test6",
+   "isFinished": false,
+   "previousPriorityId": 0,
+   "nextPriorityId": -1
+  },
+  {
+   "id": 2,
+   "featurename": "test3",
+   "isFinished": false,
+   "previousPriorityId": -1,
+   "nextPriorityId": 0
+  }
+ ]
+}
