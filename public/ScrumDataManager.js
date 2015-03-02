@@ -21,6 +21,9 @@ var scrumDataManager = {
 	dirtyFlag: false,
 	name: "Default",
 	versionCounter: 0,
+	commandToClient: {
+	    ADD_DATA_TO_FRONT: 'addDataToFront'
+	},
 	DataObject: function ( id ) {
 		this.id 				= id;
 		this.featurename 		= "TestData" + id;
@@ -77,7 +80,6 @@ var scrumDataManager = {
 		this.versionCounter++;
 	},
 	AddDataToFront: function ( data ) {
-		console.log( "Adding data at array pos:" + this.scrumDataArray.length );
 	        var newPos = this.scrumDataArray.length;
 		this.scrumDataArray.push( data );
 		this.scrumDataArray[ newPos ].previousPriorityId = -1;

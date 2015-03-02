@@ -8,11 +8,16 @@ var io          = require( 'socket.io-client');
 var expect      = require( 'expect');
 var scrumServer = require( '../ScrumServer.js' ).listen( server );
 
+_scrumServer.scrumDataManager.InitTestData();
+_scrumServer.scrumDataManager.name = "TestServer";
+
 server.listen( 3001, function() {
 
 describe( 'ScrumServer', function() {
 
     var socket;
+    var testData;
+    var dataReceivedCallback;
     var socketURL = 'http://127.0.0.1:3001'
     var socketOptions = {
         transports: ['websocket'],
@@ -32,7 +37,11 @@ describe( 'ScrumServer', function() {
 	socket.on('disconnect', function() {
 	})
 	
-	//done(); // done must be called to continue
+	socket.on( _scrumServer.scrumDataManager.commandToClient.ADD_DATA_TO_FRONT, function( _addedData ) {
+		addedData = _addedData;
+	        assert.equal( JSON.stringify( _addedData), JSON.stringify( testData ) );
+		dataReceivedCallback();
+	})
     });
 
     afterEach(function(done) {
@@ -45,13 +54,32 @@ describe( 'ScrumServer', function() {
 	done();
     });
 
-it('should be running if mocha is installed', function () {
+it('should accept a client connection', function () {
+	  // connect is in beforeEach, disconnect in afterEach
 	  assert.equal( 1, 1 );
 });
 
-it('should accept a client connection', function () {
-	  assert.equal( 1, 1 );
+it('should get some data on connect', function () {
+	  assert.notEqual( _scrumServer, null );
+	  assert.notEqual( _scrumServer.scrumDataManager, null );
+	  assert.notEqual( _scrumServer.scrumDataManager.scrumDataArray, null );
+	  assert.equal( _scrumServer.scrumDataManager.scrumDataArray.length, 3 );
+	  assert.equal( _scrumServer.scrumDataManager.priorityStartId, 0 );
 });
+
+it('should add and broadcast added data', function( _dataReceivedCallback ) {
+	  testData = new _scrumServer.scrumDataManager.DataObject();
+	  dataReceivedCallback = _dataReceivedCallback;
+	  assert.notEqual( testData, null );
+	  _scrumServer.ReceiveAddData( testData );
+	  assert.equal( _scrumServer.scrumDataManager.scrumDataArray.length, 4 );
+	  // new first element
+	  assert.equal( _scrumServer.scrumDataManager.scrumDataArray[ 3 ].previousPriorityId, -1 );
+	  // added at front, so new start id for new element
+	  assert.equal( _scrumServer.scrumDataManager.priorityStartId, 3 );
+});
+
+
 
 } ); // of describe
 

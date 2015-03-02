@@ -23,6 +23,10 @@ this.scrumDB.scrumDataArray = this.scrumDataManager.scrumDataArray;
 
 //////////////////////////  Methods  //////////////////////////
 
+this.ReceiveAddData = function( data ){
+    this.scrumDataManager.AddDataToFront( data );
+    this.io.sockets.emit( this.scrumDataManager.commandToClient.ADD_DATA_TO_FRONT, data );
+}
 
 ///////////////  websocket + events  //////////////////////////
 
