@@ -24,6 +24,10 @@ var scrumDataManager = {
 	commandToClient: {
 	    ADD_DATA_TO_FRONT: 'addDataToFront'
 	},
+    commandToServer: {
+	    ADD_DATA_TO_FRONT: 'addDataToFront'
+	},
+
 	DataObject: function ( id ) {
 		this.id 				= id;
 		this.featurename 		= "TestData" + id;

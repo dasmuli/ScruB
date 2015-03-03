@@ -60,6 +60,12 @@ _scrumServer.io.sockets.on('connection', function (socket) {
 		  _scrumServer.io.sockets.emit( 'scrubmoveup', data.id );
 		}
 	});
+    
+    socket.on( _scrumServer.scrumDataManager.commandToServer.ADD_DATA_TO_FRONT, function ( data )
+    {
+        _scrumServer.ReceiveAddData( data );
+	});
+
 	
 	// Send complete array data to client
 	socket.emit('scrubfulldata', {

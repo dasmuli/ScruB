@@ -39,8 +39,7 @@ describe( 'ScrumServer', function() {
 	
 	socket.on( _scrumServer.scrumDataManager.commandToClient.ADD_DATA_TO_FRONT, function( _addedData ) {
 		addedData = _addedData;
-	        assert.equal( JSON.stringify( _addedData), JSON.stringify( testData ) );
-		dataReceivedCallback();
+		dataReceivedCallback( _addedData );
 	})
     });
 
@@ -67,9 +66,14 @@ it('should get some data on connect', function () {
 	  assert.equal( _scrumServer.scrumDataManager.priorityStartId, 0 );
 });
 
-it('should add and broadcast added data', function( _dataReceivedCallback ) {
+it('should add and broadcast added data', function( done ) {
 	  testData = new _scrumServer.scrumDataManager.DataObject();
-	  dataReceivedCallback = _dataReceivedCallback;
+      var receiveCallback = function( _addedData )
+      {
+	      assert.equal( JSON.stringify( _addedData), JSON.stringify( testData ) );
+          done();
+      }
+	  dataReceivedCallback = receiveCallback;
 	  assert.notEqual( testData, null );
 	  _scrumServer.ReceiveAddData( testData );
 	  assert.equal( _scrumServer.scrumDataManager.scrumDataArray.length, 4 );
@@ -79,6 +83,23 @@ it('should add and broadcast added data', function( _dataReceivedCallback ) {
 	  assert.equal( _scrumServer.scrumDataManager.priorityStartId, 3 );
 });
 
+it('should receive add commands', function( _dataReceivedCallback ) {
+	  testData = new _scrumServer.scrumDataManager.DataObject();
+      var callbackOnReceive = function()
+      {
+        //_scrumServer.ReceiveAddData( testData );
+	    assert.equal( _scrumServer.scrumDataManager.scrumDataArray.length, 5 );
+	    // new first element
+	    assert.equal( _scrumServer.scrumDataManager.scrumDataArray[ 4 ].featurename, 'TestSendData' );
+	    // added at front, so new start id for new element
+	    assert.equal( _scrumServer.scrumDataManager.priorityStartId, 4);
+        _dataReceivedCallback();
+      }
+      testData.featurename = "TestSendData";
+      testData.complexity  = 40;
+	  dataReceivedCallback = callbackOnReceive;
+      socket.emit( _scrumServer.scrumDataManager.commandToServer.ADD_DATA_TO_FRONT, testData );
+	  });
 
 
 } ); // of describe
