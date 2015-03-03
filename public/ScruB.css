@@ -122,3 +122,22 @@ canvas{
       width: 24.925%;
     }
 }
+
+.custom-label-flipswitch.ui-flipswitch .ui-btn.ui-flipswitch-on {
+   text-indent: -4.5em;
+}
+.custom-label-flipswitch.ui-flipswitch .ui-btn.ui-flipswitch-off {
+   text-indent: 0.5em;
+}
+.custom-label-flipswitch.ui-flipswitch {
+   width: 8.875em;
+}
+.custom-label-flipswitch.ui-flipswitch.ui-flipswitch-active {
+   width: 1.875em;
+   padding-left: 7em;
+}
+
+
+
+
+
