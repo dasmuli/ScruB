@@ -58,6 +58,16 @@ function UpdateBacklogData( scrumdata )
 	}
 }
 
+function AddDataDataFrontList( scrumData )
+{
+	console.log( "Adding data: " + scrumData.id + ", prio: " + scrumData.priority );
+	CreateDataListEntry( scrumData );
+    if( scrumData.nextPriorityId != -1 )
+    {
+	    $( "#scrumListId"+scrumData.id ).insertBefore( ($ ( "#scrumListId"+scrumData.nextPriorityId ) ) );
+    }
+}
+
 
 
 
@@ -125,6 +135,13 @@ $(document).on("pageinit", "#dataPage", function()
 		scrumDataManager.scrumDataArray[ scrumDataIdInEditor ].featurename = $("#textinputName").val();
 		SendUpdateOfScrumDataToServer();
 	});	
+    $( "#editorAddOkButton" ).click(function() {
+        console.log( "Add button clicked." );
+		var name        = $("#textinputNameAdd").val();
+		var complexity  = $("#selectComplexityAddPopup").val();
+		var description = $("#descriptionAreaAddPopup").val();
+		SendAddDataToServer( name, complexity, description);
+	});	
 });
 
 
@@ -139,7 +156,14 @@ function SendUpdateOfScrumDataToServer()
 		featurename	: scrumDataManager.scrumDataArray[ scrumDataIdInEditor ].featurename });
 }
 
-
+function SendAddDataToServer( name, _complexity, _description )
+{
+    var data = new scrumDataManager.DataObject( -1 );
+    data.featurename = name;
+    data.complexity  = _complexity;
+    data.description = _description;
+	socket.emit( scrumDataManager.commandToServer.ADD_DATA_TO_FRONT, data );
+}
 
 
 /////////////////////   Network events   /////////////////////////////////////////////////
@@ -148,6 +172,12 @@ $( document ).ready(function() {
 	// initiate WebSocket
     socket = io.connect();
 	
+    socket.on( scrumDataManager.commandToClient.ADD_DATA_TO_FRONT, function ( data ) {
+		console.log( "received add data: " + data.featurename );
+		scrumDataManager.AddDataToFront( data );
+		AddDataDataFrontList( data );
+    });
+
     // update non-order related data
     socket.on('scrubdata', function (data) {
 		console.log( "received scrubdata: " + data.featurename );
@@ -156,7 +186,7 @@ $( document ).ready(function() {
     });
 	
 	socket.on('scrubmoveup', function ( lowerElementId ) {
-		console.log( "scrubmoveup: " + lowerElementId );
+		console.log( "received scrubmoveup: " + lowerElementId );
 		var upperElementId = scrumDataManager.scrumDataArray[ lowerElementId ].previousPriorityId;
 		scrumDataManager.MovePriorityUp( lowerElementId );
 		if( upperElementId != -1 )

@@ -86,6 +86,7 @@ var scrumDataManager = {
 	AddDataToFront: function ( data ) {
 	        var newPos = this.scrumDataArray.length;
 		this.scrumDataArray.push( data );
+		this.scrumDataArray[ newPos ].id                 = this.scrumDataArray.length - 1;
 		this.scrumDataArray[ newPos ].previousPriorityId = -1;
 		this.scrumDataArray[ newPos ].nextPriorityId     = this.priorityStartId;
 		if( this.priorityStartId != -1 )
