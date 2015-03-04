@@ -14,9 +14,9 @@ function SwapListElements( upperElementId, lowerElementId )
 	$( "#scrumListId"+upperElementId ).insertAfter( ($ ( "#scrumListId"+lowerElementId ) ) );
 }
 
-function CreateDataListEntry( scrumdata )
+function CreateDataListEntry( list, scrumdata )
 {
-	$("#scrumDataList").append("<li id=\"scrumListId"
+	$( list ).append("<li id=\"scrumListId"
 			+scrumdata.id
 			+"\"><a href=\"#editData\" id=\"editLink"
 			+scrumdata.id
@@ -25,9 +25,9 @@ function CreateDataListEntry( scrumdata )
 			+"</a><a href=\"#\" id=\"moveDataUp"
 			+scrumdata.id
 			+"\">Edit</a></li>");
-	if ($("#scrumDataList").hasClass('ui-listview')) 
+	if ($( list ).hasClass('ui-listview')) 
 	{
-		$("#scrumDataList").listview('refresh'); //this listview has already been initialized, so refresh it
+		$( list ).listview('refresh'); //this listview has already been initialized, so refresh it
 	}
 	$( "#editLink"+scrumdata.id ).click(function() {
 		scrumDataIdInEditor = scrumdata.id;
@@ -54,17 +54,29 @@ function UpdateBacklogData( scrumdata )
 	}
 	else // if not found: add
 	{	
-		CreateDataListEntry( scrumdata );
+		CreateDataListEntry( '#scrumDataList', scrumdata );
 	}
 }
 
 function AddDataDataFrontList( scrumData )
 {
 	console.log( "Adding data: " + scrumData.id + ", prio: " + scrumData.priority );
-	CreateDataListEntry( scrumData );
+	CreateDataListEntry( '#scrumDataList', scrumData );
     if( scrumData.nextPriorityId != -1 )
     {
 	    $( "#scrumListId"+scrumData.id ).insertBefore( ($ ( "#scrumListId"+scrumData.nextPriorityId ) ) );
+    }
+}
+
+function MoveFromOpenToCloseList( data )
+{
+	console.log( "Moving from open to close: " + data.id );
+    $( "#scrumListId"+data.id ).remove();
+    //$( "#scrumDoneList" ).prepend( ($ ( "#scrumListId"+data.id ) ) );
+    CreateDataListEntry( '#scrumDoneList', data );
+    if( data.nextPriorityId != -1 )
+    {
+        $( "#scrumListId"+data.id ).insertBefore( ($ ( "#scrumListId"+data.nextPriorityId ) ) );
     }
 }
 
@@ -127,13 +139,24 @@ $( document ).on( "pagecontainershow", function( event, ui ) {
 $(document).on("pageinit", "#dataPage", function()
 {
 	console.log( "pageinit" );
-    $("#editData").on("popupbeforeposition", function(event, ui) { // othre event is: popupafteropen
+    // other event is: popupafteropen
+    $("#editData").on("popupbeforeposition", function(event, ui) { 
         console.log( "popupbeforeposition: " + scrumDataIdInEditor );
 	$("#textinputName").val( scrumDataManager.scrumDataArray[ scrumDataIdInEditor ].featurename );
     });
 	$( "#editorOkButton" ).click(function() {
-		scrumDataManager.scrumDataArray[ scrumDataIdInEditor ].featurename = $("#textinputName").val();
-		SendUpdateOfScrumDataToServer();
+        if( $( "#flipFinished" ).is( ':checked' ) )
+        {
+            console.log( "Checkbox checked" );
+            scrumDataManager.scrumDataArray[ scrumDataIdInEditor ].featurename = 
+            $("#textinputName").val();
+     		SendUpdateOfScrumDataToServer();
+        }
+        else
+        {
+           console.log( "Closing issue" );
+           SendDoneToServer();
+        }
 	});	
     $( "#editorAddOkButton" ).click(function() {
         console.log( "Add button clicked." );
@@ -156,6 +179,11 @@ function SendUpdateOfScrumDataToServer()
 		featurename	: scrumDataManager.scrumDataArray[ scrumDataIdInEditor ].featurename });
 }
 
+function SendDoneToServer()
+{
+	socket.emit( scrumDataManager.commandToServer.FINISH,
+                 scrumDataManager.scrumDataArray[ scrumDataIdInEditor ] );
+}
 function SendAddDataToServer( name, _complexity, _description )
 {
     var data = new scrumDataManager.DataObject( -1 );
@@ -172,6 +200,13 @@ $( document ).ready(function() {
 	// initiate WebSocket
     socket = io.connect();
 	
+    socket.on( scrumDataManager.commandToClient.FINISH, function ( data ) {
+		console.log( "received finish data: " + data.featurename );
+        scrumDataManager.UpdateData( data );
+        scrumDataManager.Finish( data.id );
+		MoveFromOpenToCloseList( data );
+    });
+
     socket.on( scrumDataManager.commandToClient.ADD_DATA_TO_FRONT, function ( data ) {
 		console.log( "received add data: " + data.featurename );
 		scrumDataManager.AddDataToFront( data );
@@ -198,16 +233,26 @@ $( document ).ready(function() {
 	// complete scrum data array
 	socket.on('scrubfulldata', function ( data ) {
 		$("#scrumDataList").empty();
-		scrumDataManager.scrumDataArray = data.dataArray.slice();
+		scrumDataManager.scrumDataArray  = data.dataArray.slice();
 		scrumDataManager.priorityStartId = data.priorityStartId;
-		console.log( "scrubdata changed, length:" 
+		scrumDataManager.lastFinishedId  = data.lastFinishedId;
+		console.log( "full scrubdata received, length:" 
 			    + scrumDataManager.scrumDataArray.length );
 		var prioId = scrumDataManager.priorityStartId;
 		while( prioId != -1 )
 		{
-			CreateDataListEntry( scrumDataManager.scrumDataArray[ prioId ] );
+			CreateDataListEntry( '#scrumDataList',
+                                 scrumDataManager.scrumDataArray[ prioId ] );
 			prioId = scrumDataManager.scrumDataArray[ prioId ].nextPriorityId;
 		}
+        prioId = scrumDataManager.lastFinishedId;
+		while( prioId != undefined &&  prioId != -1 )
+		{
+			CreateDataListEntry( '#scrumDoneList'
+                                 ,scrumDataManager.scrumDataArray[ prioId ] );
+			prioId = scrumDataManager.scrumDataArray[ prioId ].nextPriorityId;
+		}
+
     });
     // Nachricht senden
     function senden(){

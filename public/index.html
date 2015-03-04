@@ -15,8 +15,9 @@
      <h1>ScruB</h1>
      <div data-role="navbar">
 	<ul>
-          <li><a href="#mainPage" class="ui-btn-active ui-state-persist">Chart</a></li>
+      <li><a href="#mainPage" class="ui-btn-active ui-state-persist">Chart</a></li>
  	  <li><a href="#dataPage">Open</a></li>
+ 	  <li><a href="#donePage">Done</a></li>
 	</ul>
      </div><!-- /navbar -->
   </div>
@@ -42,6 +43,42 @@
 </div>  <!-- End of page -->
 
 
+<div data-role="page" id="donePage" data-transition="flow">
+  <div data-role="header">
+     <h1>ScruB</h1>
+     <div data-role="navbar">
+	  <ul>
+        <li><a href="#mainPage">Chart</a></li>
+ 	    <li><a href="#dataPage">Open</a></li>
+        <li><a href="#mainPage" class="ui-btn-active ui-state-persist">Done</a></li>
+	  </ul>
+     </div><!-- /navbar -->
+  </div>
+  <div data-role="main" class="ui-content">
+	<div class="ui-base">
+		<!-- Lead story block -->
+		<div class="ui-block-navigation">
+			<div class="ui-body ui-body-d">
+			</div>
+		</div>
+		<!-- secondary story block #2 -->
+		<div class="ui-block-mainView">
+			<div class="ui-body ui-body-d">
+				<h2 class="scrumInfoOptional">Done</h2>
+                <div class="scrumdata-scroll-view">
+                   <ul data-role="listview" data-split-icon="arrow-u" 
+                       data-split-theme="a" data-inset="true" 
+                       id="scrumDoneList">
+                  </ul>
+                </div>
+			</div>
+		</div>
+	</div><!-- /ui-base -->
+  </div> <!-- main content -->
+</div>  <!-- End of page -->
+
+
+
 <div data-role="page" id="dataPage" data-transition="flow">
   <div data-role="header">
      <h1>ScruB</h1>
@@ -49,6 +86,7 @@
             <ul>
               <li><a href="#mainPage">Chart</a></li>
               <li><a href="#dataPage" class="ui-btn-active ui-state-persist">Open</a></li>
+              <li><a href="#donePage">Done</a></li>
             </ul>
           </div><!-- /navbar -->
 
@@ -58,7 +96,7 @@
       <!-- Lead story block -->
       <div class="ui-block-navigation">
         <div class="ui-body ui-body-d">
-	  <div data-role="navbar">
+	      <div data-role="navbar">
             <ul>
 		    <li><a href="#addData" data-rel="popup"
 			     class="ui-btn ui-corner-all ui-shadow ui-btn-inline"
@@ -92,14 +130,10 @@
                 data-wrapper-class="custom-label-flipswitch"
                 type="checkbox">
             </form>
-
              <a href="" id="editorOkButton" data-rel="back" class="ui-shadow ui-btn
 		     ui-corner-all ui-btn-b ui-icon-check ui-btn-icon-left ui-btn-inline ui-mini">Ok</a>
             <a href="" data-rel="back" class="ui-shadow ui-btn ui-corner-all
 		    ui-btn-inline ui-mini data-close-btn-text">Cancel</a>
-            
-
-
 	  </div><!-- editData Pop Up -->
 
 	  <div data-role="popup" id="addData" data-theme="a" data-overlay-theme="a"

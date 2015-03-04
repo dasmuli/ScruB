@@ -22,10 +22,12 @@ var scrumDataManager = {
 	name: "Default",
 	versionCounter: 0,
 	commandToClient: {
-	    ADD_DATA_TO_FRONT: 'addDataToFront'
+	    ADD_DATA_TO_FRONT: 'addDataToFront',
+	    FINISH:            'finishData'
 	},
     commandToServer: {
-	    ADD_DATA_TO_FRONT: 'addDataToFront'
+	    ADD_DATA_TO_FRONT: 'addDataToFront',
+	    FINISH:            'finishData'
 	},
 
 	DataObject: function ( id ) {
@@ -41,13 +43,13 @@ var scrumDataManager = {
 		return this.dirtyFlag;
 	},
 	Finish: function ( id ) {
-		console.log( "Finish:" + id );
 		if( this.scrumDataArray[ id ].isFinished )
 		{
+		    console.log( "Allready finished!" );
 		    return false;
 		}
-	        var oldNext = this.scrumDataArray[ id ].nextPriorityId;
-                var oldPrevious = this.scrumDataArray[ id ].previousPriorityId;
+	    var oldNext = this.scrumDataArray[ id ].nextPriorityId;
+        var oldPrevious = this.scrumDataArray[ id ].previousPriorityId;
 
 		this.scrumDataArray[ id ].isFinished = true;
 		this.scrumDataArray[ id ].nextPriorityId = this.lastFinishedId;

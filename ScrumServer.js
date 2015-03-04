@@ -53,6 +53,17 @@ _scrumServer.io.sockets.on('connection', function (socket) {
 				_scrumServer.scrumDataManager.scrumDataArray[ data.id ].previousPriorityId
 			});
 	});
+    
+    socket.on( _scrumServer.scrumDataManager.commandToServer.FINISH, function (data) {
+		_scrumServer.scrumDataManager.UpdateData( data );
+		if( _scrumServer.scrumDataManager.Finish( data.id ) )
+        {
+		    _scrumServer.io.sockets.emit( _scrumServer.scrumDataManager.commandToClient.FINISH,
+                _scrumServer.scrumDataManager.scrumDataArray[ data.id ]
+			);
+        }
+	});
+
 	
 	socket.on('moveDataUp', function (data) {
 		if( _scrumServer.scrumDataManager.MovePriorityUp( data.id ) )
@@ -71,6 +82,7 @@ _scrumServer.io.sockets.on('connection', function (socket) {
 	socket.emit('scrubfulldata', {
 		dataArray:	        _scrumServer.scrumDataManager.scrumDataArray,
 		priorityStartId:	_scrumServer.scrumDataManager.priorityStartId,
+		lastFinishedId:	    _scrumServer.scrumDataManager.lastFinishedId,
 	} );
 });
 
