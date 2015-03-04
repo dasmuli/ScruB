@@ -18,7 +18,7 @@ this.LoadScrumDataSync = function( name )
     }
     if( preparsedData.length == 0 )
     {
-        console.log( "ScrumDB::LoadScrumDataSync: Could not open file." );
+    console.log( "ScrumDB::LoadScrumDataSync: Could not open file." );
 	var data= {};
 	data.priorityStartId = -1;
 	data.lastFinishedId = -1;
@@ -28,12 +28,14 @@ this.LoadScrumDataSync = function( name )
     return JSON.parse( preparsedData );
 }
 
-this.SaveScrumDataAsync = function( name, scrumDataArray, priorityStartId, callback )
+this.SaveScrumDataAsync = function( name, scrumDataArray, priorityStartId,
+                                    lastFinishedId, callback )
 {
     fs.mkdir( "data", function(exists) {} );
     var data = {};
     data.priorityStartId = priorityStartId;
-    data.scrumDataArray = scrumDataArray;
+    data.lastFinishedId  = lastFinishedId;
+    data.scrumDataArray  = scrumDataArray;
     fs.writeFile( "data/" + name + ".json", JSON.stringify( data, null, ' ' ), callback ); 
 }
 
@@ -46,7 +48,9 @@ this.TimerCallback = function()
 	{
 	    this.SaveScrumDataAsync( this.scrumDataManagerList[ i ].name,
 			    this.scrumDataArray,
-			    this.scrumDataManagerList[ i ].priorityStartId, null );
+			    this.scrumDataManagerList[ i ].priorityStartId,
+                this.scrumDataManagerList[ i ].lastFinishedId, 
+                null );
 	}
     }
 }

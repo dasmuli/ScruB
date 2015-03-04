@@ -246,6 +246,7 @@ $( document ).ready(function() {
 			prioId = scrumDataManager.scrumDataArray[ prioId ].nextPriorityId;
 		}
         prioId = scrumDataManager.lastFinishedId;
+        console.log( "Creating done list with id: " + prioId );
 		while( prioId != undefined &&  prioId != -1 )
 		{
 			CreateDataListEntry( '#scrumDoneList'

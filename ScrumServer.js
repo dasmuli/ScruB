@@ -16,8 +16,9 @@ this.scrumDataManager = scrumDataManager;
 
 // connect scrumDataManager to scrumDB
 this.loadedData = this.scrumDB.LoadScrumDataSync( "Default" );
-this.scrumDataManager.scrumDataArray = this.loadedData.scrumDataArray;
+this.scrumDataManager.scrumDataArray  = this.loadedData.scrumDataArray;
 this.scrumDataManager.priorityStartId = this.loadedData.priorityStartId;
+this.scrumDataManager.lastFinishedId  = this.loadedData.lastFinishedId;
 this.scrumDB.AddDataManager( this.scrumDataManager );
 this.scrumDB.scrumDataArray = this.scrumDataManager.scrumDataArray;
 
@@ -79,6 +80,7 @@ _scrumServer.io.sockets.on('connection', function (socket) {
 
 	
 	// Send complete array data to client
+    console.log( "Sending laat finished id: " + _scrumServer.scrumDataManager.lastFinishedId );
 	socket.emit('scrubfulldata', {
 		dataArray:	        _scrumServer.scrumDataManager.scrumDataArray,
 		priorityStartId:	_scrumServer.scrumDataManager.priorityStartId,
