@@ -13,7 +13,7 @@ server.listen(conf.port);
 if ('production' == app.get('env'))
 {
    var cacher = new Cacher();
-   app.disable('etag'); // added for Safari
+   //app.disable('etag'); // added for Safari
 
    //app.get('/*', function(req, res, next){ 
 	//        res.setHeader('Last-Modified', (new Date()).toUTCString());
@@ -22,14 +22,18 @@ if ('production' == app.get('env'))
 
    cacher.genCacheKey = function(req) {
 	   // cache: remember gzip support in cache key
+       console.log('Cache key: ' + req.originalUrl + req.accepts('gzip') );
    return req.originalUrl + req.accepts('gzip')     }
 
-   //cacher.on("hit", function(key) {
-   //  console.log("woohoo!")
-   //})
-   //cacher.on("miss", function(key) {
-   //  console.log("doh!")
-   //})
+   cacher.genCacheTtl = function( res, origTtl )
+   {
+       if( res.statusCode >= 400 || res.statusCode == 304 )
+       {
+           console.log( 'non cached answer' );
+           return 0;
+       }
+       return origTtl;
+   }
 
    app.use( cacher.cache( 'days', 1 ) );
 
@@ -40,22 +44,13 @@ if ('production' == app.get('env'))
    app.use( express.errorHandler() );
 }
 
-//app.use(app.router);
 
 app.get('/combohandler', combo.combine({rootPath: __dirname + root }), combo.respond);
 
 
 
    
-if ('production' == app.get('env'))
-{   
-   var oneDay = 86400000;
-   app.use(express.static(__dirname + root, { maxAge: oneDay } ));
-}
-else
-{
-   app.use(express.static(__dirname + root ));
-}
+app.use(express.static(__dirname + root ));
 
 
 // show index.html on '/'
