@@ -14,9 +14,11 @@ function SwapListElements( upperElementId, lowerElementId )
 	$( "#scrumListId"+upperElementId ).insertAfter( ($ ( "#scrumListId"+lowerElementId ) ) );
 }
 
-function CreateDataListEntry( list, scrumdata )
+function CreateDataListEntry( list, scrumdata, addEditFeats )
 {
-	$( list ).append("<li id=\"scrumListId"
+    if( addEditFeats )
+    {
+	    $( list ).append("<li id=\"scrumListId"
 			+scrumdata.id
 			+"\"><a href=\"#editData\" id=\"editLink"
 			+scrumdata.id
@@ -25,18 +27,34 @@ function CreateDataListEntry( list, scrumdata )
 			+"</a><a href=\"#\" id=\"moveDataUp"
 			+scrumdata.id
 			+"\">Edit</a></li>");
+    }
+    else
+    {
+        $( list ).append("<li id=\"scrumListId"
+			+scrumdata.id
+			+"\">"
+            +"<a href=\"#editDoneData\" id=\"doneLink"
+			+scrumdata.id
+			+"\" data-rel=\"popup\" data-position-to=\"window\" data-transition=\"pop\">"
+            + scrumdata.featurename
+			+"</li>");
+
+    }
 	if ($( list ).hasClass('ui-listview')) 
 	{
 		$( list ).listview('refresh'); //this listview has already been initialized, so refresh it
 	}
-	$( "#editLink"+scrumdata.id ).click(function() {
-		scrumDataIdInEditor = scrumdata.id;
-	});	
-	$( "#moveDataUp"+scrumdata.id ).click(function() {
-		socket.emit('moveDataUp', {
-			id			: scrumdata.id
-			});
-	});	
+    if( addEditFeats )
+    {
+	    $( "#editLink"+scrumdata.id ).click(function() {
+		    scrumDataIdInEditor = scrumdata.id;
+	    });	
+	    $( "#moveDataUp"+scrumdata.id ).click(function() {
+		    socket.emit('moveDataUp', {
+			    id			: scrumdata.id
+		    	});
+	    });
+    }    
 }
 
 
@@ -54,14 +72,14 @@ function UpdateBacklogData( scrumdata )
 	}
 	else // if not found: add
 	{	
-		CreateDataListEntry( '#scrumDataList', scrumdata );
+		CreateDataListEntry( '#scrumDataList', scrumdata, true );
 	}
 }
 
 function AddDataDataFrontList( scrumData )
 {
 	console.log( "Adding data: " + scrumData.id + ", prio: " + scrumData.priority );
-	CreateDataListEntry( '#scrumDataList', scrumData );
+	CreateDataListEntry( '#scrumDataList', scrumData, true );
     if( scrumData.nextPriorityId != -1 )
     {
 	    $( "#scrumListId"+scrumData.id ).insertBefore( ($ ( "#scrumListId"+scrumData.nextPriorityId ) ) );
@@ -73,7 +91,7 @@ function MoveFromOpenToCloseList( data )
 	console.log( "Moving from open to close: " + data.id );
     $( "#scrumListId"+data.id ).remove();
     //$( "#scrumDoneList" ).prepend( ($ ( "#scrumListId"+data.id ) ) );
-    CreateDataListEntry( '#scrumDoneList', data );
+    CreateDataListEntry( '#scrumDoneList', data, false );
     if( data.nextPriorityId != -1 )
     {
         $( "#scrumListId"+data.id ).insertBefore( ($ ( "#scrumListId"+data.nextPriorityId ) ) );
@@ -233,6 +251,7 @@ $( document ).ready(function() {
 	// complete scrum data array
 	socket.on('scrubfulldata', function ( data ) {
 		$("#scrumDataList").empty();
+		$("#scrumDoneList").empty();
 		scrumDataManager.scrumDataArray  = data.dataArray.slice();
 		scrumDataManager.priorityStartId = data.priorityStartId;
 		scrumDataManager.lastFinishedId  = data.lastFinishedId;
@@ -242,7 +261,7 @@ $( document ).ready(function() {
 		while( prioId != -1 )
 		{
 			CreateDataListEntry( '#scrumDataList',
-                                 scrumDataManager.scrumDataArray[ prioId ] );
+                                 scrumDataManager.scrumDataArray[ prioId ], true );
 			prioId = scrumDataManager.scrumDataArray[ prioId ].nextPriorityId;
 		}
         prioId = scrumDataManager.lastFinishedId;
@@ -250,7 +269,7 @@ $( document ).ready(function() {
 		while( prioId != undefined &&  prioId != -1 )
 		{
 			CreateDataListEntry( '#scrumDoneList'
-                                 ,scrumDataManager.scrumDataArray[ prioId ] );
+                                 ,scrumDataManager.scrumDataArray[ prioId ], false );
 			prioId = scrumDataManager.scrumDataArray[ prioId ].nextPriorityId;
 		}
 

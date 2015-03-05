@@ -50,7 +50,7 @@
 	  <ul>
         <li><a href="#mainPage">Chart</a></li>
  	    <li><a href="#dataPage">Open</a></li>
-        <li><a href="#mainPage" class="ui-btn-active ui-state-persist">Done</a></li>
+        <li><a href="#donePage" class="ui-btn-active ui-state-persist">Done</a></li>
 	  </ul>
      </div><!-- /navbar -->
   </div>
@@ -73,6 +73,40 @@
                 </div>
 			</div>
 		</div>
+       <div data-role="popup" id="editDoneData" data-theme="a" data-overlay-theme="a"
+		  class="ui-content" style="max-width:340px; padding-bottom:2em;">
+		  <div data-role="header" data-theme="a">
+			  <h4>View</h4>
+		  </div>
+            <div class="ui-field-contain">
+                <input name="textdoneinputName" id="textdoneinputNameAdd"
+		  placeholder="Short description" value="" type="text">
+            </div>
+	    <form>
+	      <div class="ui-field-contain">
+	         <label for="selectComplexityAddPopup">Complexity:</label>
+	         <select name="selectComplexityAddPopup" id="selectDoneComplexityAddPopup">
+	           <option value="1">1</option>
+	           <option value="2">2</option>
+	           <option value="3">3</option>
+	           <option value="4">5</option>
+	           <option value="5">8</option>
+	           <option value="6">13</option>
+	           <option value="7">20</option>
+	           <option value="8">40</option>
+	           <option value="9">100</option>
+	         </select>
+	      </div>
+	      <label for="descriptionAreaAddPopup">Description:</label>
+	      <textarea name="descriptionAreaAddPopup" id="descriptionDoneAreaAddPopup"></textarea>
+	    </form>
+             <a href="" id="editorDoneAddOkButton" data-rel="back"
+		     class="ui-shadow ui-btn ui-corner-all ui-btn-a ui-icon-check
+		     ui-btn-icon-left ui-btn-inline ui-mini">Ok</a>
+	     <a href="" data-rel="back" class="ui-shadow ui-btn ui-corner-all
+		     ui-btn-inline ui-mini data-close-btn-text">Cancel</a> 
+	  </div><!-- addData Pop Up -->
+
 	</div><!-- /ui-base -->
   </div> <!-- main content -->
 </div>  <!-- End of page -->

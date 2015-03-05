@@ -22,14 +22,13 @@ if ('production' == app.get('env'))
 
    cacher.genCacheKey = function(req) {
 	   // cache: remember gzip support in cache key
-       console.log('Cache key: ' + req.originalUrl + req.accepts('gzip') );
+       //console.log('Cache key: ' + req.originalUrl + req.accepts('gzip') );
    return req.originalUrl + req.accepts('gzip')     }
 
    cacher.genCacheTtl = function( res, origTtl )
    {
        if( res.statusCode >= 400 || res.statusCode == 304 )
        {
-           console.log( 'non cached answer' );
            return 0;
        }
        return origTtl;
