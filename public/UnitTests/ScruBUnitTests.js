@@ -231,6 +231,9 @@ QUnit.test( "scrum data manager finish everything possible and adding therafter 
 	assert.equal( scrumDataManager.scrumDataArray[ 1 ].previousPriorityId, 2 );
 	assert.equal( scrumDataManager.scrumDataArray[ 0 ].nextPriorityId, -1 );
 	assert.equal( scrumDataManager.scrumDataArray[ 0 ].previousPriorityId, 1 );
+	assert.notEqual( scrumDataManager.scrumDataArray[ 0 ].finishDate, undefined );
+	assert.notEqual( scrumDataManager.scrumDataArray[ 1 ].finishDate, undefined );
+	assert.notEqual( scrumDataManager.scrumDataArray[ 2 ].finishDate, undefined );
 
 	// adding to an empty list must work
 	result = scrumDataManager.Finish( 0 );

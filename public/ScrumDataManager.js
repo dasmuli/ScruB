@@ -21,6 +21,7 @@ var scrumDataManager = {
 	dirtyFlag: false,
 	name: "Default",
 	versionCounter: 0,
+	finishDate: new Date(),
 	commandToClient: {
 	    ADD_DATA_TO_FRONT: 'addDataToFront',
 	    FINISH:            'finishData'
@@ -52,6 +53,7 @@ var scrumDataManager = {
         var oldPrevious = this.scrumDataArray[ id ].previousPriorityId;
 
 		this.scrumDataArray[ id ].isFinished = true;
+		this.scrumDataArray[ id ].finishDate = new Date();
 		this.scrumDataArray[ id ].nextPriorityId = this.lastFinishedId;
 		this.scrumDataArray[ id ].previousPriorityId = -1;
 		// fix open list
