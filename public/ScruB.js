@@ -160,9 +160,12 @@ $(document).on("pageinit", "#dataPage", function()
     // other event is: popupafteropen
     $("#editData").on("popupbeforeposition", function(event, ui) { 
         console.log( "popupbeforeposition: " + scrumDataIdInEditor );
-		$( "#flipFinished" ).prop( "checked", true );
-		$( "#flipFinished" ).val( "on" ).flipswitch( 'refresh' );
+		$( "#flipFinished" ).prop( 'checked', true ).flipswitch( 'refresh' );
 	    $("#textinputName").val( scrumDataManager.scrumDataArray[ scrumDataIdInEditor ].featurename );
+		$("#selectComplexityEditPopup").val( scrumDataManager.scrumDataArray[ scrumDataIdInEditor ].complexity )
+                .selectmenu( "refresh", true );
+		$("#descriptionAreaEditPopup").val( scrumDataManager.scrumDataArray[ scrumDataIdInEditor ].description );
+
         });
 	    $( "#editorOkButton" ).click(function() {
           if( $( "#flipFinished" ).is( ':checked' ) )
