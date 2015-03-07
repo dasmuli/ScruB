@@ -95,6 +95,8 @@ function MoveFromOpenToCloseList( data )
     {
         $( "#scrumListId"+data.id ).insertBefore( ($ ( "#scrumListId"+data.nextPriorityId ) ) );
     }
+    $( '#scrumDataList' ).listview('refresh');
+    $( '#scrumDoneList' ).listview('refresh');
 }
 
 
@@ -250,6 +252,7 @@ $( document ).ready(function() {
 		{
 			SwapListElements( upperElementId, lowerElementId );
 		}
+        $( '#scrumDataList' ).listview('refresh');
 	});
 
 	// complete scrum data array
