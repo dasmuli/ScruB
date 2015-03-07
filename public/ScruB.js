@@ -60,7 +60,6 @@ function CreateDataListEntry( list, scrumdata, addEditFeats )
 
 function UpdateBacklogData( scrumdata )
 {
-	console.log( "UpdateBacklogData for " + scrumdata.id + ", prio: " + scrumdata.priority );
 	// try to find elementFromPoint
 	if( scrumDataManager.scrumDataArray[ scrumdata.id ] )
 	{
@@ -199,6 +198,8 @@ $(document).on("pageinit", "#dataPage", function()
 
 function SendUpdateOfScrumDataToServer()
 {
+    console.log( "Sending update: " 
+                 + JSON.stringify( scrumDataManager.scrumDataArray[ scrumDataIdInEditor ] ) );
 	socket.emit(scrumDataManager.commandToServer.UPDATE_DATA, 
                 scrumDataManager.scrumDataArray[ scrumDataIdInEditor ] );
 }
@@ -216,7 +217,6 @@ function SendAddDataToServer( name, _complexity, _description )
     data.description = _description;
 	socket.emit( scrumDataManager.commandToServer.ADD_DATA_TO_FRONT, data );
 }
-
 
 /////////////////////   Network events   /////////////////////////////////////////////////
 
@@ -239,8 +239,6 @@ $( document ).ready(function() {
 
     // update non-order related data
     socket.on( scrumDataManager.commandToClient.UPDATE_DATA, function (data) {
-		console.log( "received scrubdata: " + data.featurename );
-		scrumDataManager.scrumDataArray[ data.id ] = data;
 		UpdateBacklogData( data );
     });
 	

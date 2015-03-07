@@ -117,7 +117,6 @@ QUnit.test( "scrum update only informational data, not structure", function( ass
 	assert.equal( scrumDataManager.scrumDataArray[ 0 ].nextPriorityId, 1 );
 	assert.equal( scrumDataManager.scrumDataArray[ 0 ].previousPriorityId, -1 );
 	assert.equal( scrumDataManager.scrumDataArray[ 0 ].featurename, "Changed" );
-	assert.equal( scrumDataManager.scrumDataArray[ 0 ].priority, 3 );
 	assert.equal( scrumDataManager.scrumDataArray[ 0 ].complexity, 8 );
 });
 

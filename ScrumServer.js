@@ -71,7 +71,6 @@ _scrumServer.io.sockets.on('connection', function (socket) {
 
 	
 	// Send complete array data to client
-    console.log( "Sending laat finished id: " + _scrumServer.scrumDataManager.lastFinishedId );
 	socket.emit('scrubfulldata', {
 		dataArray:	        _scrumServer.scrumDataManager.scrumDataArray,
 		priorityStartId:	_scrumServer.scrumDataManager.priorityStartId,

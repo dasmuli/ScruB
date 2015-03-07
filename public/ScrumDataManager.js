@@ -25,7 +25,7 @@ var scrumDataManager = {
 	commandToClient: {
 	    ADD_DATA_TO_FRONT: 'addDataToFront',
 	    FINISH:            'finishData',
-	    ADD_DATA_TO_FRONT: 'addDataToFront',
+	    UPDATE_DATA:       'updateData'
 	},
     commandToServer: {
 	    ADD_DATA_TO_FRONT: 'addDataToFront',
