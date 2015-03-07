@@ -39,20 +39,11 @@ _scrumServer.io.sockets.on('connection', function (socket) {
 		_scrumServer.io.sockets.emit('chat', { zeit: new Date(), name: data.name || 'Anonym', text: data.text });
 	});
 	
-	socket.on('updateScrumData', function (data) {
+	socket.on( _scrumServer.scrumDataManager.commandToServer.UPDATE_DATA, function (data) {
 		_scrumServer.scrumDataManager.UpdateData( data );
-		_scrumServer.io.sockets.emit('scrubdata', {
-			featurename:		
-				_scrumServer.scrumDataManager.scrumDataArray[ data.id ].featurename,
-			id: 			
-				_scrumServer.scrumDataManager.scrumDataArray[ data.id ].id,
-			complexity: 		
-				_scrumServer.scrumDataManager.scrumDataArray[ data.id ].complexity,
-			priority: 		
-				_scrumServer.scrumDataManager.scrumDataArray[ data.id ].priority,
-			previousPriorityId: 	
-				_scrumServer.scrumDataManager.scrumDataArray[ data.id ].previousPriorityId
-			});
+		_scrumServer.io.sockets.emit(_scrumServer.scrumDataManager.commandToClient.UPDATE_DATA,
+             _scrumServer.scrumDataManager.scrumDataArray[ data.id ]
+            );
 	});
     
     socket.on( _scrumServer.scrumDataManager.commandToServer.FINISH, function (data) {

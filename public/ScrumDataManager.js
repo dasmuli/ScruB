@@ -24,10 +24,12 @@ var scrumDataManager = {
 	finishDate: new Date(),
 	commandToClient: {
 	    ADD_DATA_TO_FRONT: 'addDataToFront',
-	    FINISH:            'finishData'
+	    FINISH:            'finishData',
+	    ADD_DATA_TO_FRONT: 'addDataToFront',
 	},
     commandToServer: {
 	    ADD_DATA_TO_FRONT: 'addDataToFront',
+	    UPDATE_DATA:       'updateData',
 	    FINISH:            'finishData'
 	},
 
@@ -83,7 +85,7 @@ var scrumDataManager = {
 	UpdateData: function ( data ) {
 		this.scrumDataArray[ data.id ].featurename = data.featurename;
 		this.scrumDataArray[ data.id ].complexity  = data.complexity;
-		this.scrumDataArray[ data.id ].priority    = data.priority;
+		this.scrumDataArray[ data.id ].description = data.description;
 		this.dirtyFlag = true;
 		this.versionCounter++;
 	},

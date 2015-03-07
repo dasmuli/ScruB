@@ -170,14 +170,16 @@ $(document).on("pageinit", "#dataPage", function()
 	    $( "#editorOkButton" ).click(function() {
           if( $( "#flipFinished" ).is( ':checked' ) )
           {
-            console.log( "Checkbox checked" );
             scrumDataManager.scrumDataArray[ scrumDataIdInEditor ].featurename = 
-            $("#textinputName").val();
+               $("#textinputName").val();
+            scrumDataManager.scrumDataArray[ scrumDataIdInEditor ].complexity = 
+               $("#selectComplexityEditPopup").val();
+            scrumDataManager.scrumDataArray[ scrumDataIdInEditor ].description = 
+               $("#descriptionAreaEditPopup").val();
      		SendUpdateOfScrumDataToServer();
           }
           else
           {
-           console.log( "Closing issue" );
            SendDoneToServer();
           }
 	});	
@@ -197,9 +199,8 @@ $(document).on("pageinit", "#dataPage", function()
 
 function SendUpdateOfScrumDataToServer()
 {
-	socket.emit('updateScrumData', {
-		id			: scrumDataIdInEditor,
-		featurename	: scrumDataManager.scrumDataArray[ scrumDataIdInEditor ].featurename });
+	socket.emit(scrumDataManager.commandToServer.UPDATE_DATA, 
+                scrumDataManager.scrumDataArray[ scrumDataIdInEditor ] );
 }
 
 function SendDoneToServer()
@@ -237,7 +238,7 @@ $( document ).ready(function() {
     });
 
     // update non-order related data
-    socket.on('scrubdata', function (data) {
+    socket.on( scrumDataManager.commandToClient.UPDATE_DATA, function (data) {
 		console.log( "received scrubdata: " + data.featurename );
 		scrumDataManager.scrumDataArray[ data.id ] = data;
 		UpdateBacklogData( data );
