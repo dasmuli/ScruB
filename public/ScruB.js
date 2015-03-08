@@ -100,29 +100,24 @@ function RefreshList( list )
     }
 }
 
-function MoveFromCloseToOpenList( data )
-{
-	console.log( "Moving from close to open: " + data.id );
-    $( "#scrumListId"+data.id ).remove();
-    //$( "#scrumDoneList" ).prepend( ($ ( "#scrumListId"+data.id ) ) );
-    CreateDataListEntry( '#scrumDataList', data, true );
-    if( data.nextPriorityId != -1 )
-    {
-        $( "#scrumListId"+data.id ).insertBefore( ($ ( "#scrumListId"+data.nextPriorityId ) ) );
-    }
-    RefreshList( '#scrumDataList' );       
-    RefreshList( '#scrumDoneList' );       
-}
 
-function MoveFromOpenToCloseList( data )
+function SetDoneListForElement( data, toDoneList )
 {
-	console.log( "Moving from open to close: " + data.id );
+	console.log( "Moving: " + data.id + " to list done list: " + toDoneList );
     $( "#scrumListId"+data.id ).remove();
     //$( "#scrumDoneList" ).prepend( ($ ( "#scrumListId"+data.id ) ) );
-    CreateDataListEntry( '#scrumDoneList', data, false );
+    if( toDoneList )
+    {
+        CreateDataListEntry( '#scrumDoneList', data, false );
+    }
+    else
+    {
+        CreateDataListEntry( '#scrumDataList', data, true );
+    }
     if( data.nextPriorityId != -1 )
     {
-        $( "#scrumListId"+data.id ).insertBefore( ($ ( "#scrumListId"+data.nextPriorityId ) ) );
+        $( "#scrumListId"+data.id ).insertBefore(
+            ($ ( "#scrumListId"+data.nextPriorityId ) ) );
     }
     RefreshList( '#scrumDataList' );       
     RefreshList( '#scrumDoneList' );
@@ -300,7 +295,7 @@ $( document ).ready(function() {
 		console.log( "received finish data: " + data.featurename );
         scrumDataManager.UpdateData( data );
         scrumDataManager.SetDoneState( data.id, true );
-		MoveFromOpenToCloseList( data );
+		SetDoneListForElement( data, true );
     });
 
     socket.on( scrumDataManager.commandToClient.REOPEN, function ( data )
@@ -308,7 +303,7 @@ $( document ).ready(function() {
 		console.log( "received reopen data: " + data.featurename );
         scrumDataManager.UpdateData( data );
         scrumDataManager.SetDoneState( data.id, false );
-		MoveFromCloseToOpenList( data );
+		SetDoneListForElement( data, false );
     });
 
 
