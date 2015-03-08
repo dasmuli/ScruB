@@ -200,8 +200,16 @@ var scrumDataManager = {
                 previousValue = result[ i ];
             }
         }
+        // create name array
+        var nameArray = [];
+        nameArray[ 0 ] = '';
+        for ( i = 1; i < maxLength; i++ )
+        {
+            nameArray[i ] = this.GetRelativeWeekName( baseDate, i );
+        }
         var resultObj = { 
-            dataArray: result
+            dataArray: result,
+            labelArray: nameArray
         };
         return resultObj;
     },
