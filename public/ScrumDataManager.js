@@ -173,15 +173,15 @@ var scrumDataManager = {
         {
             if( this.scrumDataArray[ i ].isFinished )
             {
-                relativeWeek = this.GetRelativeWeek( baseDate,
-                             this.scrumDataArray[ i ].finishDate ) + 1;
+                var d = new Date ( this.scrumDataArray[ i ].finishDate ); 
+                relativeWeek = this.GetRelativeWeek( baseDate, d ) + 1;
                 if( result[ relativeWeek ] == undefined )
                 {
-                    result[ relativeWeek ] = this.scrumDataArray[ i ].complexity;
+                    result[ relativeWeek ] = parseInt( this.scrumDataArray[ i ].complexity );
                 }
                 else
                 {
-                    result[ relativeWeek ] += this.scrumDataArray[ i ].complexity;
+                    result[ relativeWeek ] += parseInt( this.scrumDataArray[ i ].complexity );
                 }
             }
         }
@@ -205,7 +205,7 @@ var scrumDataManager = {
         nameArray[ 0 ] = '';
         for ( i = 1; i < maxLength; i++ )
         {
-            nameArray[i ] = this.GetRelativeWeekName( baseDate, i );
+            nameArray[ i ] = this.GetRelativeWeekName( baseDate, i-1 );
         }
         var resultObj = { 
             dataArray: result,
@@ -220,16 +220,31 @@ var scrumDataManager = {
        var maxLength = this.scrumDataArray.length;
        for ( var i = 0; i < maxLength; i++ )
        {
-           result.sum += this.scrumDataArray[ i ].complexity;
-           if( this.scrumDataArray[ i ].isFinished )
+           if( undefined != this.scrumDataArray[ i ].complexity )
            {
-               if( this.scrumDataArray[ i ].finishDate != undefined &&
-                   this.scrumDataArray[ i ].finishDate < result.oldestDate )
-               {
-                   result.oldestDate = this.scrumDataArray[ i ].finishDate;
-               }
+              result.sum += parseInt( this.scrumDataArray[ i ].complexity );
+              if( this.scrumDataArray[ i ].isFinished )
+              {
+                  if( this.scrumDataArray[ i ].finishDate != undefined )
+                  {
+                      var d;
+                      if( typeof this.scrumDataArray[ i ].finishDate == 'string' )
+                      {
+                          d = new Date( this.scrumDataArray[ i ].finishDate );
+                      }
+                      else
+                      {
+                          d = this.scrumDataArray[ i ].finishDate;
+                      }
+                      if( d < result.oldestDate )
+                      {
+                          result.oldestDate = d;
+                      }
+                  }
+              }
            }
        }
+       console.log( "Sum:" + result.sum + ", oldestDate: " + result.oldestDate );
        return result;
     },
 	PriorityListLength: function () {
