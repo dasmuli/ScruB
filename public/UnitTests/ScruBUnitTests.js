@@ -330,4 +330,31 @@ QUnit.test( "scrum data manager reopen last element", function( assert ) {
 	assert.equal( result, false );
 });
 
+QUnit.test( "scrum data manager should return allways something",
+    function( assert ) {
+	scrumDataManager.InitTestData();
+    scrumDataManager.scrumDataArray = new Array();
+    var result = scrumDataManager.GetSumAndOldestDateOfFinished();
+	assert.equal( result.sum, 0 );
+	assert.notEqual( result.oldestDate, undefined );
+
+});	
+QUnit.test( "scrum data manager should compute sum and oldest date",
+    function( assert ) {
+	scrumDataManager.InitTestData();
+    var oldest = new Date( 2003, 6, 1 );
+    scrumDataManager.scrumDataArray[ 0 ].finishDate = new Date( 2003, 6, 8 );
+    scrumDataManager.scrumDataArray[ 0 ].complexity = 40;
+    scrumDataManager.scrumDataArray[ 0 ].isFinished = true;
+    scrumDataManager.scrumDataArray[ 1 ].finishDate = oldest;
+    scrumDataManager.scrumDataArray[ 1 ].complexity = 13;
+    scrumDataManager.scrumDataArray[ 1 ].isFinished = true;
+    scrumDataManager.scrumDataArray[ 2 ].finishDate = new Date( 2003, 6, 15 );
+    scrumDataManager.scrumDataArray[ 2 ].complexity = 8;
+    scrumDataManager.scrumDataArray[ 2 ].isFinished = false;
+    var result = scrumDataManager.GetSumAndOldestDateOfFinished();
+	assert.equal( result.sum, 53 );
+	assert.equal( result.oldestDate, oldest );
+});
+
 

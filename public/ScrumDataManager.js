@@ -41,8 +41,9 @@ var scrumDataManager = {
 		this.complexity 		= 2;
 		this.isFinished 		= false;
 		this.priority			= -1;
-		this.previousPriorityId 	= -1;
+		this.previousPriorityId	= -1;
 		this.nextPriorityId		= -1;
+        this.finishDate         = new Date();
 	},
 	IsDirty: function () {
 		return this.dirtyFlag;
@@ -147,6 +148,25 @@ var scrumDataManager = {
 		}
 		this.dirtyFlag = false;
 		this.versionCounter = 0;
+    },
+    GetSumAndOldestDateOfFinished: function() {
+       var result = {};
+       result.sum = 0;
+       result.oldestDate = new Date ( 9999, 1, 1 );
+       var maxLength = this.scrumDataArray.length;
+       for ( var i = 0; i < maxLength; i++ )
+       {
+           if( this.scrumDataArray[ i ].isFinished )
+           {
+               result.sum += this.scrumDataArray[ i ].complexity;
+               if( this.scrumDataArray[ i ].finishDate != undefined &&
+                   this.scrumDataArray[ i ].finishDate < result.oldestDate )
+               {
+                   result.oldestDate = this.scrumDataArray[ i ].finishDate;
+               }
+           }
+       }
+       return result;
     },
 	PriorityListLength: function () {
 		var currentData = this.scrumDataArray[ this.priorityStartId ];
