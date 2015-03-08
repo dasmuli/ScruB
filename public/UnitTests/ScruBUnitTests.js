@@ -391,11 +391,11 @@ QUnit.test( "scrum data manager should generate chart data",
     scrumDataManager.scrumDataArray[ 2 ].complexity = 8;
     scrumDataManager.scrumDataArray[ 2 ].isFinished = true;
     var result = scrumDataManager.GetWeekBasedChartData();
-	assert.equal( result[ 0 ], 61 ); // sum of all
-	assert.equal( result[ 1 ], 48 ); // sum  - 13
-	assert.equal( result[ 2 ], 48 ); // nothing changed
-	assert.equal( result[ 3 ], 48 ); // no entry, must be same as before
-	assert.equal( result[ 4 ], 40 ); // remaining - 8
+	assert.equal( result.dataArray[ 0 ], 61 ); // sum of all
+	assert.equal( result.dataArray[ 1 ], 48 ); // sum  - 13
+	assert.equal( result.dataArray[ 2 ], 48 ); // nothing changed
+	assert.equal( result.dataArray[ 3 ], 48 ); // no entry, must be same as before
+	assert.equal( result.dataArray[ 4 ], 40 ); // remaining - 8
 });
 
 QUnit.test( "scrum data manager chart data with two values in 1 week",
@@ -411,9 +411,18 @@ QUnit.test( "scrum data manager chart data with two values in 1 week",
     scrumDataManager.scrumDataArray[ 2 ].complexity = 8;
     scrumDataManager.scrumDataArray[ 2 ].isFinished = true;
     var result = scrumDataManager.GetWeekBasedChartData();
-	assert.equal( result[ 0 ], 61 ); // sum of all
-	assert.equal( result[ 1 ], 40 ); // sum  - 13 - 8
-	assert.equal( result[ 2 ], undefined ); // nothing changed
+	assert.equal( result.dataArray[ 0 ], 61 ); // sum of all
+	assert.equal( result.dataArray[ 1 ], 40 ); // sum  - 13 - 8
+	assert.equal( result.dataArray[ 2 ], undefined ); // nothing changed
 });
 
+QUnit.test( "scrum data manager should generate strings names for relative weeks",
+    function( assert ) {
+    var oldest = new Date( 2003, 6, 1 );
+	assert.equal( scrumDataManager.GetRelativeWeekName( oldest, 0 ), '2003-6-1' );
+	assert.equal( scrumDataManager.GetRelativeWeekName( oldest, 1 ), '2003-6-8' );
+	assert.equal( scrumDataManager.GetRelativeWeekName( oldest, 2 ), '2003-6-15' );
+	assert.equal( scrumDataManager.GetRelativeWeekName( oldest, 4 ), '2003-6-29' );
+	assert.equal( scrumDataManager.GetRelativeWeekName( oldest, 52 ), '2004-5-29' );
+});
 

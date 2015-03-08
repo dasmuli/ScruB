@@ -153,6 +153,12 @@ var scrumDataManager = {
     {
         return Math.floor( ( relativeDate - baseDate ) / ( 604800000 ) );
     },
+    GetRelativeWeekName: function( baseDate, relativeWeek )
+    {
+        var millisecondsRelativeWeek = Math.floor(  baseDate.getTime() + relativeWeek * 604800000 );
+        var date = new Date( millisecondsRelativeWeek );
+        return date.getFullYear()+'-'+date.getMonth()+'-'+date.getDate();
+    },
     GetWeekBasedChartData: function()
     {
         var sumDate = this.GetSumAndOldestDateOfFinished();
@@ -162,6 +168,7 @@ var scrumDataManager = {
         var maxLength = this.scrumDataArray.length;
         var relativeWeek;
         var i;
+        // go through data and add complexity to relative week
         for ( i = 0; i < maxLength; i++ )
         {
             if( this.scrumDataArray[ i ].isFinished )
@@ -193,7 +200,10 @@ var scrumDataManager = {
                 previousValue = result[ i ];
             }
         }
-        return result;
+        var resultObj = { 
+            dataArray: result
+        };
+        return resultObj;
     },
     GetSumAndOldestDateOfFinished: function() {
        var result = {};
