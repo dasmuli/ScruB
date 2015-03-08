@@ -247,6 +247,13 @@ $(document).on("pageinit", "#dataPage", function()
            SendDoneToServer();
           }
 	});	
+    $("#addData").on("popupbeforeposition", function(event, ui) { 
+        console.log( "popupbeforeposition addData " );
+	    $("#textinputNameAdd").val( '' );
+	    $("#selectComplexityAddPopup").val( '1' ).selectmenu( "refresh", true );
+	    $("#descriptionAreaAddPopup").val( '' );
+    });
+     
     $( "#editorAddOkButton" ).click(function() {
         console.log( "Add button clicked." );
 		var name        = $("#textinputNameAdd").val();
