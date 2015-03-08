@@ -79,13 +79,13 @@
 			  <h4>View</h4>
 		  </div>
             <div class="ui-field-contain">
-                <input name="textdoneinputName" id="textdoneinputNameAdd"
-		  placeholder="Short description" value="" type="text">
+              <input name="textdoneinputName" id="textdoneinputName"
+		        placeholder="Short description" value="" type="text">
             </div>
 	    <form>
 	      <div class="ui-field-contain">
 	         <label for="selectComplexityAddPopup">Complexity:</label>
-	         <select name="selectComplexityAddPopup" id="selectDoneComplexityAddPopup">
+	         <select name="selectComplexityAddPopup" id="selectDoneComplexityEditPopup">
 	           <option value="1">1</option>
 	           <option value="2">2</option>
 	           <option value="3">3</option>
@@ -98,14 +98,20 @@
 	         </select>
 	      </div>
 	      <label for="descriptionAreaAddPopup">Description:</label>
-	      <textarea name="descriptionAreaAddPopup" id="descriptionDoneAreaAddPopup"></textarea>
+	      <textarea name="descriptionAreaAddPopup" id="descriptionDoneAreaEditPopup"></textarea>
 	    </form>
+          <div class="ui-field-contain">
+             <input data-role="flipswitch" name="flipCheckboxDoneFinished" id="flipDoneFinished"
+                data-on-text="open" data-off-text="done"
+                data-wrapper-class="custom-label-flipswitch"
+                type="checkbox">
+             <a href="" data-rel="back" class="ui-shadow ui-btn ui-corner-all
+		       ui-btn-inline ui-mini data-close-btn-text">Cancel</a> 
              <a href="" id="editorDoneAddOkButton" data-rel="back"
-		     class="ui-shadow ui-btn ui-corner-all ui-btn-a ui-icon-check
-		     ui-btn-icon-left ui-btn-inline ui-mini">Ok</a>
-	     <a href="" data-rel="back" class="ui-shadow ui-btn ui-corner-all
-		     ui-btn-inline ui-mini data-close-btn-text">Cancel</a> 
-	  </div><!-- addData Pop Up -->
+		       class="ui-shadow ui-btn ui-corner-all ui-btn-a ui-icon-check
+		       ui-btn-icon-left ui-btn-inline ui-mini">Ok</a>
+          </div>
+	  </div><!-- editDoneData Pop Up -->
 
 	</div><!-- /ui-base -->
   </div> <!-- main content -->

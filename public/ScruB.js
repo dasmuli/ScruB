@@ -3,6 +3,7 @@
 //////////////////////////   Variables   ///////////////////////////////////////////////////
 
 var scrumDataIdInEditor = 0;
+var scrumDataIdInDoneEditor = 0;
 var socket;
 
 
@@ -54,6 +55,12 @@ function CreateDataListEntry( list, scrumdata, addEditFeats )
 			    id			: scrumdata.id
 		    	});
 	    });
+    }  
+    else
+    {
+	    $( "#doneLink"+scrumdata.id ).click(function() {
+		    scrumDataIdInDoneEditor = scrumdata.id;
+	    });	
     }    
 }
 
@@ -155,6 +162,42 @@ $( document ).on( "pagecontainershow", function( event, ui ) {
 	console.log( "pagecontainershow" );
 });
 
+
+$(document).on("pageinit", "#donePage", function()
+{
+	console.log( "pageinit  done page" );
+    $("#editDoneData").on("popupbeforeposition", function(event, ui) { 
+        console.log( "editDoneData popupbeforeposition: " + scrumDataIdInDoneEditor );
+		$( "#flipDoneFinished" ).prop( 'checked', false ).flipswitch( 'refresh' );
+	    $("#textdoneinputName").val( 
+          scrumDataManager.scrumDataArray[ scrumDataIdInDoneEditor ].featurename );
+		$("#selectDoneComplexityEditPopup").val(
+          scrumDataManager.scrumDataArray[ scrumDataIdInDoneEditor ].complexity )
+                .selectmenu( "refresh", true );
+		$("#descriptionDoneAreaEditPopup").val(
+         scrumDataManager.scrumDataArray[ scrumDataIdInDoneEditor ].description );
+        });
+	    $( "#editorDoneOkButton" ).click(function() {
+          if( !$( "#flipDoneFinished" ).is( ':checked' ) )
+          {
+            /*
+            scrumDataManager.scrumDataArray[ scrumDataIdInEditor ].featurename = 
+               $("#textinputName").val();
+            scrumDataManager.scrumDataArray[ scrumDataIdInEditor ].complexity = 
+               $("#selectComplexityEditPopup").val();
+            scrumDataManager.scrumDataArray[ scrumDataIdInEditor ].description = 
+               $("#descriptionAreaEditPopup").val();
+     		SendUpdateOfScrumDataToServer();
+            */
+          }
+          else
+          {
+            //SendReopenToServer();
+          }
+	});	
+});
+
+
 $(document).on("pageinit", "#dataPage", function()
 {
 	console.log( "pageinit" );
@@ -162,11 +205,13 @@ $(document).on("pageinit", "#dataPage", function()
     $("#editData").on("popupbeforeposition", function(event, ui) { 
         console.log( "popupbeforeposition: " + scrumDataIdInEditor );
 		$( "#flipFinished" ).prop( 'checked', true ).flipswitch( 'refresh' );
-	    $("#textinputName").val( scrumDataManager.scrumDataArray[ scrumDataIdInEditor ].featurename );
-		$("#selectComplexityEditPopup").val( scrumDataManager.scrumDataArray[ scrumDataIdInEditor ].complexity )
+	    $("#textinputName").val( 
+          scrumDataManager.scrumDataArray[ scrumDataIdInEditor ].featurename );
+		$("#selectComplexityEditPopup").val(
+          scrumDataManager.scrumDataArray[ scrumDataIdInEditor ].complexity )
                 .selectmenu( "refresh", true );
-		$("#descriptionAreaEditPopup").val( scrumDataManager.scrumDataArray[ scrumDataIdInEditor ].description );
-
+		$("#descriptionAreaEditPopup").val(
+         scrumDataManager.scrumDataArray[ scrumDataIdInEditor ].description );
         });
 	    $( "#editorOkButton" ).click(function() {
           if( $( "#flipFinished" ).is( ':checked' ) )
