@@ -123,7 +123,12 @@ function SetDoneListForElement( data, toDoneList )
     RefreshList( '#scrumDoneList' );
 }
 
-
+function SetHeaderText( text )
+{
+     $( '#titleHeaderMainPage' ).text( text );
+     $( '#titleHeaderDataPage' ).text( text );
+     $( '#titleHeaderDonePage' ).text( text );
+}
 
 
 //////////////////////////////   UI events   ///////////////////////////////////////////////////
@@ -290,6 +295,25 @@ function SendAddDataToServer( name, _complexity, _description )
 $( document ).ready(function() {
 	// initiate WebSocket
     socket = io.connect();
+
+    socket.on( 'connect', function() {
+     console.log( "Socket connected" );
+     SetHeaderText( 'ScruB' );
+    });
+    
+    socket.on( 'error', function( err ) {
+     console.log( "Socket error: " + err );
+    });
+
+    socket.on( 'disconnect', function() {
+     console.log( "Socket disconnected" );
+     SetHeaderText( 'ScruB - Offline' );
+    });
+
+    socket.on( 'reconnecting', function( number ) {
+     console.log( "Socket reconnection attempt " + number );
+    });
+
 	
     socket.on( scrumDataManager.commandToClient.FINISH, function ( data ) {
 		console.log( "received finish data: " + data.featurename );
@@ -329,6 +353,7 @@ $( document ).ready(function() {
 		}
         $( '#scrumDataList' ).listview('refresh');
 	});
+
 
 	// complete scrum data array
 	socket.on('scrubfulldata', function ( data ) {
