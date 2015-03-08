@@ -34,7 +34,7 @@ function CreateDataListEntry( list, scrumdata, addEditFeats )
         $( list ).append("<li id=\"scrumListId"
 			+scrumdata.id
 			+"\">"
-            +"<a href=\"#editDoneData\" id=\"doneLink"
+            +"<a href=\"#editDoneData\" id=\"editLink"
 			+scrumdata.id
 			+"\" data-rel=\"popup\" data-position-to=\"window\" data-transition=\"pop\">"
             + scrumdata.featurename
@@ -58,7 +58,7 @@ function CreateDataListEntry( list, scrumdata, addEditFeats )
     }  
     else
     {
-	    $( "#doneLink"+scrumdata.id ).click(function() {
+	    $( "#editLink"+scrumdata.id ).click(function() {
 		    scrumDataIdInDoneEditor = scrumdata.id;
 	    });	
     }    
@@ -165,9 +165,7 @@ $( document ).on( "pagecontainershow", function( event, ui ) {
 
 $(document).on("pageinit", "#donePage", function()
 {
-	console.log( "pageinit  done page" );
     $("#editDoneData").on("popupbeforeposition", function(event, ui) { 
-        console.log( "editDoneData popupbeforeposition: " + scrumDataIdInDoneEditor );
 		$( "#flipDoneFinished" ).prop( 'checked', false ).flipswitch( 'refresh' );
 	    $("#textdoneinputName").val( 
           scrumDataManager.scrumDataArray[ scrumDataIdInDoneEditor ].featurename );
@@ -180,15 +178,13 @@ $(document).on("pageinit", "#donePage", function()
 	    $( "#editorDoneOkButton" ).click(function() {
           if( !$( "#flipDoneFinished" ).is( ':checked' ) )
           {
-            /*
-            scrumDataManager.scrumDataArray[ scrumDataIdInEditor ].featurename = 
-               $("#textinputName").val();
-            scrumDataManager.scrumDataArray[ scrumDataIdInEditor ].complexity = 
-               $("#selectComplexityEditPopup").val();
-            scrumDataManager.scrumDataArray[ scrumDataIdInEditor ].description = 
-               $("#descriptionAreaEditPopup").val();
-     		SendUpdateOfScrumDataToServer();
-            */
+            scrumDataManager.scrumDataArray[ scrumDataIdInDoneEditor ]
+                    .featurename = $("#textdoneinputName").val();
+            scrumDataManager.scrumDataArray[ scrumDataIdInDoneEditor ]
+                    .complexity  = $("#selectDoneComplexityEditPopup").val();
+            scrumDataManager.scrumDataArray[ scrumDataIdInDoneEditor ]
+                    .description = $("#descriptionDoneAreaEditPopup").val();
+     		SendUpdateOfScrumDataToServer( scrumDataIdInDoneEditor );
           }
           else
           {
@@ -222,7 +218,7 @@ $(document).on("pageinit", "#dataPage", function()
                $("#selectComplexityEditPopup").val();
             scrumDataManager.scrumDataArray[ scrumDataIdInEditor ].description = 
                $("#descriptionAreaEditPopup").val();
-     		SendUpdateOfScrumDataToServer();
+     		SendUpdateOfScrumDataToServer( scrumDateIdInEditor );
           }
           else
           {
@@ -243,12 +239,12 @@ $(document).on("pageinit", "#dataPage", function()
 
 /////////////////////   Network functions   ////////////////////////////////////////////////
 
-function SendUpdateOfScrumDataToServer()
+function SendUpdateOfScrumDataToServer( id )
 {
     console.log( "Sending update: " 
-                 + JSON.stringify( scrumDataManager.scrumDataArray[ scrumDataIdInEditor ] ) );
+                 + JSON.stringify( scrumDataManager.scrumDataArray[ id ] ) );
 	socket.emit(scrumDataManager.commandToServer.UPDATE_DATA, 
-                scrumDataManager.scrumDataArray[ scrumDataIdInEditor ] );
+                scrumDataManager.scrumDataArray[ id ] );
 }
 
 function SendDoneToServer()
