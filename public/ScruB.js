@@ -189,6 +189,7 @@ $(document).on("pageinit", "#donePage", function()
 {
     $("#editDoneData").on("popupbeforeposition", function(event, ui) { 
 		$( "#flipDoneFinished" ).prop( 'checked', false ).flipswitch( 'refresh' );
+        $( '#textdoneinputName' ).blur();
 	    $("#textdoneinputName").val( 
           scrumDataManager.scrumDataArray[ scrumDataIdInDoneEditor ].featurename );
 		$("#selectDoneComplexityEditPopup").val(
@@ -222,6 +223,7 @@ $(document).on("pageinit", "#dataPage", function()
     // other event is: popupafteropen
     $("#editData").on("popupbeforeposition", function(event, ui) { 
         console.log( "popupbeforeposition: " + scrumDataIdInEditor );
+        $( '#textinputName' ).blur();
 		$( "#flipFinished" ).prop( 'checked', true ).flipswitch( 'refresh' );
 	    $("#textinputName").val( 
           scrumDataManager.scrumDataArray[ scrumDataIdInEditor ].featurename );
@@ -240,7 +242,7 @@ $(document).on("pageinit", "#dataPage", function()
                $("#selectComplexityEditPopup").val();
             scrumDataManager.scrumDataArray[ scrumDataIdInEditor ].description = 
                $("#descriptionAreaEditPopup").val();
-     		SendUpdateOfScrumDataToServer( scrumDateIdInEditor );
+     		SendUpdateOfScrumDataToServer( scrumDataIdInEditor );
           }
           else
           {
@@ -249,6 +251,7 @@ $(document).on("pageinit", "#dataPage", function()
 	});	
     $("#addData").on("popupbeforeposition", function(event, ui) { 
         console.log( "popupbeforeposition addData " );
+        $("#textinputNameAdd").blur();
 	    $("#textinputNameAdd").val( '' );
 	    $("#selectComplexityAddPopup").val( '1' ).selectmenu( "refresh", true );
 	    $("#descriptionAreaAddPopup").val( '' );
