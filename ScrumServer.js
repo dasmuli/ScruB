@@ -55,6 +55,16 @@ _scrumServer.io.sockets.on('connection', function (socket) {
 			);
         }
 	});
+    
+    socket.on( _scrumServer.scrumDataManager.commandToServer.REOPEN, function (data) {
+		_scrumServer.scrumDataManager.UpdateData( data );
+		if( _scrumServer.scrumDataManager.SetDoneState( data.id, false ) )
+        {
+		    _scrumServer.io.sockets.emit( _scrumServer.scrumDataManager.commandToClient.REOPEN,
+                _scrumServer.scrumDataManager.scrumDataArray[ data.id ]
+			);
+        }
+	});
 
 	
 	socket.on('moveDataUp', function (data) {

@@ -92,6 +92,19 @@ function AddDataDataFrontList( scrumData )
     }
 }
 
+function MoveFromCloseToOpenList( data )
+{
+	console.log( "Moving from close to open: " + data.id );
+    $( "#scrumListId"+data.id ).remove();
+    //$( "#scrumDoneList" ).prepend( ($ ( "#scrumListId"+data.id ) ) );
+    CreateDataListEntry( '#scrumDataList', data, true );
+    if( data.nextPriorityId != -1 )
+    {
+        $( "#scrumListId"+data.id ).insertBefore( ($ ( "#scrumListId"+data.nextPriorityId ) ) );
+    }
+    $( '#scrumDataList' ).listview('refresh');
+    $( '#scrumDoneList' ).listview('refresh');
+}
 function MoveFromOpenToCloseList( data )
 {
 	console.log( "Moving from open to close: " + data.id );
@@ -188,7 +201,7 @@ $(document).on("pageinit", "#donePage", function()
           }
           else
           {
-            //SendReopenToServer();
+            SendReopenToServer();
           }
 	});	
 });
@@ -252,6 +265,13 @@ function SendDoneToServer()
 	socket.emit( scrumDataManager.commandToServer.FINISH,
                  scrumDataManager.scrumDataArray[ scrumDataIdInEditor ] );
 }
+
+function SendReopenToServer()
+{
+	socket.emit( scrumDataManager.commandToServer.REOPEN,
+                 scrumDataManager.scrumDataArray[ scrumDataIdInDoneEditor ] );
+}
+
 function SendAddDataToServer( name, _complexity, _description )
 {
     var data = new scrumDataManager.DataObject( -1 );
@@ -274,7 +294,17 @@ $( document ).ready(function() {
 		MoveFromOpenToCloseList( data );
     });
 
-    socket.on( scrumDataManager.commandToClient.ADD_DATA_TO_FRONT, function ( data ) {
+    socket.on( scrumDataManager.commandToClient.REOPEN, function ( data )
+    {
+		console.log( "received reopen data: " + data.featurename );
+        scrumDataManager.UpdateData( data );
+        scrumDataManager.SetDoneState( data.id, false );
+		MoveFromCloseToOpenList( data );
+    });
+
+
+    socket.on( scrumDataManager.commandToClient.ADD_DATA_TO_FRONT, function ( data )
+    {
 		console.log( "received add data: " + data.featurename );
 		scrumDataManager.AddDataToFront( data );
 		AddDataDataFrontList( data );

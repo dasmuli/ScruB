@@ -25,12 +25,14 @@ var scrumDataManager = {
 	commandToClient: {
 	    ADD_DATA_TO_FRONT: 'addDataToFront',
 	    FINISH:            'finishData',
-	    UPDATE_DATA:       'updateData'
+	    UPDATE_DATA:       'updateData',
+	    REOPEN:            'reopenData'
 	},
     commandToServer: {
 	    ADD_DATA_TO_FRONT: 'addDataToFront',
 	    UPDATE_DATA:       'updateData',
-	    FINISH:            'finishData'
+	    FINISH:            'finishData',
+	    REOPEN:            'reopenData'
 	},
 
 	DataObject: function ( id ) {
