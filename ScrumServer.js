@@ -48,7 +48,7 @@ _scrumServer.io.sockets.on('connection', function (socket) {
     
     socket.on( _scrumServer.scrumDataManager.commandToServer.FINISH, function (data) {
 		_scrumServer.scrumDataManager.UpdateData( data );
-		if( _scrumServer.scrumDataManager.Finish( data.id ) )
+		if( _scrumServer.scrumDataManager.SetDoneState( data.id, true ) )
         {
 		    _scrumServer.io.sockets.emit( _scrumServer.scrumDataManager.commandToClient.FINISH,
                 _scrumServer.scrumDataManager.scrumDataArray[ data.id ]

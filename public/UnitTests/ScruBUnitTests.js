@@ -136,7 +136,7 @@ QUnit.test( "scrum data manager initiates finish list on first finish", function
 	assert.equal( scrumDataManager.dirtyFlag, false );
 	assert.equal( scrumDataManager.IsDirty(), false );
 	assert.equal( scrumDataManager.scrumDataArray[ 0 ].isFinished, false );
-	var result = scrumDataManager.Finish( 0 );
+	var result = scrumDataManager.SetDoneState( 0, true );
 	assert.equal( result, true );
 	assert.equal( scrumDataManager.dirtyFlag, true );
 	assert.equal( scrumDataManager.IsDirty(), true );
@@ -148,7 +148,7 @@ QUnit.test( "scrum data manager initiates finish list on first finish", function
 	assert.equal( scrumDataManager.scrumDataArray[ 1 ].nextPriorityId, 2 );
 	assert.equal( scrumDataManager.scrumDataArray[ 1 ].previousPriorityId, -1 );
 	// retry must be unsusccessull
-	result = scrumDataManager.Finish( 0 );
+	result = scrumDataManager.SetDoneState( 0, true );
 	assert.equal( result, false );
 });
 
@@ -157,7 +157,7 @@ QUnit.test( "scrum data manager finish on middle element", function( assert ) {
 	assert.equal( scrumDataManager.dirtyFlag, false );
 	assert.equal( scrumDataManager.IsDirty(), false );
 	assert.equal( scrumDataManager.scrumDataArray[ 1 ].isFinished, false );
-	var result = scrumDataManager.Finish( 1 );
+	var result = scrumDataManager.SetDoneState( 1, true );
 	assert.equal( result, true );
 	assert.equal( scrumDataManager.dirtyFlag, true );
 	assert.equal( scrumDataManager.IsDirty(), true );
@@ -169,7 +169,7 @@ QUnit.test( "scrum data manager finish on middle element", function( assert ) {
 	assert.equal( scrumDataManager.scrumDataArray[ 0 ].nextPriorityId, 2 );
 	assert.equal( scrumDataManager.scrumDataArray[ 0 ].previousPriorityId, -1 );
 	// retry must be unsusccessull
-	result = scrumDataManager.Finish( 1 );
+	result = scrumDataManager.SetDoneState( 1, true );
 	assert.equal( result, false );
 });
 
@@ -178,7 +178,7 @@ QUnit.test( "scrum data manager finish last element", function( assert ) {
 	assert.equal( scrumDataManager.dirtyFlag, false );
 	assert.equal( scrumDataManager.IsDirty(), false );
 	assert.equal( scrumDataManager.scrumDataArray[ 2 ].isFinished, false );
-	var result = scrumDataManager.Finish( 2 );
+	var result = scrumDataManager.SetDoneState( 2, true );
 	assert.equal( result, true );
 	assert.equal( scrumDataManager.dirtyFlag, true );
 	assert.equal( scrumDataManager.IsDirty(), true );
@@ -190,18 +190,18 @@ QUnit.test( "scrum data manager finish last element", function( assert ) {
 	assert.equal( scrumDataManager.scrumDataArray[ 1 ].nextPriorityId, -1 );
 	assert.equal( scrumDataManager.scrumDataArray[ 1 ].previousPriorityId, 0 );
 	// retry must be unsusccessull
-	result = scrumDataManager.Finish( 2 );
+	result = scrumDataManager.SetDoneState( 2, true );
 	assert.equal( result, false );
 });
 
 QUnit.test( "scrum data manager finish 2", function( assert ) {
 	scrumDataManager.InitTestData();
-	var result = scrumDataManager.Finish( 1 );
+	var result = scrumDataManager.SetDoneState( 1, true );
 	assert.equal( result, true );
 	assert.equal( scrumDataManager.lastFinishedId, 1 );
 	assert.equal( scrumDataManager.priorityStartId, 0 );
 	// finish first element
-	result = scrumDataManager.Finish( 0 );
+	result = scrumDataManager.SetDoneState( 0, true );
 	assert.equal( scrumDataManager.lastFinishedId, 0 );
 	assert.equal( scrumDataManager.priorityStartId, 2 );
 	assert.equal( scrumDataManager.scrumDataArray[ 0 ].nextPriorityId, 1 );
@@ -210,17 +210,17 @@ QUnit.test( "scrum data manager finish 2", function( assert ) {
 	assert.equal( scrumDataManager.scrumDataArray[ 2 ].nextPriorityId, -1 );
 	assert.equal( scrumDataManager.scrumDataArray[ 2 ].previousPriorityId, -1 );
 	// retry must be unsusccessull
-	result = scrumDataManager.Finish( 0 );
+	result = scrumDataManager.SetDoneState( 0, true );
 	assert.equal( result, false );
 });
 
 QUnit.test( "scrum data manager finish everything possible and adding therafter too", function( assert ) {
 	scrumDataManager.InitTestData();
-	var result = scrumDataManager.Finish( 0 );
+	var result = scrumDataManager.SetDoneState( 0, true );
 	assert.equal( result, true );
-	result = scrumDataManager.Finish( 1 );
+	result = scrumDataManager.SetDoneState( 1, true );
 	assert.equal( result, true );
-	result = scrumDataManager.Finish( 2 );
+	result = scrumDataManager.SetDoneState( 2, true );
 	assert.equal( result, true );
 	assert.equal( scrumDataManager.lastFinishedId, 2 );
 	assert.equal( scrumDataManager.priorityStartId, -1 );
@@ -235,7 +235,7 @@ QUnit.test( "scrum data manager finish everything possible and adding therafter 
 	assert.notEqual( scrumDataManager.scrumDataArray[ 2 ].finishDate, undefined );
 
 	// adding to an empty list must work
-	result = scrumDataManager.Finish( 0 );
+	result = scrumDataManager.SetDoneState( 0, true );
 	assert.equal( result, false );
 });
 
@@ -262,4 +262,72 @@ QUnit.test( "scrum data manager add new data at front", function( assert ) {
 	assert.equal( scrumDataManager.scrumDataArray[ 3 ].complexity, 18 );
 
 });
+
+QUnit.test( "scrum data manager initiates reopen on first finished", function( assert ) {
+	scrumDataManager.InitTestData();
+	assert.equal( scrumDataManager.scrumDataArray[ 0 ].isFinished, false );
+	var result = scrumDataManager.SetDoneState( 0, true );
+	assert.equal( result, true );
+    result = scrumDataManager.SetDoneState( 1, false );
+	assert.equal( result, false );  // reopen on opened element fails
+    result = scrumDataManager.SetDoneState( 0, false );
+	assert.equal( result, true );
+	assert.equal( scrumDataManager.lastFinishedId, -1 );
+	assert.equal( scrumDataManager.priorityStartId, 0 );
+	assert.equal( scrumDataManager.scrumDataArray[ 0 ].nextPriorityId, 1 );
+	assert.equal( scrumDataManager.scrumDataArray[ 0 ].previousPriorityId, -1 );
+	assert.equal( scrumDataManager.scrumDataArray[ 0 ].isFinished, false );
+	assert.equal( scrumDataManager.scrumDataArray[ 1 ].nextPriorityId, 2 );
+	assert.equal( scrumDataManager.scrumDataArray[ 1 ].previousPriorityId, 0 );
+	// retry must be unsusccessull
+	result = scrumDataManager.SetDoneState( 0, false );
+	assert.equal( result, false );
+});
+
+QUnit.test( "scrum data manager reopen middle element", function( assert ) {
+	scrumDataManager.InitTestData();
+	assert.equal( scrumDataManager.dirtyFlag, false );
+	assert.equal( scrumDataManager.IsDirty(), false );
+	assert.equal( scrumDataManager.scrumDataArray[ 1 ].isFinished, false );
+	var result = scrumDataManager.SetDoneState( 1, true );
+	assert.equal( result, true );
+    result = scrumDataManager.SetDoneState( 1, false );
+	assert.equal( result, true );
+	assert.equal( scrumDataManager.dirtyFlag, true );
+	assert.equal( scrumDataManager.IsDirty(), true );
+	assert.equal( scrumDataManager.lastFinishedId, -1 );
+	assert.equal( scrumDataManager.priorityStartId, 1 );
+	assert.equal( scrumDataManager.scrumDataArray[ 1 ].nextPriorityId, 0 );
+	assert.equal( scrumDataManager.scrumDataArray[ 1 ].previousPriorityId, -1 );
+	assert.equal( scrumDataManager.scrumDataArray[ 1 ].isFinished, false );
+	assert.equal( scrumDataManager.scrumDataArray[ 0 ].nextPriorityId, 2 );
+	assert.equal( scrumDataManager.scrumDataArray[ 0 ].previousPriorityId, 1 );
+	// retry must be unsusccessull
+	result = scrumDataManager.SetDoneState( 1, false );
+	assert.equal( result, false );
+});
+
+QUnit.test( "scrum data manager reopen last element", function( assert ) {
+	scrumDataManager.InitTestData();
+	assert.equal( scrumDataManager.dirtyFlag, false );
+	assert.equal( scrumDataManager.IsDirty(), false );
+	assert.equal( scrumDataManager.scrumDataArray[ 2 ].isFinished, false );
+	var result = scrumDataManager.SetDoneState( 2, true );
+	assert.equal( result, true );
+    result = scrumDataManager.SetDoneState( 2, false );
+	assert.equal( result, true );
+	assert.equal( scrumDataManager.dirtyFlag, true );
+	assert.equal( scrumDataManager.IsDirty(), true );
+	assert.equal( scrumDataManager.lastFinishedId, -1 );
+	assert.equal( scrumDataManager.priorityStartId, 2 );
+	assert.equal( scrumDataManager.scrumDataArray[ 2 ].nextPriorityId, 0 );
+	assert.equal( scrumDataManager.scrumDataArray[ 2 ].previousPriorityId, -1 );
+	assert.equal( scrumDataManager.scrumDataArray[ 2 ].isFinished, false );
+	assert.equal( scrumDataManager.scrumDataArray[ 1 ].nextPriorityId, -1 );
+	assert.equal( scrumDataManager.scrumDataArray[ 1 ].previousPriorityId, 0 );
+	// retry must be unsusccessull
+	result = scrumDataManager.SetDoneState( 2, false );
+	assert.equal( result, false );
+});
+
 

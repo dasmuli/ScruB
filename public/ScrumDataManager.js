@@ -45,20 +45,26 @@ var scrumDataManager = {
 	IsDirty: function () {
 		return this.dirtyFlag;
 	},
-	Finish: function ( id ) {
-		if( this.scrumDataArray[ id ].isFinished )
+	SetDoneState: function ( id, toDoneState ) {
+		if( this.scrumDataArray[ id ].isFinished == toDoneState )
 		{
-		    console.log( "Allready finished!" );
+		    console.log( "State allready reached: "
+                         + id + ", state: " + toDoneState );
 		    return false;
 		}
+        var oldListLeader = this.lastFinishedId;
+        if( !toDoneState )
+        {
+            oldListLeader = this.priorityStartId;
+        }
 	    var oldNext = this.scrumDataArray[ id ].nextPriorityId;
         var oldPrevious = this.scrumDataArray[ id ].previousPriorityId;
 
-		this.scrumDataArray[ id ].isFinished = true;
+		this.scrumDataArray[ id ].isFinished = toDoneState;
 		this.scrumDataArray[ id ].finishDate = new Date();
-		this.scrumDataArray[ id ].nextPriorityId = this.lastFinishedId;
+		this.scrumDataArray[ id ].nextPriorityId = oldListLeader;
 		this.scrumDataArray[ id ].previousPriorityId = -1;
-		// fix open list
+		// fix old list
 		if( oldPrevious != -1 )
 		{
 	            this.scrumDataArray[ oldPrevious ].nextPriorityId = oldNext;
@@ -67,17 +73,33 @@ var scrumDataManager = {
 		{
 	            this.scrumDataArray[ oldNext ].previousPriorityId = oldPrevious;
 		}
-                if( scrumDataManager.priorityStartId == id )
+        if( toDoneState && scrumDataManager.priorityStartId === id )
 		{
 		    this.priorityStartId = oldNext;
 		}
-		// fix finished list
-		if( !( this.lastFinishedId == -1) )
+        if( !toDoneState && scrumDataManager.lastFinishedId === id )
 		{
-		   this.scrumDataArray[ this.lastFinishedId ].previousPriorityId = id;
+		    this.lastFinishedId = oldNext;
 		}
-                this.lastFinishedId = id;
-                this.dirtyFlag = true;
+		// fix new list
+        if( toDoneState )
+        {
+		    if( !( this.lastFinishedId === -1) )
+		    {
+		       this.scrumDataArray[ this.lastFinishedId ].previousPriorityId = id;
+		    }
+            this.lastFinishedId = id;
+        }
+        else
+        {
+            if( !( this.priorityStartId === -1) )
+		    {
+		       this.scrumDataArray[ this.priorityStartId ].previousPriorityId = id;
+		    }
+            this.priorityStartId = id;
+
+        }
+        this.dirtyFlag = true;
 		this.versionCounter++;
 		return true;
 	},

@@ -270,7 +270,7 @@ $( document ).ready(function() {
     socket.on( scrumDataManager.commandToClient.FINISH, function ( data ) {
 		console.log( "received finish data: " + data.featurename );
         scrumDataManager.UpdateData( data );
-        scrumDataManager.Finish( data.id );
+        scrumDataManager.SetDoneState( data.id, true );
 		MoveFromOpenToCloseList( data );
     });
 
