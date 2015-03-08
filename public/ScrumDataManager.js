@@ -149,6 +149,10 @@ var scrumDataManager = {
 		this.dirtyFlag = false;
 		this.versionCounter = 0;
     },
+    GetRelativeWeek: function( baseDate, relativeDate )
+    {
+        return Math.floor( ( relativeDate - baseDate ) / ( 604800000 ) );
+    },
     GetSumAndOldestDateOfFinished: function() {
        var result = {};
        result.sum = 0;

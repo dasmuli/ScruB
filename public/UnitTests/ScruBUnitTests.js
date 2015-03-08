@@ -337,8 +337,8 @@ QUnit.test( "scrum data manager should return allways something",
     var result = scrumDataManager.GetSumAndOldestDateOfFinished();
 	assert.equal( result.sum, 0 );
 	assert.notEqual( result.oldestDate, undefined );
+});
 
-});	
 QUnit.test( "scrum data manager should compute sum and oldest date",
     function( assert ) {
 	scrumDataManager.InitTestData();
@@ -357,4 +357,23 @@ QUnit.test( "scrum data manager should compute sum and oldest date",
 	assert.equal( result.oldestDate, oldest );
 });
 
+QUnit.test( "scrum data manager should compute relative weeks",
+    function( assert ) {
+    var oldest = new Date( 2003, 6, 1 );
+    var other  = new Date( 2003, 6, 1 );
+	assert.equal( scrumDataManager.GetRelativeWeek( oldest, other ), 0 );
+    other  = new Date( 2003, 6, 7 );
+	assert.equal( scrumDataManager.GetRelativeWeek( oldest, other ), 0 );
+    other  = new Date( 2003, 6, 8 );
+	assert.equal( scrumDataManager.GetRelativeWeek( oldest, other ), 1 );
+    other  = new Date( 2003, 6, 15 );
+	assert.equal( scrumDataManager.GetRelativeWeek( oldest, other ), 2 );
+    other  = new Date( 2003, 7, 1 );
+	assert.equal( scrumDataManager.GetRelativeWeek( oldest, other ), 4 );
+    other  = new Date( 2004, 6, 1 );
+	assert.equal( scrumDataManager.GetRelativeWeek( oldest, other ), 52 );
+    other  = new Date( 2005, 6, 1 );
+	assert.equal( scrumDataManager.GetRelativeWeek( oldest, other ), 104 );
+
+});
 
