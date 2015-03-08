@@ -92,6 +92,14 @@ function AddDataDataFrontList( scrumData )
     }
 }
 
+function RefreshList( list )
+{
+	if ($( list ).hasClass('ui-listview')) 
+    {
+        $( list ).listview('refresh');
+    }
+}
+
 function MoveFromCloseToOpenList( data )
 {
 	console.log( "Moving from close to open: " + data.id );
@@ -102,9 +110,10 @@ function MoveFromCloseToOpenList( data )
     {
         $( "#scrumListId"+data.id ).insertBefore( ($ ( "#scrumListId"+data.nextPriorityId ) ) );
     }
-    $( '#scrumDataList' ).listview('refresh');
-    $( '#scrumDoneList' ).listview('refresh');
+    RefreshList( '#scrumDataList' );       
+    RefreshList( '#scrumDoneList' );       
 }
+
 function MoveFromOpenToCloseList( data )
 {
 	console.log( "Moving from open to close: " + data.id );
@@ -115,8 +124,8 @@ function MoveFromOpenToCloseList( data )
     {
         $( "#scrumListId"+data.id ).insertBefore( ($ ( "#scrumListId"+data.nextPriorityId ) ) );
     }
-    $( '#scrumDataList' ).listview('refresh');
-    $( '#scrumDoneList' ).listview('refresh');
+    RefreshList( '#scrumDataList' );       
+    RefreshList( '#scrumDoneList' );
 }
 
 
