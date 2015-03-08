@@ -153,6 +153,48 @@ var scrumDataManager = {
     {
         return Math.floor( ( relativeDate - baseDate ) / ( 604800000 ) );
     },
+    GetWeekBasedChartData: function()
+    {
+        var sumDate = this.GetSumAndOldestDateOfFinished();
+        var baseDate = sumDate.oldestDate;
+        var result = [];
+        result[ 0 ] = sumDate.sum;
+        var maxLength = this.scrumDataArray.length;
+        var relativeWeek;
+        var i;
+        for ( i = 0; i < maxLength; i++ )
+        {
+            if( this.scrumDataArray[ i ].isFinished )
+            {
+                relativeWeek = this.GetRelativeWeek( baseDate,
+                             this.scrumDataArray[ i ].finishDate ) + 1;
+                if( result[ relativeWeek ] == undefined )
+                {
+                    result[ relativeWeek ] = this.scrumDataArray[ i ].complexity;
+                }
+                else
+                {
+                    result[ relativeWeek ] += this.scrumDataArray[ i ].complexity;
+                }
+            }
+        }
+        // fix array holes
+        var previousValue = sumDate.sum;
+        maxLength = result.length;
+        for ( i = 1; i < maxLength; i++ )
+        {
+            if( result[ i ] == undefined )
+            {
+                result[ i ] = previousValue;
+            }
+            else
+            {
+                result[ i ]  = previousValue - result[ i ];
+                previousValue = result[ i ];
+            }
+        }
+        return result;
+    },
     GetSumAndOldestDateOfFinished: function() {
        var result = {};
        result.sum = 0;
@@ -160,9 +202,9 @@ var scrumDataManager = {
        var maxLength = this.scrumDataArray.length;
        for ( var i = 0; i < maxLength; i++ )
        {
+           result.sum += this.scrumDataArray[ i ].complexity;
            if( this.scrumDataArray[ i ].isFinished )
            {
-               result.sum += this.scrumDataArray[ i ].complexity;
                if( this.scrumDataArray[ i ].finishDate != undefined &&
                    this.scrumDataArray[ i ].finishDate < result.oldestDate )
                {

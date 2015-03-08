@@ -330,7 +330,8 @@ QUnit.test( "scrum data manager reopen last element", function( assert ) {
 	assert.equal( result, false );
 });
 
-QUnit.test( "scrum data manager should return allways something",
+QUnit.test( "scrum data manager should compute sum and oldest date\
+              return allways something",
     function( assert ) {
 	scrumDataManager.InitTestData();
     scrumDataManager.scrumDataArray = new Array();
@@ -353,7 +354,7 @@ QUnit.test( "scrum data manager should compute sum and oldest date",
     scrumDataManager.scrumDataArray[ 2 ].complexity = 8;
     scrumDataManager.scrumDataArray[ 2 ].isFinished = false;
     var result = scrumDataManager.GetSumAndOldestDateOfFinished();
-	assert.equal( result.sum, 53 );
+	assert.equal( result.sum, 61 );
 	assert.equal( result.oldestDate, oldest );
 });
 
@@ -376,4 +377,43 @@ QUnit.test( "scrum data manager should compute relative weeks",
 	assert.equal( scrumDataManager.GetRelativeWeek( oldest, other ), 104 );
 
 });
+
+QUnit.test( "scrum data manager should generate chart data",
+    function( assert ) {
+	scrumDataManager.InitTestData();
+    scrumDataManager.scrumDataArray[ 0 ].finishDate = new Date( 2003, 6, 8 );
+    scrumDataManager.scrumDataArray[ 0 ].complexity = 40;
+    scrumDataManager.scrumDataArray[ 0 ].isFinished = false;
+    scrumDataManager.scrumDataArray[ 1 ].finishDate = new Date( 2003, 6, 1 );
+    scrumDataManager.scrumDataArray[ 1 ].complexity = 13;
+    scrumDataManager.scrumDataArray[ 1 ].isFinished = true;
+    scrumDataManager.scrumDataArray[ 2 ].finishDate = new Date( 2003, 6, 22 );
+    scrumDataManager.scrumDataArray[ 2 ].complexity = 8;
+    scrumDataManager.scrumDataArray[ 2 ].isFinished = true;
+    var result = scrumDataManager.GetWeekBasedChartData();
+	assert.equal( result[ 0 ], 61 ); // sum of all
+	assert.equal( result[ 1 ], 48 ); // sum  - 13
+	assert.equal( result[ 2 ], 48 ); // nothing changed
+	assert.equal( result[ 3 ], 48 ); // no entry, must be same as before
+	assert.equal( result[ 4 ], 40 ); // remaining - 8
+});
+
+QUnit.test( "scrum data manager chart data with two values in 1 week",
+    function( assert ) {
+	scrumDataManager.InitTestData();
+    scrumDataManager.scrumDataArray[ 0 ].finishDate = new Date( 2003, 6, 8 );
+    scrumDataManager.scrumDataArray[ 0 ].complexity = 40;
+    scrumDataManager.scrumDataArray[ 0 ].isFinished = false;
+    scrumDataManager.scrumDataArray[ 1 ].finishDate = new Date( 2003, 6, 1 );
+    scrumDataManager.scrumDataArray[ 1 ].complexity = 13;
+    scrumDataManager.scrumDataArray[ 1 ].isFinished = true;
+    scrumDataManager.scrumDataArray[ 2 ].finishDate = new Date( 2003, 6, 7 );
+    scrumDataManager.scrumDataArray[ 2 ].complexity = 8;
+    scrumDataManager.scrumDataArray[ 2 ].isFinished = true;
+    var result = scrumDataManager.GetWeekBasedChartData();
+	assert.equal( result[ 0 ], 61 ); // sum of all
+	assert.equal( result[ 1 ], 40 ); // sum  - 13 - 8
+	assert.equal( result[ 2 ], undefined ); // nothing changed
+});
+
 
