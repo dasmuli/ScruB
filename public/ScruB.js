@@ -323,6 +323,7 @@ $( document ).ready(function() {
 		console.log( "received add data: " + data.featurename );
 		scrumDataManager.AddDataToFront( data );
 		AddDataDataFrontList( data );
+        $( '#scrumDataList' ).listview('refresh');
     });
 
     // update non-order related data
