@@ -157,7 +157,7 @@ var scrumDataManager = {
     {
         var millisecondsRelativeWeek = Math.floor(  baseDate.getTime() + relativeWeek * 604800000 );
         var date = new Date( millisecondsRelativeWeek );
-        return date.getFullYear()+'-'+date.getMonth()+'-'+date.getDate();
+        return date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
     },
     GetWeekBasedChartData: function()
     {

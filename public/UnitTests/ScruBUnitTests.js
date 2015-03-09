@@ -397,10 +397,10 @@ QUnit.test( "scrum data manager should generate chart data",
 	assert.equal( result.dataArray[ 3 ], 48 ); // no entry, must be same as before
 	assert.equal( result.dataArray[ 4 ], 40 ); // remaining - 8
     assert.equal( result.labelArray[ 0 ], '' );
-	assert.equal( result.labelArray[ 1 ], '2003-6-1' ); 
-	assert.equal( result.labelArray[ 2 ], '2003-6-8' );
-	assert.equal( result.labelArray[ 3 ], '2003-6-15' );
-	assert.equal( result.labelArray[ 4 ], '2003-6-22' );
+	assert.equal( result.labelArray[ 1 ], '2003-7-1' ); 
+	assert.equal( result.labelArray[ 2 ], '2003-7-8' );
+	assert.equal( result.labelArray[ 3 ], '2003-7-15' );
+	assert.equal( result.labelArray[ 4 ], '2003-7-22' );
 
 });
 
@@ -425,10 +425,10 @@ QUnit.test( "scrum data manager chart data with two values in 1 week",
 QUnit.test( "scrum data manager should generate strings names for relative weeks",
     function( assert ) {
     var oldest = new Date( 2003, 6, 1 );
-	assert.equal( scrumDataManager.GetRelativeWeekName( oldest, 0 ), '2003-6-1' );
-	assert.equal( scrumDataManager.GetRelativeWeekName( oldest, 1 ), '2003-6-8' );
-	assert.equal( scrumDataManager.GetRelativeWeekName( oldest, 2 ), '2003-6-15' );
-	assert.equal( scrumDataManager.GetRelativeWeekName( oldest, 4 ), '2003-6-29' );
-	assert.equal( scrumDataManager.GetRelativeWeekName( oldest, 52 ), '2004-5-29' );
+	assert.equal( scrumDataManager.GetRelativeWeekName( oldest, 0 ), '2003-7-1' );
+	assert.equal( scrumDataManager.GetRelativeWeekName( oldest, 1 ), '2003-7-8' );
+	assert.equal( scrumDataManager.GetRelativeWeekName( oldest, 2 ), '2003-7-15' );
+	assert.equal( scrumDataManager.GetRelativeWeekName( oldest, 4 ), '2003-7-29' );
+	assert.equal( scrumDataManager.GetRelativeWeekName( oldest, 52 ), '2004-6-29' );
 });
 
