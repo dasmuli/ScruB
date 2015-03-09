@@ -272,7 +272,8 @@ function ComputeChartData()
 	window.myLine = new Chart(ctx).Line(lineChartData, {
 		responsive: true,
 	    maintainAspectRatio: false,
-        bezierCurve: false
+        bezierCurve: false,
+        scaleBeginAtZero: true
 	});
 
 }
