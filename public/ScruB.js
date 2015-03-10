@@ -10,6 +10,46 @@ var socket;
 
 ///////////////////////   UI  functions   /////////////////////////////////////////////////
 
+
+function ComputeChartData()
+{
+    var chartData = scrumDataManager.GetWeekBasedChartData();
+    console.log( "Setting new chart data: " + JSON.stringify( chartData ) );
+    if( $( '#canvas' ).width() <= 100 )
+    {
+        console.log( "Chart canvas too small." );
+    }
+    else
+    {
+      console.log( "Chart canvas width " + $( '#canvas' ).width() );
+      if( window.myLine == undefined )
+      {
+        lineChartData = {
+				labels : chartData.labelArray,
+				datasets : [
+					{
+						label: "Burndown chart",
+                        fillColor : "rgba(151,187,205,0.2)",
+						strokeColor : "rgba(151,187,205,1)",
+						pointColor : "rgba(151,187,205,1)",
+						pointStrokeColor : "#fff",
+						pointHighlightFill : "#fff",
+						pointHighlightStroke : "rgba(151,187,205,1)",
+						data : chartData.dataArray
+                    }
+				]
+			}
+        ctx = document.getElementById("canvas").getContext("2d");	
+	    window.myLine = new Chart(ctx).Line(lineChartData, {
+		    responsive: true,
+ 	        maintainAspectRatio: false,
+            bezierCurve: false,
+            scaleBeginAtZero: true
+	    });
+      }
+    }
+
+}
 function SwapListElements( upperElementId, lowerElementId )
 {
 	$( "#scrumListId"+upperElementId ).insertAfter( ($ ( "#scrumListId"+lowerElementId ) ) );
@@ -134,6 +174,12 @@ function SetHeaderText( text )
 //////////////////////////////   UI events   ///////////////////////////////////////////////////
 
 
+$(document).on("pageshow", "#mainPage", function()
+{
+    console.log( "Showing main page" );
+    ComputeChartData();
+});
+
 $(document).on("pageinit", "#donePage", function()
 {
     $("#editDoneData").on("popupbeforeposition", function(event, ui) { 
@@ -249,34 +295,7 @@ function SendAddDataToServer( name, _complexity, _description )
 	socket.emit( scrumDataManager.commandToServer.ADD_DATA_TO_FRONT, data );
 }
 
-function ComputeChartData()
-{
-    var chartData = scrumDataManager.GetWeekBasedChartData();
-    console.log( "Setting new chart data: " + JSON.stringify( chartData ) );
-    lineChartData = {
-				labels : chartData.labelArray,
-				datasets : [
-					{
-						label: "Burndown chart",
-                        fillColor : "rgba(151,187,205,0.2)",
-						strokeColor : "rgba(151,187,205,1)",
-						pointColor : "rgba(151,187,205,1)",
-						pointStrokeColor : "#fff",
-						pointHighlightFill : "#fff",
-						pointHighlightStroke : "rgba(151,187,205,1)",
-						data : chartData.dataArray
-                    }
-				]
-			}
-    ctx = document.getElementById("canvas").getContext("2d");	
-	window.myLine = new Chart(ctx).Line(lineChartData, {
-		responsive: true,
-	    maintainAspectRatio: false,
-        bezierCurve: false,
-        scaleBeginAtZero: true
-	});
 
-}
 
 /////////////////////   Network events   /////////////////////////////////////////////////
 
