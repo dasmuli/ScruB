@@ -46,6 +46,32 @@ function ComputeChartData()
             bezierCurve: false,
             scaleBeginAtZero: true
 	    });
+      } // window.myLine undefined
+      else
+      {
+          var i;
+          var dataLength = chartData.dataArray.length;
+          if( window.myLine.datasets[ 0 ].points.length ==
+              chartData.dataArray.length )
+          {
+              for( i = 0; i < dataLength; i++ )
+              {
+                  window.myLine.datasets[ 0 ].points[ i ].value =
+                         chartData.dataArray[ i ];
+              }
+              window.myLine.update();
+          }
+          else
+          {
+              while( window.myLine.datasets[0].points.length > 0 )
+              {
+                  window.myLine.removeData();
+              }
+              for( i = 0; i < dataLength; i++ )
+              {
+                  window.myLine.addData( [ chartData.dataArray[ i ] ], chartData.labelArray[ i ] );
+              }
+          }
       }
     }
 
@@ -107,11 +133,7 @@ function CreateDataListEntry( list, scrumdata, addEditFeats )
 
 function UpdateBacklogData( scrumdata )
 {
-	// try to find elementFromPoint
-	if( scrumDataManager.scrumDataArray[ scrumdata.id ] )
-	{
-		scrumDataManager.scrumDataArray[ scrumdata.id ] = scrumdata;
-	}
+    scrumDataManager.UpdateData( scrumdata );
 	if( $( "#editLink"+scrumdata.id ).length != 0 )
 	{
 		$( "#editLink"+scrumdata.id ).html( scrumdata.featurename );
@@ -327,6 +349,7 @@ $( document ).ready(function() {
         scrumDataManager.UpdateData( data );
         scrumDataManager.SetDoneState( data.id, true );
 		SetDoneListForElement( data, true );
+        ComputeChartData();
     });
 
     socket.on( scrumDataManager.commandToClient.REOPEN, function ( data )
@@ -335,6 +358,7 @@ $( document ).ready(function() {
         scrumDataManager.UpdateData( data );
         scrumDataManager.SetDoneState( data.id, false );
 		SetDoneListForElement( data, false );
+        ComputeChartData();
     });
 
 
@@ -344,11 +368,13 @@ $( document ).ready(function() {
 		scrumDataManager.AddDataToFront( data );
 		AddDataDataFrontList( data );
         $( '#scrumDataList' ).listview('refresh');
+        ComputeChartData();
     });
 
     // update non-order related data
     socket.on( scrumDataManager.commandToClient.UPDATE_DATA, function (data) {
 		UpdateBacklogData( data );
+        ComputeChartData();
     });
 	
 	socket.on('scrubmoveup', function ( lowerElementId ) {
