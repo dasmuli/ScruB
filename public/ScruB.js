@@ -76,6 +76,50 @@ function ComputeChartData()
     }
 
 }
+function StartIntegrityCheckTimeout()
+{
+    window.setTimeout( CheckScrumListIntegrity, 500 ); // check once after 500ms if list is ok
+}
+function CheckScrumListIntegrity()
+{
+    console.log( "Checking list integrity" );
+    var prioId = scrumDataManager.priorityStartId;
+    var current;
+    var next;
+	while( prioId != -1 )
+	{
+		current = $( '#scrumListId'+prioId );
+        var nextId = scrumDataManager.scrumDataArray[ prioId ].nextPriorityId
+        if( current.length ) // length checks, if elements exists 
+        {
+             if( nextId != -1 )
+             {
+                 next = $( '#scrumListId' + nextId );
+                 if( next.length )
+                 {
+                     if( !next.is( current.next() ) )
+                     {
+                         console.log( "List integrity: wrong order: " + nextId 
+                                      + " must be follwing " + prioId );
+	                     next.insertAfter( current );
+                     }
+                 }
+                 else // add a new list element
+                 {
+                     console.log( "List integrity: missing element: " + nextId );
+                     CreateDataListEntry( "#scrumDataList",
+                         scrumDataManager.scrumDataArray[ nextId ], true );
+                     next = $( '#scrumListId' + nextId );
+	                 next.insertAfter( current );
+                 }
+            }
+        }
+		prioId = scrumDataManager.scrumDataArray[ prioId ].nextPriorityId;
+	}
+
+}
+
+
 function SwapListElements( upperElementId, lowerElementId )
 {
 	$( "#scrumListId"+upperElementId ).insertAfter( ($ ( "#scrumListId"+lowerElementId ) ) );
@@ -322,6 +366,10 @@ function SendAddDataToServer( name, _complexity, _description )
 /////////////////////   Network events   /////////////////////////////////////////////////
 
 $( document ).ready(function() {
+    if( typeof io == 'undefined' ) // Unit tests do not define io
+    {
+        return;
+    }
 	// initiate WebSocket
     socket = io.connect();
 
@@ -350,6 +398,7 @@ $( document ).ready(function() {
         scrumDataManager.SetDoneState( data.id, true );
 		SetDoneListForElement( data, true );
         ComputeChartData();
+        StartIntegrityCheckTimeout()
     });
 
     socket.on( scrumDataManager.commandToClient.REOPEN, function ( data )
@@ -359,6 +408,7 @@ $( document ).ready(function() {
         scrumDataManager.SetDoneState( data.id, false );
 		SetDoneListForElement( data, false );
         ComputeChartData();
+        StartIntegrityCheckTimeout()
     });
 
 
@@ -369,6 +419,7 @@ $( document ).ready(function() {
 		AddDataDataFrontList( data );
         $( '#scrumDataList' ).listview('refresh');
         ComputeChartData();
+        StartIntegrityCheckTimeout()
     });
 
     // update non-order related data
@@ -386,6 +437,7 @@ $( document ).ready(function() {
 			SwapListElements( upperElementId, lowerElementId );
 		}
         $( '#scrumDataList' ).listview('refresh');
+        StartIntegrityCheckTimeout()
 	});
 
 
@@ -414,6 +466,7 @@ $( document ).ready(function() {
 			prioId = scrumDataManager.scrumDataArray[ prioId ].nextPriorityId;
 		}
         ComputeChartData();
+        StartIntegrityCheckTimeout();
     });
     // Nachricht senden
     function senden(){

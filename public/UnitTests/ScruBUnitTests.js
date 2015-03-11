@@ -432,3 +432,4 @@ QUnit.test( "scrum data manager should generate strings names for relative weeks
 	assert.equal( scrumDataManager.GetRelativeWeekName( oldest, 52 ), '2004-6-29' );
 });
 
+
