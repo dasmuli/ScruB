@@ -371,7 +371,7 @@ $( document ).ready(function() {
         return;
     }
 	// initiate WebSocket
-    socket = io.connect();
+    socket = io.connect('/ScruB');
 
     socket.on( 'connect', function() {
      console.log( "Socket connected" );

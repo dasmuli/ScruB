@@ -26,22 +26,22 @@ this.scrumDB.scrumDataArray = this.scrumDataManager.scrumDataArray;
 
 this.ReceiveAddData = function( data ){
     this.scrumDataManager.AddDataToFront( data );
-    this.io.sockets.emit( this.scrumDataManager.commandToClient.ADD_DATA_TO_FRONT, data );
+    ScruBs.emit( this.scrumDataManager.commandToClient.ADD_DATA_TO_FRONT, data );
 }
 
 ///////////////  websocket + events  //////////////////////////
 
 _scrumServer = this;  // global instance for callbacks, could not find better way :(
 
-_scrumServer.io.sockets.on('connection', function (socket) {
-	socket.emit('chat', { zeit: new Date(), text: 'You are locked on to the server!' });
-	socket.on('chat', function (data) {
-		_scrumServer.io.sockets.emit('chat', { zeit: new Date(), name: data.name || 'Anonym', text: data.text });
-	});
+var ScruBs =_scrumServer.io.of( '/ScruB' ).on('connection', function (socket) {
+	//socket.emit('chat', { zeit: new Date(), text: 'You are locked on to the server!' });
+	//socket.on('chat', function (data) {
+	//	_scrumServer.io.sockets.emit('chat', { zeit: new Date(), name: data.name || 'Anonym', text: data.text });
+	//});
 	
 	socket.on( _scrumServer.scrumDataManager.commandToServer.UPDATE_DATA, function (data) {
 		_scrumServer.scrumDataManager.UpdateData( data );
-		_scrumServer.io.sockets.emit(_scrumServer.scrumDataManager.commandToClient.UPDATE_DATA,
+		ScruBs.emit(_scrumServer.scrumDataManager.commandToClient.UPDATE_DATA,
              _scrumServer.scrumDataManager.scrumDataArray[ data.id ]
             );
 	});
@@ -50,7 +50,7 @@ _scrumServer.io.sockets.on('connection', function (socket) {
 		_scrumServer.scrumDataManager.UpdateData( data );
 		if( _scrumServer.scrumDataManager.SetDoneState( data.id, true ) )
         {
-		    _scrumServer.io.sockets.emit( _scrumServer.scrumDataManager.commandToClient.FINISH,
+		    ScruBs.emit( _scrumServer.scrumDataManager.commandToClient.FINISH,
                 _scrumServer.scrumDataManager.scrumDataArray[ data.id ]
 			);
         }
@@ -60,7 +60,7 @@ _scrumServer.io.sockets.on('connection', function (socket) {
 		_scrumServer.scrumDataManager.UpdateData( data );
 		if( _scrumServer.scrumDataManager.SetDoneState( data.id, false ) )
         {
-		    _scrumServer.io.sockets.emit( _scrumServer.scrumDataManager.commandToClient.REOPEN,
+		    ScruBs.emit( _scrumServer.scrumDataManager.commandToClient.REOPEN,
                 _scrumServer.scrumDataManager.scrumDataArray[ data.id ]
 			);
         }
@@ -70,7 +70,7 @@ _scrumServer.io.sockets.on('connection', function (socket) {
 	socket.on('moveDataUp', function (data) {
 		if( _scrumServer.scrumDataManager.MovePriorityUp( data.id ) )
 		{
-		  _scrumServer.io.sockets.emit( 'scrubmoveup', data.id );
+		  ScruBs.emit( 'scrubmoveup', data.id );
 		}
 	});
     
