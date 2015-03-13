@@ -21,6 +21,17 @@ it('should exist a scrumDB', function () {
 	  assert.notEqual( scrumDB.LoadScrumDataSync, null );
 });
 
+it('should automatically load the Default', function () {
+	  assert.notEqual( scrumDB.datasets[ 'Default' ], null );
+});
+
+it('should find the default data set', function () {
+      var db = scrumDB.GetData( "Default" );
+	  assert.notEqual( db, null );
+	  assert.equal( db.name, "Default" );
+});
+
+
 it('should generate a file in the data directory', function ( done ) {
 	  assert.notEqual( scrumDataManager.scrumDataArray, null );
 	  assert.notEqual( scrumDataManager, null );

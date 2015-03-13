@@ -16,22 +16,30 @@ this.LoadScrumDataSync = function( name )
     } catch( e )
     {
      	 var data= {};
-	 data.priorityStartId = -1;
-	 data.lastFinishedId = -1;
-	 data.scrumDataArray = new Array();
-	 return data;
+	     data.priorityStartId = -1;
+	     data.lastFinishedId = -1;
+	     data.scrumDataArray = new Array();
+	     return data;
     }
     if( preparsedData.length == 0 )
     {
-    console.log( "ScrumDB::LoadScrumDataSync: Could not open file." );
-	var data= {};
-	data.priorityStartId = -1;
-	data.lastFinishedId = -1;
-	data.scrumDataArray = new Array();
+         console.log( "ScrumDB::LoadScrumDataSync: Could not open file." );
+	     var data= {};
+	     data.priorityStartId = -1;
+	     data.lastFinishedId = -1;
+	     data.scrumDataArray = new Array();
 	return data;
     }
     return JSON.parse( preparsedData );
 }
+
+this.Init = function()
+{
+    this.datasets = {};
+    this.datasets.Default = this.LoadScrumDataSync( 'Default' );
+
+}
+this.Init();
 
 this.SaveScrumDataAsync = function( name, scrumDataArray, priorityStartId,
                                     lastFinishedId, callback )
