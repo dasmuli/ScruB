@@ -18,7 +18,7 @@ describe( 'ScrumServer', function() {
     var socket;
     var testData;
     var dataReceivedCallback;
-    var socketURL = 'http://127.0.0.1:3001'
+    var socketURL = 'http://127.0.0.1:3001/ScruB'
     var socketOptions = {
         transports: ['websocket'],
         'force new connection': true

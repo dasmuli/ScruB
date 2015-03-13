@@ -28,6 +28,7 @@ it('should generate a file in the data directory', function ( done ) {
 	  scrumDB.SaveScrumDataAsync( "Test",
 			 scrumDataManager.scrumDataArray,
 			 scrumDataManager.priorityStartId,
+             -1,
 			 done );
 });
 
@@ -66,6 +67,12 @@ it('should return something legal when loading non existing files', function () 
 	  assert.equal( data.scrumDataArray.length, 0 );
 	  assert.equal( data.priorityStartId, -1 );
 	  assert.equal( data.lastFinishedId, -1 );
+});
+
+it('should find the default data set', function () {
+      var db = scrumDB.GetData( "Default" );
+	  assert.notEqual( db, null );
+	  assert.equal( db.name, "Default" );
 });
 
 

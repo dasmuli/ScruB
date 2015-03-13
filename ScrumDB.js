@@ -3,6 +3,11 @@ var fs = require( 'fs' );
 
 this.scrumDataManagerList = new Array();
 
+this.GetData = function( name )
+{
+   return scrumDataManager; 
+}
+
 this.LoadScrumDataSync = function( name )
 {
     try
