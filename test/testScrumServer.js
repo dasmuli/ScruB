@@ -99,7 +99,7 @@ it('should receive add commands', function( _dataReceivedCallback ) {
       testData.complexity  = 40;
 	  dataReceivedCallback = callbackOnReceive;
       socket.emit( _scrumServer.scrumDataManager.commandToServer.ADD_DATA_TO_FRONT, testData );
-	  });
+});
 
 
 } ); // of describe

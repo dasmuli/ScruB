@@ -76,6 +76,17 @@ it('should find the default data set', function () {
 	  assert.equal( db.name, "Default" );
 });
 
+it('should create new project', function() {
+	  var successResult =  _scrumServer.CreateNewProject( "TestCreateNewProject" );
+      // check if project was added to scrumDB 
+	  assert.equal( successResult, true );
+      // if the project exists, the command is rejected
+      successResult =  _scrumServer.CreateNewProject( "TestCreateNewProject" );
+	  assert.equal( successResult, false );
+      // remove from ScrumDB
+      scrumDB.DeleteData( "TestCreateNewProject" );
+});
+
 
 
 } ); // of describe

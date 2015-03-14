@@ -1,11 +1,11 @@
 
 var fs = require( 'fs' );
 
-this.scrumDataSetList = new Array();
+this.scrumDataSetList =  {};
 
 this.GetData = function( name )
 {
-   return scrumDataManager; 
+   return this.scrumDataSetList[ name ]; 
 }
 
 this.LoadScrumDataSync = function( name )
@@ -57,14 +57,14 @@ this.SaveScrumDataAsync = function( name, scrumDataArray, priorityStartId,
 
 this.TimerCallback = function()
 {
-    for( var i = 0; i < this.scrumDataSetList.length; i++ )
+    for( var dataSet in this.scrumDataSetList )
     {
-        if( this.scrumDataSetList[ i ].dirtyFlag )
+        if( this.scrumDataSetList.hasOwnProperty( dataSet ) )
 	    {
-	        this.SaveScrumDataAsync( this.scrumDataSetList[ i ].name,
-			    this.scrumDataSetList[ i ].scrumDataArray,
-			    this.scrumDataSetList[ i ].priorityStartId,
-                this.scrumDataSetList[ i ].lastFinishedId, 
+	        this.SaveScrumDataAsync( dataSet.name,
+			    dataSet.scrumDataArray,
+			    dataSet.priorityStartId,
+                dataSet.lastFinishedId, 
                 null );
 	    }
     }
@@ -77,7 +77,19 @@ this.timerHandle = setInterval( (function( self ){
 
 this.AddDataManager = function( scrumDataSet )
 {
-    this.scrumDataSetList.push( scrumDataSet );
-    this.TimerCallback();
+    if( this.scrumDataSetList[ scrumDataSet.name ] == undefined )
+    {
+        this.scrumDataSetList[ scrumDataSet.name ] = scrumDataSet;
+        this.TimerCallback();
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
+this.DeleteData = function( name )
+{
+    delete this.scrumDataSetList[ name ];
+}
