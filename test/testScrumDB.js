@@ -25,18 +25,12 @@ it('should automatically load the Default', function () {
 	  assert.notEqual( scrumDB.datasets[ 'Default' ], null );
 });
 
-it('should find the default data set', function () {
-      var db = scrumDB.GetData( "Default" );
-	  assert.notEqual( db, null );
-	  assert.equal( db.name, "Default" );
-});
-
 
 it('should generate a file in the data directory', function ( done ) {
 	  assert.notEqual( scrumDataManager.scrumDataArray, null );
 	  assert.notEqual( scrumDataManager, null );
 	  scrumDataManager.InitTestData();
-	  scrumDB.SaveScrumDataAsync( "Test",
+	  scrumDB.SaveScrumDataAsync( "Test2",
 			 scrumDataManager.scrumDataArray,
 			 scrumDataManager.priorityStartId,
              -1,
@@ -55,17 +49,13 @@ it('should load the file in the data directory', function () {
 	  assert.equal( scrumDataManager.priorityStartId, 0 );
 });
 
+
 it('should have a timer', function () {
 	  assert.notEqual( scrumDB.timerHandle, null );
 });
 
-it('should receive a scrum data manager an ask if it is changed', function (done) {
+it('should receive a scrum data manager', function () {
 	  scrumDataManager.InitTestData();
-	  var mockWasCalled = false;
-	  scrumDataManager.IsDirty = function() {
-		mockWasCalled = true;
-		done();
-	  }
 	  scrumDB.AddDataManager( scrumDataManager );
 });
 

@@ -83,13 +83,13 @@ function StartIntegrityCheckTimeout()
 function CheckScrumListIntegrity()
 {
     console.log( "Checking list integrity" );
-    var prioId = scrumDataManager.priorityStartId;
+    var prioId = scrumDataManager.activeDataSet.priorityStartId;
     var current;
     var next;
 	while( prioId != -1 )
 	{
 		current = $( '#scrumListId'+prioId );
-        var nextId = scrumDataManager.scrumDataArray[ prioId ].nextPriorityId
+        var nextId = scrumDataManager.activeDataSet.scrumDataArray[ prioId ].nextPriorityId
         if( current.length ) // length checks, if elements exists 
         {
              if( nextId != -1 )
@@ -108,13 +108,13 @@ function CheckScrumListIntegrity()
                  {
                      console.log( "List integrity: missing element: " + nextId );
                      CreateDataListEntry( "#scrumDataList",
-                         scrumDataManager.scrumDataArray[ nextId ], true );
+                         scrumDataManager.activeDataSet.scrumDataArray[ nextId ], true );
                      next = $( '#scrumListId' + nextId );
 	                 next.insertAfter( current );
                  }
             }
         }
-		prioId = scrumDataManager.scrumDataArray[ prioId ].nextPriorityId;
+		prioId = scrumDataManager.activeDataSet.scrumDataArray[ prioId ].nextPriorityId;
 	}
 
 }
@@ -252,21 +252,21 @@ $(document).on("pageinit", "#donePage", function()
 		$( "#flipDoneFinished" ).prop( 'checked', false ).flipswitch( 'refresh' );
         $( '#textdoneinputName' ).blur();
 	    $("#textdoneinputName").val( 
-          scrumDataManager.scrumDataArray[ scrumDataIdInDoneEditor ].featurename );
+          scrumDataManager.activeDataSet.scrumDataArray[ scrumDataIdInDoneEditor ].featurename );
 		$("#selectDoneComplexityEditPopup").val(
-          scrumDataManager.scrumDataArray[ scrumDataIdInDoneEditor ].complexity )
+          scrumDataManager.activeDataSet.scrumDataArray[ scrumDataIdInDoneEditor ].complexity )
                 .selectmenu( "refresh", true );
 		$("#descriptionDoneAreaEditPopup").val(
-         scrumDataManager.scrumDataArray[ scrumDataIdInDoneEditor ].description );
+         scrumDataManager.activeDataSet.scrumDataArray[ scrumDataIdInDoneEditor ].description );
         });
 	    $( "#editorDoneOkButton" ).click(function() {
           if( !$( "#flipDoneFinished" ).is( ':checked' ) )
           {
-            scrumDataManager.scrumDataArray[ scrumDataIdInDoneEditor ]
+            scrumDataManager.activeDataSet.scrumDataArray[ scrumDataIdInDoneEditor ]
                     .featurename = $("#textdoneinputName").val();
-            scrumDataManager.scrumDataArray[ scrumDataIdInDoneEditor ]
+            scrumDataManager.activeDataSet.scrumDataArray[ scrumDataIdInDoneEditor ]
                     .complexity  = $("#selectDoneComplexityEditPopup").val();
-            scrumDataManager.scrumDataArray[ scrumDataIdInDoneEditor ]
+            scrumDataManager.activeDataSet.scrumDataArray[ scrumDataIdInDoneEditor ]
                     .description = $("#descriptionDoneAreaEditPopup").val();
      		SendUpdateOfScrumDataToServer( scrumDataIdInDoneEditor );
           }
@@ -287,21 +287,21 @@ $(document).on("pageinit", "#dataPage", function()
         $( '#textinputName' ).blur();
 		$( "#flipFinished" ).prop( 'checked', true ).flipswitch( 'refresh' );
 	    $("#textinputName").val( 
-          scrumDataManager.scrumDataArray[ scrumDataIdInEditor ].featurename );
+          scrumDataManager.activeDataSet.scrumDataArray[ scrumDataIdInEditor ].featurename );
 		$("#selectComplexityEditPopup").val(
-          scrumDataManager.scrumDataArray[ scrumDataIdInEditor ].complexity )
+          scrumDataManager.activeDataSet.scrumDataArray[ scrumDataIdInEditor ].complexity )
                 .selectmenu( "refresh", true );
 		$("#descriptionAreaEditPopup").val(
-         scrumDataManager.scrumDataArray[ scrumDataIdInEditor ].description );
+         scrumDataManager.activeDataSet.scrumDataArray[ scrumDataIdInEditor ].description );
         });
 	    $( "#editorOkButton" ).click(function() {
           if( $( "#flipFinished" ).is( ':checked' ) )
           {
-            scrumDataManager.scrumDataArray[ scrumDataIdInEditor ].featurename = 
+            scrumDataManager.activeDataSet.scrumDataArray[ scrumDataIdInEditor ].featurename = 
                $("#textinputName").val();
-            scrumDataManager.scrumDataArray[ scrumDataIdInEditor ].complexity = 
+            scrumDataManager.activeDataSet.scrumDataArray[ scrumDataIdInEditor ].complexity = 
                $("#selectComplexityEditPopup").val();
-            scrumDataManager.scrumDataArray[ scrumDataIdInEditor ].description = 
+            scrumDataManager.activeDataSet.scrumDataArray[ scrumDataIdInEditor ].description = 
                $("#descriptionAreaEditPopup").val();
      		SendUpdateOfScrumDataToServer( scrumDataIdInEditor );
           }
@@ -335,21 +335,21 @@ $(document).on("pageinit", "#dataPage", function()
 function SendUpdateOfScrumDataToServer( id )
 {
     console.log( "Sending update: " 
-                 + JSON.stringify( scrumDataManager.scrumDataArray[ id ] ) );
+                 + JSON.stringify( scrumDataManager.activeDataSet.scrumDataArray[ id ] ) );
 	socket.emit(scrumDataManager.commandToServer.UPDATE_DATA, 
-                scrumDataManager.scrumDataArray[ id ] );
+                scrumDataManager.activeDataSet.scrumDataArray[ id ] );
 }
 
 function SendDoneToServer()
 {
 	socket.emit( scrumDataManager.commandToServer.FINISH,
-                 scrumDataManager.scrumDataArray[ scrumDataIdInEditor ] );
+                 scrumDataManager.activeDataSet.scrumDataArray[ scrumDataIdInEditor ] );
 }
 
 function SendReopenToServer()
 {
 	socket.emit( scrumDataManager.commandToServer.REOPEN,
-                 scrumDataManager.scrumDataArray[ scrumDataIdInDoneEditor ] );
+                 scrumDataManager.activeDataSet.scrumDataArray[ scrumDataIdInDoneEditor ] );
 }
 
 function SendAddDataToServer( name, _complexity, _description )
@@ -430,7 +430,7 @@ $( document ).ready(function() {
 	
 	socket.on('scrubmoveup', function ( lowerElementId ) {
 		console.log( "received scrubmoveup: " + lowerElementId );
-		var upperElementId = scrumDataManager.scrumDataArray[ lowerElementId ].previousPriorityId;
+		var upperElementId = scrumDataManager.activeDataSet.scrumDataArray[ lowerElementId ].previousPriorityId;
 		scrumDataManager.MovePriorityUp( lowerElementId );
 		if( upperElementId != -1 )
 		{
@@ -445,25 +445,25 @@ $( document ).ready(function() {
 	socket.on('scrubfulldata', function ( data ) {
 		$("#scrumDataList").empty();
 		$("#scrumDoneList").empty();
-		scrumDataManager.scrumDataArray  = data.dataArray.slice();
-		scrumDataManager.priorityStartId = data.priorityStartId;
-		scrumDataManager.lastFinishedId  = data.lastFinishedId;
+		scrumDataManager.activeDataSet.scrumDataArray  = data.dataArray.slice();
+		scrumDataManager.activeDataSet.priorityStartId = data.priorityStartId;
+		scrumDataManager.activeDataSet.lastFinishedId  = data.lastFinishedId;
 		console.log( "full scrubdata received, length:" 
-			    + scrumDataManager.scrumDataArray.length );
-		var prioId = scrumDataManager.priorityStartId;
+			    + scrumDataManager.activeDataSet.scrumDataArray.length );
+		var prioId = scrumDataManager.activeDataSet.priorityStartId;
 		while( prioId != -1 )
 		{
 			CreateDataListEntry( '#scrumDataList',
-                                 scrumDataManager.scrumDataArray[ prioId ], true );
-			prioId = scrumDataManager.scrumDataArray[ prioId ].nextPriorityId;
+                                 scrumDataManager.activeDataSet.scrumDataArray[ prioId ], true );
+			prioId = scrumDataManager.activeDataSet.scrumDataArray[ prioId ].nextPriorityId;
 		}
-        prioId = scrumDataManager.lastFinishedId;
+        prioId = scrumDataManager.activeDataSet.lastFinishedId;
         console.log( "Creating done list with id: " + prioId );
 		while( prioId != undefined &&  prioId != -1 )
 		{
 			CreateDataListEntry( '#scrumDoneList'
-                                 ,scrumDataManager.scrumDataArray[ prioId ], false );
-			prioId = scrumDataManager.scrumDataArray[ prioId ].nextPriorityId;
+                                 ,scrumDataManager.activeDataSet.scrumDataArray[ prioId ], false );
+			prioId = scrumDataManager.activeDataSet.scrumDataArray[ prioId ].nextPriorityId;
 		}
         ComputeChartData();
         StartIntegrityCheckTimeout();

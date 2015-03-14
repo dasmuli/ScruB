@@ -1,7 +1,7 @@
 
 var fs = require( 'fs' );
 
-this.scrumDataManagerList = new Array();
+this.scrumDataSetList = new Array();
 
 this.GetData = function( name )
 {
@@ -16,6 +16,7 @@ this.LoadScrumDataSync = function( name )
     } catch( e )
     {
      	 var data= {};
+         data.name = name;
 	     data.priorityStartId = -1;
 	     data.lastFinishedId = -1;
 	     data.scrumDataArray = new Array();
@@ -25,10 +26,11 @@ this.LoadScrumDataSync = function( name )
     {
          console.log( "ScrumDB::LoadScrumDataSync: Could not open file." );
 	     var data= {};
+         data.name = name;
 	     data.priorityStartId = -1;
 	     data.lastFinishedId = -1;
 	     data.scrumDataArray = new Array();
-	return data;
+	     return data;
     }
     return JSON.parse( preparsedData );
 }
@@ -37,7 +39,6 @@ this.Init = function()
 {
     this.datasets = {};
     this.datasets.Default = this.LoadScrumDataSync( 'Default' );
-
 }
 this.Init();
 
@@ -46,6 +47,7 @@ this.SaveScrumDataAsync = function( name, scrumDataArray, priorityStartId,
 {
     fs.mkdir( "data", function(exists) {} );
     var data = {};
+    data.name = name;
     data.priorityStartId = priorityStartId;
     data.lastFinishedId  = lastFinishedId;
     data.scrumDataArray  = scrumDataArray;
@@ -55,16 +57,16 @@ this.SaveScrumDataAsync = function( name, scrumDataArray, priorityStartId,
 
 this.TimerCallback = function()
 {
-    for( var i = 0; i < this.scrumDataManagerList.length; i++ )
+    for( var i = 0; i < this.scrumDataSetList.length; i++ )
     {
-        if( this.scrumDataManagerList[ i ].IsDirty() )
-	{
-	    this.SaveScrumDataAsync( this.scrumDataManagerList[ i ].name,
-			    this.scrumDataArray,
-			    this.scrumDataManagerList[ i ].priorityStartId,
-                this.scrumDataManagerList[ i ].lastFinishedId, 
+        if( this.scrumDataSetList[ i ].dirtyFlag )
+	    {
+	        this.SaveScrumDataAsync( this.scrumDataSetList[ i ].name,
+			    this.scrumDataSetList[ i ].scrumDataArray,
+			    this.scrumDataSetList[ i ].priorityStartId,
+                this.scrumDataSetList[ i ].lastFinishedId, 
                 null );
-	}
+	    }
     }
 }
 this.timerHandle = setInterval( (function( self ){
@@ -73,9 +75,9 @@ this.timerHandle = setInterval( (function( self ){
     }
     })(this),60 * 1000 );
 
-this.AddDataManager = function( scrumDataManager )
+this.AddDataManager = function( scrumDataSet )
 {
-    this.scrumDataManagerList.push( scrumDataManager );
+    this.scrumDataSetList.push( scrumDataSet );
     this.TimerCallback();
 }
 

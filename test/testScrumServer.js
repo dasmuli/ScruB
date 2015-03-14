@@ -61,9 +61,9 @@ it('should accept a client connection', function () {
 it('should get some data on connect', function () {
 	  assert.notEqual( _scrumServer, null );
 	  assert.notEqual( _scrumServer.scrumDataManager, null );
-	  assert.notEqual( _scrumServer.scrumDataManager.scrumDataArray, null );
-	  assert.equal( _scrumServer.scrumDataManager.scrumDataArray.length, 3 );
-	  assert.equal( _scrumServer.scrumDataManager.priorityStartId, 0 );
+	  assert.notEqual( _scrumServer.scrumDataManager.activeDataSet.scrumDataArray, null );
+	  assert.equal( _scrumServer.scrumDataManager.activeDataSet.scrumDataArray.length, 3 );
+	  assert.equal( _scrumServer.scrumDataManager.activeDataSet.priorityStartId, 0 );
 });
 
 it('should add and broadcast added data', function( done ) {
@@ -76,11 +76,11 @@ it('should add and broadcast added data', function( done ) {
 	  dataReceivedCallback = receiveCallback;
 	  assert.notEqual( testData, null );
 	  _scrumServer.ReceiveAddData( testData );
-	  assert.equal( _scrumServer.scrumDataManager.scrumDataArray.length, 4 );
+	  assert.equal( _scrumServer.scrumDataManager.activeDataSet.scrumDataArray.length, 4 );
 	  // new first element
-	  assert.equal( _scrumServer.scrumDataManager.scrumDataArray[ 3 ].previousPriorityId, -1 );
+	  assert.equal( _scrumServer.scrumDataManager.activeDataSet.scrumDataArray[ 3 ].previousPriorityId, -1 );
 	  // added at front, so new start id for new element
-	  assert.equal( _scrumServer.scrumDataManager.priorityStartId, 3 );
+	  assert.equal( _scrumServer.scrumDataManager.activeDataSet.priorityStartId, 3 );
 });
 
 it('should receive add commands', function( _dataReceivedCallback ) {
@@ -88,11 +88,11 @@ it('should receive add commands', function( _dataReceivedCallback ) {
       var callbackOnReceive = function()
       {
         //_scrumServer.ReceiveAddData( testData );
-	    assert.equal( _scrumServer.scrumDataManager.scrumDataArray.length, 5 );
+	    assert.equal( _scrumServer.scrumDataManager.activeDataSet.scrumDataArray.length, 5 );
 	    // new first element
-	    assert.equal( _scrumServer.scrumDataManager.scrumDataArray[ 4 ].featurename, 'TestSendData' );
+	    assert.equal( _scrumServer.scrumDataManager.activeDataSet.scrumDataArray[ 4 ].featurename, 'TestSendData' );
 	    // added at front, so new start id for new element
-	    assert.equal( _scrumServer.scrumDataManager.priorityStartId, 4);
+	    assert.equal( _scrumServer.scrumDataManager.activeDataSet.priorityStartId, 4);
         _dataReceivedCallback();
       }
       testData.featurename = "TestSendData";

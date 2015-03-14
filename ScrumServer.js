@@ -16,11 +16,8 @@ this.scrumDataManager = scrumDataManager;
 
 // connect scrumDataManager to scrumDB
 this.loadedData = this.scrumDB.LoadScrumDataSync( "Default" );
-this.scrumDataManager.scrumDataArray  = this.loadedData.scrumDataArray;
-this.scrumDataManager.priorityStartId = this.loadedData.priorityStartId;
-this.scrumDataManager.lastFinishedId  = this.loadedData.lastFinishedId;
-this.scrumDB.AddDataManager( this.scrumDataManager );
-this.scrumDB.scrumDataArray = this.scrumDataManager.scrumDataArray;
+this.scrumDataManager.activeDataSet  = this.loadedData;
+this.scrumDB.AddDataManager( this.scrumDataManager.activeDataSet );
 
 //////////////////////////  Methods  //////////////////////////
 
@@ -42,7 +39,7 @@ var ScruBs =_scrumServer.io.of( '/ScruB' ).on('connection', function (socket) {
 	socket.on( _scrumServer.scrumDataManager.commandToServer.UPDATE_DATA, function (data) {
 		_scrumServer.scrumDataManager.UpdateData( data );
 		ScruBs.emit(_scrumServer.scrumDataManager.commandToClient.UPDATE_DATA,
-             _scrumServer.scrumDataManager.scrumDataArray[ data.id ]
+             _scrumServer.scrumDataManager.activeDataSet.scrumDataArray[ data.id ]
             );
 	});
     
@@ -51,7 +48,7 @@ var ScruBs =_scrumServer.io.of( '/ScruB' ).on('connection', function (socket) {
 		if( _scrumServer.scrumDataManager.SetDoneState( data.id, true ) )
         {
 		    ScruBs.emit( _scrumServer.scrumDataManager.commandToClient.FINISH,
-                _scrumServer.scrumDataManager.scrumDataArray[ data.id ]
+                _scrumServer.scrumDataManager.activeDataSet.scrumDataArray[ data.id ]
 			);
         }
 	});
@@ -61,7 +58,7 @@ var ScruBs =_scrumServer.io.of( '/ScruB' ).on('connection', function (socket) {
 		if( _scrumServer.scrumDataManager.SetDoneState( data.id, false ) )
         {
 		    ScruBs.emit( _scrumServer.scrumDataManager.commandToClient.REOPEN,
-                _scrumServer.scrumDataManager.scrumDataArray[ data.id ]
+                _scrumServer.scrumDataManager.activeDataSet.scrumDataArray[ data.id ]
 			);
         }
 	});
@@ -82,9 +79,9 @@ var ScruBs =_scrumServer.io.of( '/ScruB' ).on('connection', function (socket) {
 	
 	// Send complete array data to client
 	socket.emit('scrubfulldata', {
-		dataArray:	        _scrumServer.scrumDataManager.scrumDataArray,
-		priorityStartId:	_scrumServer.scrumDataManager.priorityStartId,
-		lastFinishedId:	    _scrumServer.scrumDataManager.lastFinishedId,
+		dataArray:	        _scrumServer.scrumDataManager.activeDataSet.scrumDataArray,
+		priorityStartId:	_scrumServer.scrumDataManager.activeDataSet.priorityStartId,
+		lastFinishedId:	    _scrumServer.scrumDataManager.activeDataSet.lastFinishedId,
 	} );
 });
 
