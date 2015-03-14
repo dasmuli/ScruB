@@ -75,7 +75,7 @@ this.timerHandle = setInterval( (function( self ){
     }
     })(this),60 * 1000 );
 
-this.AddDataManager = function( scrumDataSet )
+this.AddDataSet = function( scrumDataSet )
 {
     if( this.scrumDataSetList[ scrumDataSet.name ] == undefined )
     {

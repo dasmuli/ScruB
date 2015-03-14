@@ -17,7 +17,7 @@ module.exports.listen = function( server )
     // connect scrumDataManager to scrumDB
     this.loadedData = this.scrumDB.LoadScrumDataSync( "Default" );
     this.scrumDataManager.activeDataSet  = this.loadedData;
-    this.scrumDB.AddDataManager( this.scrumDataManager.activeDataSet );
+    this.scrumDB.AddDataSet( this.scrumDataManager.activeDataSet );
 
     //////////////////////////  Methods  //////////////////////////
 
@@ -28,7 +28,7 @@ module.exports.listen = function( server )
 
     this.CreateNewProject = function( name ){
        var newDataSet = new this.scrumDataManager.DataSet( name );
-       return this.scrumDB.AddDataManager( newDataSet );
+       return this.scrumDB.AddDataSet( newDataSet );
        //ScruBs.emit( this.scrumDataManager.commandToClient.ADD_DATA_TO_FRONT, data );
     }
     ///////////////  websocket + events  //////////////////////////

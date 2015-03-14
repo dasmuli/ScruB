@@ -56,7 +56,7 @@ it('should have a timer', function () {
 
 it('should receive a scrum data manager', function () {
 	  scrumDataManager.InitTestData();
-	  scrumDB.AddDataManager( scrumDataManager );
+	  scrumDB.AddDataSet( scrumDataManager );
 });
 
 it('should return something legal when loading non existing files', function () {
