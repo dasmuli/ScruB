@@ -26,6 +26,16 @@ module.exports.listen = function( server )
        ScruBs.emit( this.scrumDataManager.commandToClient.ADD_DATA_TO_FRONT, data );
     }
 
+    this.GetRandomId = function(){
+        var result = "";
+        var possible="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789$-_.+!*'(),";
+        for( var i = 0; i < 5; i++ )
+        {
+            result += possible.charAt( Math.floor( Math.random() * possible.length ) );
+        }
+        return result;
+    }
+
     this.CreateNewProject = function( name ){
        var newDataSet = new this.scrumDataManager.DataSet( name );
        return this.scrumDB.AddDataSet( newDataSet );
@@ -80,6 +90,15 @@ module.exports.listen = function( server )
        socket.on( _scrumServer.scrumDataManager.commandToServer.ADD_DATA_TO_FRONT, function ( data )
        {
             _scrumServer.ReceiveAddData( data );
+	   });
+
+       socket.on( _scrumServer.scrumDataManager.commandToServer.CREATE_ANONYMOUS_PROJECT, function ( data )
+       {
+           socket.emit( _scrumServer.scrumDataManager.commandToServer.FULL_DATA, {
+     		   dataArray:	    _scrumServer.scrumDataManager.activeDataSet.scrumDataArray,
+	    	   priorityStartId:	_scrumServer.scrumDataManager.activeDataSet.priorityStartId,
+		       lastFinishedId:	_scrumServer.scrumDataManager.activeDataSet.lastFinishedId,
+	        } );
 	   });
 
 	

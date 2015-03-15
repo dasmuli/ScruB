@@ -13,13 +13,16 @@ var scrumDataManager = {
 	    ADD_DATA_TO_FRONT: 'addDataToFront',
 	    FINISH:            'finishData',
 	    UPDATE_DATA:       'updateData',
+	    FULL_DATA:         'scrubfulldata',
 	    REOPEN:            'reopenData'
 	},
     commandToServer: {
-	    ADD_DATA_TO_FRONT: 'addDataToFront',
-	    UPDATE_DATA:       'updateData',
-	    FINISH:            'finishData',
-	    REOPEN:            'reopenData'
+	    ADD_DATA_TO_FRONT:        'addDataToFront',
+	    UPDATE_DATA:              'updateData',
+	    FULL_DATA:                'scrubfulldata',
+	    FINISH:                   'finishData',
+	    REOPEN:                   'reopenData',
+	    CREATE_ANONYMOUS_PROJECT: 'createAnonymousProject'
 	},
     // represents a complete project data set
     DataSet: function( name ) {
