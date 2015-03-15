@@ -94,11 +94,15 @@ module.exports.listen = function( server )
 
        socket.on( _scrumServer.scrumDataManager.commandToServer.CREATE_ANONYMOUS_PROJECT, function ( data )
        {
-           socket.emit( _scrumServer.scrumDataManager.commandToServer.FULL_DATA, {
+           var newId = _scrumServer.GetRandomId();
+           if(_scrumServer.CreateNewProject( newId ) )
+           {
+             socket.emit( _scrumServer.scrumDataManager.commandToServer.FULL_DATA, {
      		   dataArray:	    _scrumServer.scrumDataManager.activeDataSet.scrumDataArray,
 	    	   priorityStartId:	_scrumServer.scrumDataManager.activeDataSet.priorityStartId,
 		       lastFinishedId:	_scrumServer.scrumDataManager.activeDataSet.lastFinishedId,
-	        } );
+	         } );
+           }
 	   });
 
 	

@@ -121,10 +121,19 @@ it('should generate a 5 char random string', function() {
 
 it('should receive create anonymous project command', function( _dataReceivedCallback ) {
 	  testData = new _scrumServer.scrumDataManager.DataObject();
+      assert.notEqual( _scrumServer.scrumDB, undefined );
+      var oldListLength = Object.keys(_scrumServer.scrumDB.scrumDataSetList ).length;
+      var reactOnCall = 2;
       var callbackOnReceive = function() // callback for complete data
       {
+        reactOnCall--;
+        if( reactOnCall > 0 )
+        {
+            return;
+        }
         ResetCallbacks();
         // newly generated name is set
+        assert.equal( Object.keys(_scrumServer.scrumDB.scrumDataSetList ).length, oldListLength+1 );
         // flag for new project is set
         // new data set: 1 open and 2 done point: each +1 week in the future
 	    //assert.equal( _scrumServer.scrumDataManager.activeDataSet.scrumDataArray.length, 5 );
