@@ -246,6 +246,14 @@ $(document).on("pageshow", "#mainPage", function()
     ComputeChartData();
 });
 
+$(document).on("pageinit", "#projectPage", function()
+{
+	    $( "#CreateProjectButton" ).click(function() {
+             SendCreateAnonymousProject();
+          });	
+});
+
+
 $(document).on("pageinit", "#donePage", function()
 {
     $("#editDoneData").on("popupbeforeposition", function(event, ui) { 
@@ -331,6 +339,12 @@ $(document).on("pageinit", "#dataPage", function()
 
 
 /////////////////////   Network functions   //////////////////////////////////
+
+function SendCreateAnonymousProject()
+{
+    console.log( "Sending new project to server." );
+    socket.emit(scrumDataManager.commandToServer.CREATE_ANONYMOUS_PROJECT, {} );
+}
 
 function SendUpdateOfScrumDataToServer( id )
 {
@@ -428,6 +442,13 @@ $( document ).ready(function() {
         ComputeChartData();
     });
 	
+    socket.on( scrumDataManager.commandToClient.NEW_PROJECT_CREATED, function (data) {
+        console.log( "New project received: " + data.newId );
+        $( "#OverheadText" ).html( "Created new project " + data.newId
+                                   + ". Click and bookmark <a href=\"/" 
+                                   + data.newId + "/\"> this link</a>." );
+    });
+
 	socket.on('scrubmoveup', function ( lowerElementId ) {
 		console.log( "received scrubmoveup: " + lowerElementId );
 		var upperElementId = scrumDataManager.activeDataSet.scrumDataArray[ lowerElementId ].previousPriorityId;
