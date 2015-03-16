@@ -32,7 +32,9 @@ this.LoadScrumDataSync = function( name )
 	     data.scrumDataArray = new Array();
 	     return data;
     }
-    return JSON.parse( preparsedData );
+    var result = JSON.parse( preparsedData );
+    result.dirtyFlag = false;
+    return result;
 }
 
 this.Init = function()
@@ -57,15 +59,20 @@ this.SaveScrumDataAsync = function( name, scrumDataArray, priorityStartId,
 
 this.TimerCallback = function()
 {
-    for( var dataSet in this.scrumDataSetList )
+    for( var dataSetName in this.scrumDataSetList )
     {
-        if( this.scrumDataSetList.hasOwnProperty( dataSet ) )
+        if( this.scrumDataSetList.hasOwnProperty( dataSetName ) )
 	    {
-	        this.SaveScrumDataAsync( dataSet.name,
+            var dataSet = this.scrumDataSetList[ dataSetName ]
+            if( dataSet.dirtyFlag )
+            {
+	           this.SaveScrumDataAsync( dataSet.name,
 			    dataSet.scrumDataArray,
 			    dataSet.priorityStartId,
                 dataSet.lastFinishedId, 
-                null );
+                function( err ) { console.log( err ); } );
+               dataSet.dirtyFlag = false;
+            }
 	    }
     }
 }
@@ -80,7 +87,6 @@ this.AddDataSet = function( scrumDataSet )
     if( this.scrumDataSetList[ scrumDataSet.name ] == undefined )
     {
         this.scrumDataSetList[ scrumDataSet.name ] = scrumDataSet;
-        this.TimerCallback();
         return true;
     }
     else

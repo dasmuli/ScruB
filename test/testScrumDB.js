@@ -27,7 +27,6 @@ it('should automatically load the Default', function () {
 
 
 it('should generate a file in the data directory', function ( done ) {
-	  assert.notEqual( scrumDataManager.scrumDataArray, null );
 	  assert.notEqual( scrumDataManager, null );
 	  scrumDataManager.InitTestData();
 	  scrumDB.SaveScrumDataAsync( "Test2",

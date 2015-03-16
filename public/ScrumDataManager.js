@@ -3,18 +3,13 @@
 
 var scrumDataManager = {
     activeDataSet: {},
-    scrumDataArray: [],
-	priorityStartId: 0,
-	lastFinishedId: -1,
-	dirtyFlag: false,
-	name: "Default",
-	versionCounter: 0,
 	commandToClient: {
-	    ADD_DATA_TO_FRONT: 'addDataToFront',
-	    FINISH:            'finishData',
-	    UPDATE_DATA:       'updateData',
-	    FULL_DATA:         'scrubfulldata',
-	    REOPEN:            'reopenData'
+	    ADD_DATA_TO_FRONT:        'addDataToFront',
+	    FINISH:                   'finishData',
+	    UPDATE_DATA:              'updateData',
+	    FULL_DATA:                'scrubfulldata',
+	    REOPEN:                   'reopenData',
+	    NEW_PROJECT_CREATED:      'newProject'
 	},
     commandToServer: {
 	    ADD_DATA_TO_FRONT:        'addDataToFront',
@@ -46,7 +41,7 @@ var scrumDataManager = {
 	},
     InitEmptyDataSet: function()
     {
-        this.activeDataSet = new this.DataSet( "Unset" );
+        this.activeDataSet = new this.DataSet( "Default" );
     },
 	IsDirty: function () {
 		return this.activeDataSet.dirtyFlag;

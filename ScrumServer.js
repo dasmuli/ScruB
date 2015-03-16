@@ -21,11 +21,6 @@ module.exports.listen = function( server )
 
     //////////////////////////  Methods  //////////////////////////
 
-    this.ReceiveAddData = function( data ){
-       this.scrumDataManager.AddDataToFront( data );
-       ScruBs.emit( this.scrumDataManager.commandToClient.ADD_DATA_TO_FRONT, data );
-    }
-
     this.GetRandomId = function(){
         var result = "";
         var possible="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789$-_.+!*'(),";
@@ -51,10 +46,13 @@ module.exports.listen = function( server )
 	    //	_scrumServer.io.sockets.emit('chat', { zeit: new Date(),
         //	   name: data.name || 'Anonym', text: data.text });
 	   //});
+        socket.room = 'Default';
+        socket.join( 'Default' );
 	
 	    socket.on( _scrumServer.scrumDataManager.commandToServer.UPDATE_DATA, function (data) {
 		    _scrumServer.scrumDataManager.UpdateData( data );
-		    ScruBs.emit(_scrumServer.scrumDataManager.commandToClient.UPDATE_DATA,
+		    ScruBs.in( socket.room )
+                .emit(_scrumServer.scrumDataManager.commandToClient.UPDATE_DATA,
                   _scrumServer.scrumDataManager.activeDataSet.scrumDataArray[ data.id ]
                  );
 	    });
@@ -63,7 +61,7 @@ module.exports.listen = function( server )
 		    _scrumServer.scrumDataManager.UpdateData( data );
 		    if( _scrumServer.scrumDataManager.SetDoneState( data.id, true ) )
             {
-		        ScruBs.emit( _scrumServer.scrumDataManager.commandToClient.FINISH,
+		        ScruBs.in( socket.room ).emit( _scrumServer.scrumDataManager.commandToClient.FINISH,
                     _scrumServer.scrumDataManager.activeDataSet.scrumDataArray[ data.id ]
 			    );
             }
@@ -73,7 +71,7 @@ module.exports.listen = function( server )
 		    _scrumServer.scrumDataManager.UpdateData( data );
 		    if( _scrumServer.scrumDataManager.SetDoneState( data.id, false ) )
             {
-		        ScruBs.emit( _scrumServer.scrumDataManager.commandToClient.REOPEN,
+		        ScruBs.in( socket.room ).emit( _scrumServer.scrumDataManager.commandToClient.REOPEN,
                     _scrumServer.scrumDataManager.activeDataSet.scrumDataArray[ data.id ]
 			    );
             }
@@ -83,13 +81,14 @@ module.exports.listen = function( server )
 	    socket.on('moveDataUp', function (data) {
 		    if( _scrumServer.scrumDataManager.MovePriorityUp( data.id ) )
 		    {
-		       ScruBs.emit( 'scrubmoveup', data.id );
+		       ScruBs.in( socket.room ).emit( 'scrubmoveup', data.id );
 		    }
 	    });
     
        socket.on( _scrumServer.scrumDataManager.commandToServer.ADD_DATA_TO_FRONT, function ( data )
        {
-            _scrumServer.ReceiveAddData( data );
+           _scrumServer.scrumDataManager.AddDataToFront( data );
+           ScruBs.in( socket.room ).emit( _scrumServer.scrumDataManager.commandToClient.ADD_DATA_TO_FRONT, data );
 	   });
 
        socket.on( _scrumServer.scrumDataManager.commandToServer.CREATE_ANONYMOUS_PROJECT, function ( data )
@@ -97,10 +96,11 @@ module.exports.listen = function( server )
            var newId = _scrumServer.GetRandomId();
            if(_scrumServer.CreateNewProject( newId ) )
            {
-             socket.emit( _scrumServer.scrumDataManager.commandToServer.FULL_DATA, {
-     		   dataArray:	    _scrumServer.scrumDataManager.activeDataSet.scrumDataArray,
-	    	   priorityStartId:	_scrumServer.scrumDataManager.activeDataSet.priorityStartId,
-		       lastFinishedId:	_scrumServer.scrumDataManager.activeDataSet.lastFinishedId,
+             //socket.leave( socket.room );
+             //socket.join( newId );
+             //socket.room = newId;
+             socket.emit( _scrumServer.scrumDataManager.commandToClient.NEW_PROJECT_CREATED, {
+     		   newId:	    newId,
 	         } );
            }
 	   });

@@ -46,6 +46,10 @@ describe( 'ScrumServer', function() {
 		fulldataReceivedCallback( data );
 	})
 
+    socket.on( _scrumServer.scrumDataManager.commandToClient.NEW_PROJECT_CREATED, function( data ) {
+		newProjectReceivedCallback( data );
+	})
+
     });
 
     afterEach(function(done) {
@@ -62,6 +66,7 @@ describe( 'ScrumServer', function() {
     {
         adddataReceivedCallback = function() {};
         fulldataReceivedCallback = function() {};
+        newProjectReceivedCallback = function() {};
     }
 
 it('should accept a client connection', function () {
@@ -82,18 +87,18 @@ it('should add and broadcast added data', function( done ) {
       var receiveCallback = function( _addedData )
       {
           ResetCallbacks();
-	      assert.equal( JSON.stringify( _addedData), JSON.stringify( testData ) );
+	      //assert.equal( JSON.stringify( _addedData), JSON.stringify( testData ) );
+          assert.equal( _scrumServer.scrumDataManager.activeDataSet.scrumDataArray.length, 4 );
+    	  // new first element
+	      assert.equal( _scrumServer.scrumDataManager.activeDataSet.scrumDataArray[ 3 ].previousPriorityId, -1 );
+	      // added at front, so new start id for new element
+	      assert.equal( _scrumServer.scrumDataManager.activeDataSet.priorityStartId, 3 );
           done();
       }
 	  adddataReceivedCallback = receiveCallback;
 	  assert.notEqual( testData, null );
-	  _scrumServer.ReceiveAddData( testData );
-	  assert.equal( _scrumServer.scrumDataManager.activeDataSet.scrumDataArray.length, 4 );
-	  // new first element
-	  assert.equal( _scrumServer.scrumDataManager.activeDataSet.scrumDataArray[ 3 ].previousPriorityId, -1 );
-	  // added at front, so new start id for new element
-	  assert.equal( _scrumServer.scrumDataManager.activeDataSet.priorityStartId, 3 );
-});
+      socket.emit( _scrumServer.scrumDataManager.commandToServer.ADD_DATA_TO_FRONT, testData );
+	  });
 
 it('should receive add commands', function( _dataReceivedCallback ) {
 	  testData = new _scrumServer.scrumDataManager.DataObject();
@@ -123,23 +128,17 @@ it('should receive create anonymous project command', function( _dataReceivedCal
 	  testData = new _scrumServer.scrumDataManager.DataObject();
       assert.notEqual( _scrumServer.scrumDB, undefined );
       var oldListLength = Object.keys(_scrumServer.scrumDB.scrumDataSetList ).length;
-      var reactOnCall = 2;
-      var callbackOnReceive = function() // callback for complete data
+      var callbackOnReceive = function( data ) // callback for complete data
       {
-        reactOnCall--;
-        if( reactOnCall > 0 )
-        {
-            return;
-        }
         ResetCallbacks();
-        // newly generated name is set
+        // newly generated name is added to list
         assert.equal( Object.keys(_scrumServer.scrumDB.scrumDataSetList ).length, oldListLength+1 );
-        // flag for new project is set
+        // id for new project is set
+        assert.notEqual( data.newId, null );
         // new data set: 1 open and 2 done point: each +1 week in the future
-	    //assert.equal( _scrumServer.scrumDataManager.activeDataSet.scrumDataArray.length, 5 );
         _dataReceivedCallback();
       }
-	  fulldataReceivedCallback = callbackOnReceive; // switch client callback
+	  newProjectReceivedCallback = callbackOnReceive; // switch client callback
       socket.emit( _scrumServer.scrumDataManager.commandToServer.CREATE_ANONYMOUS_PROJECT, {} );
 });
 
