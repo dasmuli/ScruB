@@ -449,7 +449,7 @@ $( document ).ready(function() {
         console.log( "New project received: " + data.newId );
         $( "#OverheadText" ).html( "Created new project " + data.newId
                                    + ". Visit and bookmark <a href=\"/" 
-                                   + data.newId + "/\"> this link</a>." );
+                                   + data.newId + "/\" data-ajax=\"false\" > this link</a>." );
     });
 
 	socket.on('scrubmoveup', function ( lowerElementId ) {
