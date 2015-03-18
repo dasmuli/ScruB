@@ -9,9 +9,7 @@ var express = require('express')
 var root = '/public';
 
 app.use( function( req, res, next ) {
-    console.log( "Incoming URL: " + req.url );
     req.url = req.url.replace( /\/[A-Za-z\d$\-_\.+!*]+\//, '/' );  // URL is parsed by socket!   
-    console.log( "Outgoing URL: " + req.url );
     next();
 });
 

@@ -384,8 +384,11 @@ $( document ).ready(function() {
     {
         return;
     }
+    // test what database must be opened based un URL
+    var db = window.location.href.split( /\// )[3];
+    console.log( "Socket db: " + db );
 	// initiate WebSocket
-    socket = io.connect('/ScruB');
+    socket = io.connect('/ScruB', { query: 'db='+db } );
 
     socket.on( 'connect', function() {
      console.log( "Socket connected" );

@@ -46,6 +46,8 @@ module.exports.listen = function( server )
 	    //	_scrumServer.io.sockets.emit('chat', { zeit: new Date(),
         //	   name: data.name || 'Anonym', text: data.text });
 	   //});
+        console.log( "Socket wants to open: " + socket.handshake.query.db );
+
         socket.room = 'Default';
         socket.join( 'Default' );
 	
