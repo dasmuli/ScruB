@@ -445,7 +445,7 @@ $( document ).ready(function() {
     socket.on( scrumDataManager.commandToClient.NEW_PROJECT_CREATED, function (data) {
         console.log( "New project received: " + data.newId );
         $( "#OverheadText" ).html( "Created new project " + data.newId
-                                   + ". Click and bookmark <a href=\"/" 
+                                   + ". Visit and bookmark <a href=\"/" 
                                    + data.newId + "/\"> this link</a>." );
     });
 
