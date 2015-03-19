@@ -9,7 +9,7 @@ var express = require('express')
 var root = '/public';
 
 app.use( function( req, res, next ) {
-    req.url = req.url.replace( /\/[A-Za-z\d$\-_\.+!*]+\//, '/' );  // URL is parsed by socket!   
+    req.url = req.url.replace( /\/[A-Za-z\d$\-_\.+!*,]+\//, '/' );  // URL is parsed by socket!   
     next();
 });
 
@@ -18,12 +18,6 @@ server.listen(conf.port);
 if ('production' == app.get('env'))
 {
    var cacher = new Cacher();
-   //app.disable('etag'); // added for Safari
-
-   //app.get('/*', function(req, res, next){ 
-	//        res.setHeader('Last-Modified', (new Date()).toUTCString());
-	//	  next(); 
-   //});
 
    cacher.genCacheKey = function(req) {
 	   // cache: remember gzip support in cache key

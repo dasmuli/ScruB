@@ -36,6 +36,18 @@ it('should generate a file in the data directory', function ( done ) {
 			 done );
 });
 
+it('should check and load a file', function () {
+      // non existing files
+      assert.equal( scrumDB.LoadData( 'ThisDoesNotExist' ), false );
+      // file not in list is simply loaded
+      assert.equal( scrumDB.scrumDataSetList[ 'Test2' ], undefined );
+      assert.equal( scrumDB.LoadData( 'Test2' ), true );
+      // file not in list is loaded
+      assert.notEqual( scrumDB.scrumDataSetList[ 'Test2' ], undefined );
+      assert.equal( scrumDB.LoadData( 'Test2' ), true );
+});
+
+
 it('should load the file in the data directory', function () {
 	  scrumDataArray = null;
 	  assert.equal( scrumDataArray, null );

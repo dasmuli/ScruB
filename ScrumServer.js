@@ -23,7 +23,7 @@ module.exports.listen = function( server )
 
     this.GetRandomId = function(){
         var result = "";
-        var possible="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789$-_.+!*'(),";
+        var possible="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789$-_.+!*(),";
         for( var i = 0; i < 5; i++ )
         {
             result += possible.charAt( Math.floor( Math.random() * possible.length ) );
@@ -46,7 +46,7 @@ module.exports.listen = function( server )
 	    //	_scrumServer.io.sockets.emit('chat', { zeit: new Date(),
         //	   name: data.name || 'Anonym', text: data.text });
 	   //});
-        console.log( "Socket wants to open: " + socket.handshake.query.db );
+        //console.log( "Socket wants to open: " + socket.handshake.query.db );
 
         socket.room = 'Default';
         socket.join( 'Default' );

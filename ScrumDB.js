@@ -37,6 +37,25 @@ this.LoadScrumDataSync = function( name )
     return result;
 }
 
+
+this.LoadData = function( name )
+{
+    if( this.scrumDataSetList[ name ] != undefined )
+    {
+        return true;
+    }
+    try
+    {
+        var data = JSON.parse( fs.readFileSync( "data/" + name + ".json", 'utf8' ) ); 
+        this.AddDataSet( data );
+        return true;
+    }
+    catch( e )
+    {
+        return false;
+    }
+}
+
 this.Init = function()
 {
     this.datasets = {};
