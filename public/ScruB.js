@@ -493,9 +493,10 @@ $( document ).ready(function() {
 	socket.on('scrubfulldata', function ( data ) {
 		$("#scrumDataList").empty();
 		$("#scrumDoneList").empty();
-		scrumDataManager.activeDataSet.scrumDataArray  = data.dataArray.slice();
-		scrumDataManager.activeDataSet.priorityStartId = data.priorityStartId;
-		scrumDataManager.activeDataSet.lastFinishedId  = data.lastFinishedId;
+		scrumDataManager.activeDataSet.scrumDataArray   = data.dataArray.slice();
+		scrumDataManager.activeDataSet.priorityStartId  = data.priorityStartId;
+		scrumDataManager.activeDataSet.lastFinishedId   = data.lastFinishedId;
+		scrumDataManager.activeDataSet.connectedDevices = data.connectedDevices;
 		console.log( "full scrubdata received, length:" 
 			    + scrumDataManager.activeDataSet.scrumDataArray.length );
 		var prioId = scrumDataManager.activeDataSet.priorityStartId;
