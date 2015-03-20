@@ -4,7 +4,7 @@ QUnit.test( "qunit test", function( assert ) {
 });
 
 QUnit.test( "scrum data test array exists", function( assert ) {
-	assert.notEqual( scrumDataManager.scrumDataArray, null );
+	assert.notEqual( scrumDataManager.activeDataSet.scrumDataArray, null );
 });
 
 QUnit.test( "scrum data manager has default, non empty data set.",
@@ -14,7 +14,7 @@ QUnit.test( "scrum data manager has default, non empty data set.",
 	assert.notEqual( scrumDataManager.activeDataSet.scrumDataArray, undefined );
 	assert.equal( scrumDataManager.activeDataSet.lastFinishedId, -1 );
 	assert.equal( scrumDataManager.activeDataSet.dirtyFlag, false );
-	assert.equal( scrumDataManager.activeDataSet.name, "Unset" );
+	assert.equal( scrumDataManager.activeDataSet.name, "Default" );
 	assert.equal( scrumDataManager.activeDataSet.versionCounter, 0 );
 });
 
@@ -139,7 +139,7 @@ QUnit.test( "scrum data manager has a name", function( assert ) {
 
 QUnit.test( "scrum data manager has initial empty finish list", function( assert ) {
 	scrumDataManager.InitTestData();
-	assert.equal( scrumDataManager.lastFinishedId, -1 );
+	assert.equal( scrumDataManager.activeDataSet.lastFinishedId, -1 );
 });
 
 QUnit.test( "scrum data manager initiates finish list on first finish", function( assert ) {
@@ -165,13 +165,11 @@ QUnit.test( "scrum data manager initiates finish list on first finish", function
 
 QUnit.test( "scrum data manager finish on middle element", function( assert ) {
 	scrumDataManager.InitTestData();
-	assert.equal( scrumDataManager.dirtyFlag, false );
-	assert.equal( scrumDataManager.IsDirty(), false );
+	assert.equal( scrumDataManager.activeDataSet.dirtyFlag, false );
 	assert.equal( scrumDataManager.activeDataSet.scrumDataArray[ 1 ].isFinished, false );
 	var result = scrumDataManager.SetDoneState( 1, true );
 	assert.equal( result, true );
 	assert.equal( scrumDataManager.activeDataSet.dirtyFlag, true );
-	assert.equal( scrumDataManager.IsDirty(), true );
 	assert.equal( scrumDataManager.activeDataSet.lastFinishedId, 1 );
 	assert.equal( scrumDataManager.activeDataSet.priorityStartId, 0 );
 	assert.equal( scrumDataManager.activeDataSet.scrumDataArray[ 1 ].nextPriorityId, -1 );

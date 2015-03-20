@@ -3,6 +3,7 @@
 
 var scrumDataManager = {
     activeDataSet: {},
+    name: "Default",
 	commandToClient: {
 	    ADD_DATA_TO_FRONT:        'addDataToFront',
 	    FINISH:                   'finishData',
