@@ -434,7 +434,8 @@ $( document ).ready(function() {
         scrumDataManager.SetDoneState( data.id, true );
 		SetDoneListForElement( data, true );
         ComputeChartData();
-        StartIntegrityCheckTimeout()
+        StartIntegrityCheckTimeout();
+        UpdateProjectInformation();
     });
 
     socket.on( scrumDataManager.commandToClient.REOPEN, function ( data )
@@ -444,7 +445,8 @@ $( document ).ready(function() {
         scrumDataManager.SetDoneState( data.id, false );
 		SetDoneListForElement( data, false );
         ComputeChartData();
-        StartIntegrityCheckTimeout()
+        StartIntegrityCheckTimeout();
+        UpdateProjectInformation();
     });
 
 
@@ -455,13 +457,15 @@ $( document ).ready(function() {
 		AddDataDataFrontList( data );
         $( '#scrumDataList' ).listview('refresh');
         ComputeChartData();
-        StartIntegrityCheckTimeout()
+        StartIntegrityCheckTimeout();
+        UpdateProjectInformation();
     });
 
     // update non-order related data
     socket.on( scrumDataManager.commandToClient.UPDATE_DATA, function (data) {
 		UpdateBacklogData( data );
         ComputeChartData();
+        UpdateProjectInformation();
     });
 	
     socket.on( scrumDataManager.commandToClient.NEW_PROJECT_CREATED, function (data) {
@@ -480,7 +484,8 @@ $( document ).ready(function() {
 			SwapListElements( upperElementId, lowerElementId );
 		}
         $( '#scrumDataList' ).listview('refresh');
-        StartIntegrityCheckTimeout()
+        StartIntegrityCheckTimeout();
+        UpdateProjectInformation();
 	});
 
 
@@ -510,6 +515,7 @@ $( document ).ready(function() {
 		}
         ComputeChartData();
         StartIntegrityCheckTimeout();
+        UpdateProjectInformation();
     });
     // Nachricht senden
     function senden(){

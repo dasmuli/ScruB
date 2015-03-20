@@ -168,14 +168,22 @@ var scrumDataManager = {
             if ( this.activeDataSet.scrumDataArray[ i ].isFinished )
             {
                 result.tasksDone++;
-                result.velocity += this.activeDataSet.scrumDataArray[ i ].complexity;
+                if( !isNaN( this.activeDataSet.scrumDataArray[ i ].complexity ) )
+                {
+                    result.velocity += parseInt( this.activeDataSet.scrumDataArray[ i ].complexity );
+                }
             }
             else
             {
                 result.tasksOpen++;
             }
         }
-        result.velocity /= chartData.dataArray.length;
+        var weeks = chartData.dataArray.length - 1;
+        if( weeks <= 0 )
+        {
+            weeks = 1;
+        }
+        result.velocity /= weeks;
         return result;
     },
     GetWeekBasedChartData: function()
