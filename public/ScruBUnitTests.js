@@ -454,5 +454,22 @@ QUnit.test( "scrum data manager creates empty data set.",
 });
 
 
+QUnit.test( "scrum data manager should generate project information",
+    function( assert ) {
+	scrumDataManager.InitTestData();
+    scrumDataManager.activeDataSet.scrumDataArray[ 0 ].finishDate = new Date( 2003, 6, 8 );
+    scrumDataManager.activeDataSet.scrumDataArray[ 0 ].complexity = 40;
+    scrumDataManager.activeDataSet.scrumDataArray[ 0 ].isFinished = false;
+    scrumDataManager.activeDataSet.scrumDataArray[ 1 ].finishDate = new Date( 2003, 6, 1 );
+    scrumDataManager.activeDataSet.scrumDataArray[ 1 ].complexity = 13;
+    scrumDataManager.activeDataSet.scrumDataArray[ 1 ].isFinished = true;
+    scrumDataManager.activeDataSet.scrumDataArray[ 2 ].finishDate = new Date( 2003, 6, 8 );
+    scrumDataManager.activeDataSet.scrumDataArray[ 2 ].complexity = 8;
+    scrumDataManager.activeDataSet.scrumDataArray[ 2 ].isFinished = true;
+    var result = scrumDataManager.GetProjectInformation();
+	assert.equal( result.tasksOpen, 1 );
+	assert.equal( result.tasksDone, 2 );
+	assert.equal( result.velocity, 7 );
+});
 
 

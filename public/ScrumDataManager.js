@@ -157,6 +157,27 @@ var scrumDataManager = {
         var date = new Date( millisecondsRelativeWeek );
         return date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
     },
+    GetProjectInformation: function()
+    {
+        var length = this.activeDataSet.scrumDataArray.length;
+        var sumDone = 0;
+        var result = { tasksOpen: 0, tasksDone : 0, velocity: 0 };
+        var chartData = this.GetWeekBasedChartData();  // too lazy to compute weeks
+        for( var i = 0; i < length; i++ )
+        {
+            if ( this.activeDataSet.scrumDataArray[ i ].isFinished )
+            {
+                result.tasksDone++;
+                result.velocity += this.activeDataSet.scrumDataArray[ i ].complexity;
+            }
+            else
+            {
+                result.tasksOpen++;
+            }
+        }
+        result.velocity /= chartData.dataArray.length;
+        return result;
+    },
     GetWeekBasedChartData: function()
     {
         var sumDate = this.GetSumAndOldestDateOfFinished();

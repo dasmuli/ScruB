@@ -76,10 +76,29 @@ function ComputeChartData()
     }
 
 }
+
+function UpdateProjectInformation()
+{
+    if( scrumDataManager.activeDataSet.name )
+    {
+        $( '#ProjectName' ).text( scrumDataManager.activeDataSet.name );
+    }
+    if( scrumDataManager.activeDataSet.scrumDataArray )
+    {
+        $( '#ProjectNumberOfTasks' ).text( scrumDataManager.activeDataSet.scrumDataArray.length );
+    }
+    var projectInfo = scrumDataManager.GetProjectInformation();
+    $( '#ProjectTasksOpen' ).text( projectInfo.tasksOpen );
+    $( '#ProjectTasksDone' ).text( projectInfo.tasksDone );
+    $( '#ProjectVelocity' ).text( projectInfo.velocity );
+    $( '#ProjectConnectedDevices' ).text( scrumDataManager.activeDataSet.connectedDevices );
+}
+
 function StartIntegrityCheckTimeout()
 {
     window.setTimeout( CheckScrumListIntegrity, 500 ); // check once after 500ms if list is ok
 }
+
 function CheckScrumListIntegrity()
 {
     console.log( "Checking list integrity" );
