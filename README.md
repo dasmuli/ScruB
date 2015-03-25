@@ -3,6 +3,9 @@ ScruB is a lean personal and small team scrum-like task planer. It is based on n
 
 The demo is available on my dynamic dns server http://zerozerozero.dd-dns.de. I use this site for my small projects, so data backup is given.
 
+# Screenshots
+![Chart](/screenshots/Chart.png?raw=true "Chart")
+
 # Features
 * Add issues with complexity and description
 * Change order of issues
