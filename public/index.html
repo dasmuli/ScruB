@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="combohandler?ScruB.css&jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.css">
+<!-- <link rel="stylesheet" type="text/css" href="ScruB.css"> -->
+<script src="combohandler?socket.io.js&jquery/jquery-1.11.2.min.js&jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.js&Chart.js&ScrumDataManager.js&ScruB.js"></script>
+
+<title>ScruB</title>
+</head>
+<body>
+
+<div data-role="page" id="mainPage" data-transition="flow">
+  <div data-role="header">
+     <h1 id="titleHeaderMainPage">ScruB</h1>
+     <div data-role="navbar">
+	<ul>
+      <li><a href="#mainPage" class="ui-btn-active ui-state-persist">Chart</a></li>
+ 	  <li><a href="#dataPage">Open</a></li>
+ 	  <li><a href="#donePage">Done</a></li>
+ 	  <li><a href="#projectPage">Project</a></li>
+	</ul>
+     </div><!-- /navbar -->
+  </div>
+  <div data-role="main" class="ui-content">
+	<div class="ui-base">
+		<!-- Lead story block -->
+		<div class="ui-block-navigation">
+			<div class="ui-body ui-body-d">
+							</div>
+		</div>
+		<!-- secondary story block #2 -->
+		<div class="ui-block-mainView">
+			<div class="ui-body ui-body-d">
+				<h2 class="scrumInfoOptional">Burndown chart</h2>
+				<div id="Graph" class="ui-body-d ui-content">
+					<canvas id="canvas" class="scrumchart-view"></canvas>
+				</div>
+			</div>
+		</div>
+	</div><!-- /ui-base -->
+  </div> <!-- main content -->
+
+</div>  <!-- End of page -->
+
+
+<div data-role="page" id="donePage" data-transition="flow">
+  <div data-role="header">
+     <h1 id="titleHeaderDonePage">ScruB</h1>
+     <div data-role="navbar">
+	  <ul>
+        <li><a href="#mainPage">Chart</a></li>
+ 	    <li><a href="#dataPage">Open</a></li>
+        <li><a href="#donePage" class="ui-btn-active ui-state-persist">Done</a></li>
+ 	    <li><a href="#projectPage">Project</a></li>
+	  </ul>
+     </div><!-- /navbar -->
+  </div>
+  <div data-role="main" class="ui-content">
+	<div class="ui-base">
+		<!-- Lead story block -->
+		<div class="ui-block-navigation">
+			<div class="ui-body ui-body-d">
+			</div>
+		</div>
+		<!-- secondary story block #2 -->
+		<div class="ui-block-mainView">
+			<div class="ui-body ui-body-d">
+				<h2 class="scrumInfoOptional">Done</h2>
+                <div class="scrumdata-scroll-view">
+                   <ul data-role="listview" data-split-icon="arrow-u" 
+                       data-split-theme="a" data-inset="true" 
+                       id="scrumDoneList">
+                  </ul>
+                </div>
+			</div>
+		</div>
+       <div data-role="popup" id="editDoneData" data-theme="a" data-overlay-theme="a"
+		  class="ui-content" style="max-width:340px; padding-bottom:2em;">
+		  <div data-role="header" data-theme="a">
+			  <h4>View</h4>
+		  </div>
+            <div class="ui-field-contain">
+              <input name="textdoneinputName" id="textdoneinputName"
+		        placeholder="Short description" value="" type="text">
+            </div>
+	    <form>
+	      <div class="ui-field-contain">
+	         <label for="selectComplexityAddPopup">Complexity:</label>
+	         <select name="selectComplexityAddPopup" id="selectDoneComplexityEditPopup">
+	           <option value="0">0</option>
+	           <option value="1">1</option>
+	           <option value="2">2</option>
+	           <option value="3">3</option>
+	           <option value="4">5</option>
+	           <option value="8">8</option>
+	           <option value="13">13</option>
+	           <option value="20">20</option>
+	           <option value="40">40</option>
+	           <option value="100">100</option>
+	         </select>
+	      </div>
+	      <label for="descriptionAreaAddPopup">Description:</label>
+	      <textarea name="descriptionAreaAddPopup" id="descriptionDoneAreaEditPopup"></textarea>
+	    </form>
+          <div class="ui-field-contain">
+             <input data-role="flipswitch" name="flipCheckboxDoneFinished" id="flipDoneFinished"
+                data-on-text="open" data-off-text="done"
+                data-wrapper-class="custom-label-flipswitch"
+                type="checkbox">
+             <a href="" data-rel="back" class="ui-shadow ui-btn ui-corner-all
+		       ui-btn-inline ui-mini data-close-btn-text">Cancel</a> 
+             <a href="" id="editorDoneOkButton" data-rel="back"
+		       class="ui-shadow ui-btn ui-corner-all ui-btn-a ui-icon-check
+		       ui-btn-icon-left ui-btn-inline ui-mini">Ok</a>
+          </div>
+	  </div><!-- editDoneData Pop Up -->
+
+	</div><!-- /ui-base -->
+  </div> <!-- main content -->
+</div>  <!-- End of page -->
+
+
+
+<div data-role="page" id="dataPage" data-transition="flow">
+  <div data-role="header">
+     <h1 id="titleHeaderDataPage">ScruB</h1>
+          <div data-role="navbar">
+            <ul>
+              <li><a href="#mainPage">Chart</a></li>
+              <li><a href="#dataPage" class="ui-btn-active ui-state-persist">Open</a></li>
+              <li><a href="#donePage">Done</a></li>
+ 	          <li><a href="#projectPage">Project</a></li>
+            </ul>
+          </div><!-- /navbar -->
+
+  </div>
+  <div data-role="main" class="ui-content">
+    <div class="ui-base">
+      <!-- Lead story block -->
+      <div class="ui-block-navigation">
+        <div class="ui-body ui-body-d">
+	      <div data-role="navbar">
+            <ul>
+		    <li><a href="#addData" data-rel="popup"
+			     class="ui-btn ui-corner-all ui-shadow ui-btn-inline"
+	                     data-position-to="window"
+			     data-transition="pop">Add</a>
+		    </li>
+            </ul>
+          </div><!-- /navbar -->
+        </div>
+      </div>
+      <!-- secondary story block #2 -->
+      <div class="ui-block-mainView">
+        <div class="ui-body ui-body-d">
+          <h2 class="scrumInfoOptional">Backlog</h2>
+          <div class="scrumdata-scroll-view">
+            <ul data-role="listview" data-split-icon="arrow-u" data-split-theme="a" data-inset="true" id="scrumDataList">
+            </ul>
+          </div>
+				
+          <div data-role="popup" id="editData" data-theme="a" data-overlay-theme="a"
+		  class="ui-content" style="max-width:340px; padding-bottom:2em;">
+          <div data-role="header" data-theme="a">
+			  <h4>Edit</h4>
+		  </div>
+
+            <div class="ui-field-contain">
+              <input name="textinputName" id="textinputName" placeholder="Text input"
+	        value="Oldame" type="text">
+            </div>
+            <form>
+	          <div class="ui-field-contain">
+	           <label for="selectComplexityEditPopup">Complexity:</label>
+	           <select name="selectComplexityEditPopup" id="selectComplexityEditPopup">
+	             <option value="0">0</option>
+	             <option value="1">1</option>
+	             <option value="2">2</option>
+	             <option value="3">3</option>
+	             <option value="5">5</option>
+	             <option value="8">8</option>
+	             <option value="13">13</option>
+	             <option value="20">20</option>
+	             <option value="40">40</option>
+	             <option value="100">100</option>
+	           </select>
+	         </div>
+	         <label for="descriptionAreaEditPopup">Description:</label>
+	         <textarea name="descriptionAreaEditPopup" id="descriptionAreaEditPopup"></textarea>
+             <div class="ui-field-contain">
+               <input data-role="flipswitch" name="flipCheckboxFinished" id="flipFinished"
+                data-on-text="open" data-off-text="done"
+                data-wrapper-class="custom-label-flipswitch"
+                type="checkbox">
+               <a href="" data-rel="back" class="ui-shadow ui-btn ui-corner-all
+		          ui-btn-inline ui-mini data-close-btn-text">Cancel</a>
+               <a href="" id="editorOkButton" data-rel="back" class="ui-shadow ui-btn
+		          ui-corner-all ui-btn ui-icon-check ui-btn-icon-left
+                  ui-btn-inline ui-mini">Ok</a>
+              </div>
+            </form>
+	  </div><!-- editData Pop Up -->
+
+	  <div data-role="popup" id="addData" data-theme="a" data-overlay-theme="a"
+		  class="ui-content" style="max-width:340px; padding-bottom:2em;">
+		  <div data-role="header" data-theme="a">
+			  <h4>Add</h4>
+		  </div>
+            <div class="ui-field-contain">
+                <input name="textinputName" id="textinputNameAdd"
+		  placeholder="Short description" value="" type="text">
+            </div>
+	    <form>
+	      <div class="ui-field-contain">
+	         <label for="selectComplexityAddPopup">Complexity:</label>
+	         <select name="selectComplexityAddPopup" id="selectComplexityAddPopup">
+	           <option value="0">0</option>
+	           <option value="1">1</option>
+	           <option value="2">2</option>
+	           <option value="3">3</option>
+	           <option value="5">5</option>
+	           <option value="8">8</option>
+	           <option value="13">13</option>
+	           <option value="20">20</option>
+	           <option value="40">40</option>
+	           <option value="100">100</option>
+	         </select>
+	      </div>
+	      <label for="descriptionAreaAddPopup">Description:</label>
+	      <textarea name="descriptionAreaAddPopup" id="descriptionAreaAddPopup"></textarea>
+	    </form>
+             <a href="" id="editorAddOkButton" data-rel="back"
+		     class="ui-shadow ui-btn ui-corner-all ui-btn-a ui-icon-check
+		     ui-btn-icon-left ui-btn-inline ui-mini">Ok</a>
+	     <a href="" data-rel="back" class="ui-shadow ui-btn ui-corner-all
+		     ui-btn-inline ui-mini data-close-btn-text">Cancel</a> 
+	  </div><!-- addData Pop Up -->
+  
+	</div><!-- data main view -->
+      </div>
+    </div><!-- /ui-base -->
+  </div> <!-- main content -->
+
+</div>  <!-- End of page -->
+
+<div data-role="page" id="projectPage" data-transition="flow">
+  <div data-role="header">
+     <h1 id="titleHeaderMainPage">ScruB</h1>
+     <div data-role="navbar">
+	<ul>
+      <li><a href="#mainPage">Chart</a></li>
+ 	  <li><a href="#dataPage">Open</a></li>
+ 	  <li><a href="#donePage">Done</a></li>
+ 	  <li><a href="#projectPage" class="ui-btn-active ui-state-persist">Project</a></li>
+	</ul>
+     </div><!-- /navbar -->
+  </div>
+  <div data-role="main" class="ui-content">
+	<div class="ui-base">
+		<!-- Lead story block -->
+		<div class="ui-block-navigation">
+			<div class="ui-body ui-body-d">
+              <div data-role="navbar">
+                <ul>
+		          <li><a id="CreateProjectButton"  href="#"
+			        class="ui-btn ui-corner-all ui-shadow ui-btn-inline"
+	                >Create new</a>
+		          </li>
+                </ul>
+              </div><!-- /navbar -->
+		    </div>
+		</div>
+		<!-- secondary story block #2 -->
+		<div class="ui-block-mainView">
+			<div class="ui-body ui-body-d">
+                <div id="OverheadText"></div>
+				<h2 class="scrumInfoOptional">Project information</h2>
+                <table data-role="table" class="my-custom-breakpoint">
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th>Name</th>
+                        <td id="ProjectName">3D+xA</td>
+                      </tr>
+                      <tr>
+                        <th>Number of tasks</th>
+                        <td id="ProjectNumberOfTasks">38</td>
+                      </tr>
+                      <tr>
+                        <th>Tasks open</th>
+                        <td id="ProjectTasksOpen">18</td>
+                      </tr>
+                      <tr>
+                        <th>Tasks done</th>
+                        <td id="ProjectTasksDone">22</td>
+                      </tr>
+                      <tr>
+                        <th>Velocity (points per week)</th>
+                        <td id="ProjectVelocity">16.6</td>
+                      </tr>
+                      <tr>
+                        <th>Connected devices (overall)</th>
+                        <td id="ProjectConnectedDevices">33</td>
+                      </tr>
+                    </tbody>
+                </table>
+    		</div>
+		</div>
+	</div><!-- /ui-base -->
+  </div> <!-- main content -->
+
+</div>  <!-- End of page -->
+
+
+
+</body>
+</html>

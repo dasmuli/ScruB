@@ -26,3 +26,9 @@ node_modules
 
 # Users Environment Variables
 .lock-wscript
+
+# no vim swap files
+*.swp
+
+# and no data files
+data/*
