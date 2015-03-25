@@ -5,6 +5,8 @@ The demo is available on my dynamic dns server http://zerozerozero.dd-dns.de. I 
 
 # Screenshots
 ![Chart](/screenshots/Chart.png?raw=true "Chart")
+![Open issues](/screenshots/Open.png?raw=true "Open issues")
+![Edit dialog](/screenshots/EditDialog.png?raw=true "Edit dialog")
 
 # Features
 * Add issues with complexity and description
