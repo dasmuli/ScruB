@@ -25,4 +25,5 @@ The demo is available on my dynamic dns server http://zerozerozero.dd-dns.de. I 
 * Main data is collected in one big sized (medium in fact) array, handled by ScrumDataManager.js both on server and client.
 
 # Background
-As this was a test project to get to know node and socket.io, the code is rather sub standard. But as the app works and being quite fast for a slow low power arm server, I am rather happy with the result.
+As this was a test project to get to know node and socket.io, the code is rather sub standard. But as the app works and as it is quite fast for my slow low power arm server, I am rather happy with the result.
+The ugly design issues comprise global objects, an eval statement and no modulization in general. A last point added lately is the feature that client opens a websocket based on the URL, because the URL contains the database to be opened. The server on the other hand ignore supdirectories, which is a bit harsh. 
